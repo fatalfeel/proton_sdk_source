@@ -28,6 +28,7 @@ Some of the libraries Proton may link to may have additional requirements or res
 You can contact the author here:
 
 Seth A. Robinson ( seth@rtsoft.com )
+Any question email: fatalfeel@yahoo.com.tw (Jesse Stone)
 
 www: rtsoft.com
 blog: codedojo.com
