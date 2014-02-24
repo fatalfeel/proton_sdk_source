@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "-[EAGLView touchesBegan:withEvent:]:EAGLView.mm">
+         <PersistentStrings>
+            <PersistentString
+               value = "ev.MouseInput.X">
+            </PersistentString>
+            <PersistentString
+               value = "touchPoint.x">
+            </PersistentString>
+            <PersistentString
+               value = "ev.MouseInput.Y">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "irr::core::vector3d&lt;float&gt;::vector3d(irr::core::vector3d&lt;float&gt; const&amp;):vector3d.h">
+      </ContextState>
+      <ContextState
+         contextName = "irr::scene::CSceneNodeAnimatorCameraFPS::animateNode(irr::scene::ISceneNode*, unsigned int):CSceneNodeAnimatorCameraFPS.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "EventControlComponent::OnUpdate(VariantList*):EventControlComponent.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "m_lastevent">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "EventControlComponent::EventControlComponent():EventControlComponent.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "irr::CIrrDeviceStub::getInputReceivingSceneManager():CIrrDeviceStub.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "InputReceivingSceneManager">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "BaseApp::Draw():BaseApp.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "stTemp">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "irr::core::vector3d&lt;float&gt;::crossProduct(irr::core::vector3d&lt;float&gt; const&amp;) const:vector3d.h">
+      </ContextState>
+      <ContextState
+         contextName = "irr::scene::CSceneNodeAnimatorCameraFPS::OnEvent(irr::SEvent const&amp;):CSceneNodeAnimatorCameraFPS.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "evt.KeyInput.Key">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
