@@ -22,7 +22,7 @@
 					<folderInfo id="com.android.toolchain.gcc.2024326483.115804615" name="/" resourcePath="">
 						<toolChain id="com.android.toolchain.gcc.5506693" name="com.android.toolchain.gcc" superClass="com.android.toolchain.gcc">
 							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF" id="com.android.targetPlatform.299887377" isAbstract="false" superClass="com.android.targetPlatform"/>
-							<builder arguments="NDK_DEBUG=1" command="ndk-build" id="com.android.builder.1525648495" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Android Builder" superClass="com.android.builder"/>
+							<builder arguments="NDK_DEBUG=1 V=1" command="ndk-build" id="com.android.builder.1525648495" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Android Builder" superClass="com.android.builder"/>
 							<tool id="com.android.gcc.compiler.148551608" name="Android GCC Compiler" superClass="com.android.gcc.compiler">
 								<inputType id="com.android.gcc.inputType.1113115717" superClass="com.android.gcc.inputType"/>
 							</tool>
