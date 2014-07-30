@@ -1,4 +1,4 @@
-The Proton SDK License (based on the XFree86 1.1 license)
+The Proton 3d engine License (based on the XFree86 1.1 license)
 
 Copyright (C)  2010 Seth A. Robinson
 All rights reserved.
@@ -16,7 +16,7 @@ All rights reserved.
 
 Note:
 
-Irrlicht engine modifications are released under the Irrlicht ZLIB style license. ( http://irrlicht.sourceforge.net/license.html )
+Irrlicht OGLES2 engine modifications are released under the Irrlicht ZLIB style license. ( http://irrlicht.sourceforge.net/license.html )
 
 Any source based off Clanlib (located in the shared/Clanlib directory) is released under the current Clanlib license.
 
@@ -28,7 +28,7 @@ Some of the libraries Proton may link to may have additional requirements or res
 You can contact the author here:
 
 Seth A. Robinson ( seth@rtsoft.com )
-Question email: fatalfeel@yahoo.com.tw (Jesse Stone)
+Question contact: fatalfeel@yahoo.com.tw (Jesse Stone)
 
 www: rtsoft.com
 blog: codedojo.com
