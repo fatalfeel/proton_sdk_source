@@ -827,13 +827,13 @@ bool COpenGLDriver::OnAgainDriverInit()
 
 	if (BridgeCalls)
 		delete BridgeCalls;
-	
-	BridgeCalls = new COpenGLCallBridge(this);
 
 	//deleteMaterialRenders();
 	//removeAllHardwareBuffers();
 	CNullDriver::OnAgainDriverInit(); //by stone
-
+	
+	BridgeCalls = new COpenGLCallBridge(this);
+	
 	if (queryFeature(EVDF_ARB_GLSL))
 	{
 		char buf[32];

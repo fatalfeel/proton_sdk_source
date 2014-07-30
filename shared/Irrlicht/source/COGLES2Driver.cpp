@@ -445,14 +445,14 @@ namespace video
 		if(BridgeCalls)
 			delete BridgeCalls;
 
-		BridgeCalls = new COGLES2CallBridge(this);
-		
-		StencilBuffer = stencilBuffer;
-
 		//deleteMaterialRenders();
 		//removeAllHardwareBuffers();
 		CNullDriver::OnAgainDriverInit(); //by stone
 
+		BridgeCalls = new COGLES2CallBridge(this);
+		
+		StencilBuffer = stencilBuffer;
+		
 		DriverAttributes->setAttribute("MaxTextures", MaxTextureUnits);
 		DriverAttributes->setAttribute("MaxSupportedTextures", MaxSupportedTextures);
         //		DriverAttributes->setAttribute("MaxLights", MaxLights);

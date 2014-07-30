@@ -3,8 +3,7 @@
       package="com.rtsoft.rt3dapp"
       android:versionCode="1"
       android:versionName="0.7"
-      android:installLocation="preferExternal"
-      >
+      android:installLocation="internalOnly">
 
   <uses-feature android:glEsVersion="0x00020000" android:required="true" />
     
