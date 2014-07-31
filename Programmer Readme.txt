@@ -1,5 +1,5 @@
 1.
-Proton 3d engine impelement irrlicht 1.9.0 with OGLES2.0 and OpenGL
+Proton 3d engine impelement irrlicht 1.9.0 with OGLES1.0, OGLES2.0 and OpenGL
 You can build on Win32, MacOS, Android, Ios
 
 1.
