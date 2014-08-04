@@ -43,8 +43,7 @@ public class Main extends SharedActivity
    		PackageName= "com.rtsoft.rt3dapp"; //edit build.xml to change this setting, not here
 	
 		System.loadLibrary(dllname);
-	
-	
+		
 		
 		super.onCreate(savedInstanceState);
 		if (HookedEnabled)

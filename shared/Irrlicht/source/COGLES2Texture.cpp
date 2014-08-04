@@ -882,8 +882,7 @@ void COGLES2Texture::Reload()
 			}
 
 			glGenTextures(1, &TextureName);
-			glBindTexture( GL_TEXTURE_2D, TextureName);
-
+			//glBindTexture( GL_TEXTURE_2D, TextureName);
 			uploadTexture(true, 0);
 
 			if (bIsFont)

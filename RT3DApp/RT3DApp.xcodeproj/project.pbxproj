@@ -338,6 +338,7 @@
 		B739B98E17D7306C00F60FA4 /* thread_local_storage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B739B98817D7306C00F60FA4 /* thread_local_storage.cpp */; };
 		B739B98F17D7306C00F60FA4 /* thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B739B98917D7306C00F60FA4 /* thread.cpp */; };
 		B74393B41817C08A00C0745C /* EventControlComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B74393B21817C08A00C0745C /* EventControlComponent.cpp */; };
+		B753EB63198F773F0070F0D5 /* StencilMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B753EB61198F773F0070F0D5 /* StencilMenu.cpp */; };
 		B75647B51823AE5A00B42188 /* CProtonReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B75647B31823AE5A00B42188 /* CProtonReader.cpp */; };
 		B78CDB361802820400C202B0 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = B78CDB341802820400C202B0 /* zip.c */; };
 		B7C7220618158F2800FA4FBA /* CDefaultGUIElementFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B7C7220518158F2700FA4FBA /* CDefaultGUIElementFactory.cpp */; };
@@ -1148,6 +1149,8 @@
 		B739B9A017D731B300F60FA4 /* vec4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vec4.h; path = "ClanLib-2.0/Sources/API/Core/Math/vec4.h"; sourceTree = "<group>"; };
 		B74393B21817C08A00C0745C /* EventControlComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EventControlComponent.cpp; path = source/Component/EventControlComponent.cpp; sourceTree = "<group>"; };
 		B74393B31817C08A00C0745C /* EventControlComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EventControlComponent.h; path = source/Component/EventControlComponent.h; sourceTree = "<group>"; };
+		B753EB61198F773F0070F0D5 /* StencilMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StencilMenu.cpp; path = source/GUI/StencilMenu.cpp; sourceTree = "<group>"; };
+		B753EB62198F773F0070F0D5 /* StencilMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StencilMenu.h; path = source/GUI/StencilMenu.h; sourceTree = "<group>"; };
 		B75647B31823AE5A00B42188 /* CProtonReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CProtonReader.cpp; path = ../shared/Irrlicht/source/CProtonReader.cpp; sourceTree = "<group>"; };
 		B75647B41823AE5A00B42188 /* CProtonReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CProtonReader.h; path = ../shared/Irrlicht/source/CProtonReader.h; sourceTree = "<group>"; };
 		B75647B61823B21A00B42188 /* CLWOMeshFileLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CLWOMeshFileLoader.h; path = ../shared/Irrlicht/source/CLWOMeshFileLoader.h; sourceTree = "<group>"; };
@@ -1279,6 +1282,8 @@
 				B7DC4AD21830B6FD00319BE0 /* QuakeShaderMenu.h */,
 				B706F63418112D1300DC9F99 /* ShaderMenu.cpp */,
 				B706F63518112D1300DC9F99 /* ShaderMenu.h */,
+				B753EB61198F773F0070F0D5 /* StencilMenu.cpp */,
+				B753EB62198F773F0070F0D5 /* StencilMenu.h */,
 				5D59D38E10B6E08600BA1F75 /* TerrainMenu.cpp */,
 				5D59D38F10B6E08600BA1F75 /* TerrainMenu.h */,
 				5D4760830FBB1CFF008400E3 /* MainMenu.cpp */,
@@ -2340,6 +2345,8 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "RT3DApp" */;
 			compatibilityVersion = "Xcode 3.1";
 			developmentRegion = English;
@@ -2610,6 +2617,7 @@
 				5D5C13321279ADED00A4E4E3 /* StreamingInstanceFile.cpp in Sources */,
 				5D5C13331279ADED00A4E4E3 /* StreamingInstance.cpp in Sources */,
 				5D5C13341279ADED00A4E4E3 /* FileSystemZip.cpp in Sources */,
+				B753EB63198F773F0070F0D5 /* StencilMenu.cpp in Sources */,
 				5D5C13351279ADED00A4E4E3 /* FileSystem.cpp in Sources */,
 				5D5C13361279ADED00A4E4E3 /* FileManager.cpp in Sources */,
 				5DD326B812C0DD490009B0F3 /* COctreeTriangleSelector.cpp in Sources */,

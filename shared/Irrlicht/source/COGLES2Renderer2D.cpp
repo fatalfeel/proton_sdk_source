@@ -28,8 +28,9 @@ namespace video
 
 //! Constructor
 COGLES2Renderer2D::COGLES2Renderer2D(const c8* vertexShaderProgram, const c8* pixelShaderProgram, COGLES2Driver* driver)
-	:	COGLES2MaterialRenderer(driver, 0, EMT_SOLID), RenderTargetSize(core::dimension2d<u32>(0,0)),
-		Matrix(core::matrix4::EM4CONST_NOTHING), Texture(0)
+//	:	COGLES2MaterialRenderer(driver, 0, EMT_SOLID), RenderTargetSize(core::dimension2d<u32>(0,0)),
+//		Matrix(core::matrix4::EM4CONST_NOTHING), Texture(0)
+: COGLES2MaterialRenderer(driver, 0, EMT_SOLID), Texture(0)
 {
 	#ifdef _DEBUG
 	setDebugName("COGLES2Renderer2D");
@@ -41,13 +42,12 @@ COGLES2Renderer2D::COGLES2Renderer2D(const c8* vertexShaderProgram, const c8* pi
 
 	Driver->getBridgeCalls()->setProgram(Program);
 
-	// These states doesn't change later.
+	// These states don't change later.
 
-	MatrixID = getPixelShaderConstantID("uOrthoMatrix");
-	UseTextureID = getPixelShaderConstantID("uUseTexture");
+	TextureUsageID = getPixelShaderConstantID("uTextureUsage");
 	s32 TextureUnitID = getPixelShaderConstantID("uTextureUnit");	
 
-	int TextureUnit = 0;
+	s32 TextureUnit = 0;
 	setPixelShaderConstant(TextureUnitID, &TextureUnit, 1);
 
 	Driver->getBridgeCalls()->setProgram(0);
@@ -75,7 +75,7 @@ bool COGLES2Renderer2D::OnRender(IMaterialRendererServices* service, E_VERTEX_TY
 {
 	Driver->setTextureRenderStates(Driver->getCurrentMaterial(), false);
 
-	const core::dimension2d<u32>& renderTargetSize = Driver->getCurrentRenderTargetSize();
+	/*const core::dimension2d<u32>& renderTargetSize = Driver->getCurrentRenderTargetSize();
 
 	if (RenderTargetSize != renderTargetSize)
 	{
@@ -88,7 +88,10 @@ bool COGLES2Renderer2D::OnRender(IMaterialRendererServices* service, E_VERTEX_TY
 	}
 
 	int UseTexture = Texture ? 1 : 0;
-	setPixelShaderConstant(UseTextureID, &UseTexture, 1);
+	setPixelShaderConstant(UseTextureID, &UseTexture, 1);*/
+
+	s32 TextureUsage = Texture ? 1 : 0;
+	setPixelShaderConstant(TextureUsageID, &TextureUsage, 1);
 
 	return true;
 }

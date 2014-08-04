@@ -37,14 +37,15 @@ public:
 	void setTexture(const ITexture* texture);
 
 protected:
+	s32 TextureUsageID;
 
-	core::dimension2d<u32> RenderTargetSize;
-	core::matrix4 Matrix;
+	//core::dimension2d<u32> RenderTargetSize;
+	//core::matrix4 Matrix;
 
 	const ITexture* Texture;
 
-	s32 MatrixID;
-	s32 UseTextureID;
+	//s32 MatrixID;
+	//s32 UseTextureID;
 };
 
 

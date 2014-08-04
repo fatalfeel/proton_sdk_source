@@ -220,7 +220,8 @@ namespace video
 		virtual core::dimension2du getMaxTextureSize() const;
 
 		//! Draws a shadow volume into the stencil buffer.
-		virtual void drawStencilShadowVolume(const core::vector3df* triangles, s32 count, bool zfail);
+		//virtual void drawStencilShadowVolume(const core::vector3df* triangles, s32 count, bool zfail);
+		virtual void drawStencilShadowVolume(const core::array<core::vector3df>& triangles, bool zfail, u32 debugDataVisible=0);
 
 		//! Fills the stencil shadow with color.
 		virtual void drawStencilShadow(bool clearStencilBuffer = false,
@@ -495,6 +496,10 @@ namespace video
 
 		void setBlend(bool enable);
 
+		// Color Mask.
+
+		void setColorMask(bool red, bool green, bool blue, bool alpha);
+
 		// Cull face calls.
 
 		void setCullFaceFunc(GLenum mode);
@@ -529,6 +534,8 @@ namespace video
 		GLenum BlendSource;
 		GLenum BlendDestination;
 		bool Blend;
+
+		bool ColorMask[4];
 
 		GLenum CullFaceMode;
 		bool CullFace;

@@ -4840,7 +4840,7 @@
 						Name="Video"
 						>
 						<Filter
-							Name="GL"
+							Name="OpenGL"
 							>
 							<File
 								RelativePath="..\..\shared\Irrlicht\source\COpenGLCgMaterialRenderer.cpp"
@@ -5511,200 +5511,8 @@
 							</File>
 						</Filter>
 						<Filter
-							Name="GLES"
+							Name="OGLES1"
 							>
-							<File
-								RelativePath="..\..\shared\Irrlicht\source\COGLES2Driver.cpp"
-								>
-								<FileConfiguration
-									Name="Debug GL|Win32"
-									ExcludedFromBuild="true"
-									>
-									<Tool
-										Name="VCCLCompilerTool"
-									/>
-								</FileConfiguration>
-							</File>
-							<File
-								RelativePath="..\..\shared\Irrlicht\source\COGLES2Driver.h"
-								>
-								<FileConfiguration
-									Name="Debug GL|Win32"
-									ExcludedFromBuild="true"
-									>
-									<Tool
-										Name="VCCLCompilerTool"
-									/>
-								</FileConfiguration>
-							</File>
-							<File
-								RelativePath="..\..\shared\Irrlicht\source\COGLES2ExtensionHandler.cpp"
-								>
-								<FileConfiguration
-									Name="Debug GL|Win32"
-									ExcludedFromBuild="true"
-									>
-									<Tool
-										Name="VCCLCompilerTool"
-									/>
-								</FileConfiguration>
-							</File>
-							<File
-								RelativePath="..\..\shared\Irrlicht\source\COGLES2ExtensionHandler.h"
-								>
-								<FileConfiguration
-									Name="Debug GL|Win32"
-									ExcludedFromBuild="true"
-									>
-									<Tool
-										Name="VCCLCompilerTool"
-									/>
-								</FileConfiguration>
-							</File>
-							<File
-								RelativePath="..\..\shared\Irrlicht\source\COGLES2FixedPipelineRenderer.cpp"
-								>
-								<FileConfiguration
-									Name="Debug GL|Win32"
-									ExcludedFromBuild="true"
-									>
-									<Tool
-										Name="VCCLCompilerTool"
-									/>
-								</FileConfiguration>
-							</File>
-							<File
-								RelativePath="..\..\shared\Irrlicht\source\COGLES2FixedPipelineRenderer.h"
-								>
-								<FileConfiguration
-									Name="Debug GL|Win32"
-									ExcludedFromBuild="true"
-									>
-									<Tool
-										Name="VCCLCompilerTool"
-									/>
-								</FileConfiguration>
-							</File>
-							<File
-								RelativePath="..\..\shared\Irrlicht\source\COGLES2MaterialRenderer.cpp"
-								>
-								<FileConfiguration
-									Name="Debug GL|Win32"
-									ExcludedFromBuild="true"
-									>
-									<Tool
-										Name="VCCLCompilerTool"
-									/>
-								</FileConfiguration>
-							</File>
-							<File
-								RelativePath="..\..\shared\Irrlicht\source\COGLES2MaterialRenderer.h"
-								>
-								<FileConfiguration
-									Name="Debug GL|Win32"
-									ExcludedFromBuild="true"
-									>
-									<Tool
-										Name="VCCLCompilerTool"
-									/>
-								</FileConfiguration>
-							</File>
-							<File
-								RelativePath="..\..\shared\Irrlicht\source\COGLES2NormalMapRenderer.cpp"
-								>
-								<FileConfiguration
-									Name="Debug GL|Win32"
-									ExcludedFromBuild="true"
-									>
-									<Tool
-										Name="VCCLCompilerTool"
-									/>
-								</FileConfiguration>
-							</File>
-							<File
-								RelativePath="..\..\shared\Irrlicht\source\COGLES2NormalMapRenderer.h"
-								>
-								<FileConfiguration
-									Name="Debug GL|Win32"
-									ExcludedFromBuild="true"
-									>
-									<Tool
-										Name="VCCLCompilerTool"
-									/>
-								</FileConfiguration>
-							</File>
-							<File
-								RelativePath="..\..\shared\Irrlicht\source\COGLES2ParallaxMapRenderer.cpp"
-								>
-								<FileConfiguration
-									Name="Debug GL|Win32"
-									ExcludedFromBuild="true"
-									>
-									<Tool
-										Name="VCCLCompilerTool"
-									/>
-								</FileConfiguration>
-							</File>
-							<File
-								RelativePath="..\..\shared\Irrlicht\source\COGLES2ParallaxMapRenderer.h"
-								>
-								<FileConfiguration
-									Name="Debug GL|Win32"
-									ExcludedFromBuild="true"
-									>
-									<Tool
-										Name="VCCLCompilerTool"
-									/>
-								</FileConfiguration>
-							</File>
-							<File
-								RelativePath="..\..\shared\Irrlicht\source\COGLES2Renderer2D.cpp"
-								>
-								<FileConfiguration
-									Name="Debug GL|Win32"
-									ExcludedFromBuild="true"
-									>
-									<Tool
-										Name="VCCLCompilerTool"
-									/>
-								</FileConfiguration>
-							</File>
-							<File
-								RelativePath="..\..\shared\Irrlicht\source\COGLES2Renderer2D.h"
-								>
-								<FileConfiguration
-									Name="Debug GL|Win32"
-									ExcludedFromBuild="true"
-									>
-									<Tool
-										Name="VCCLCompilerTool"
-									/>
-								</FileConfiguration>
-							</File>
-							<File
-								RelativePath="..\..\shared\Irrlicht\source\COGLES2Texture.cpp"
-								>
-								<FileConfiguration
-									Name="Debug GL|Win32"
-									ExcludedFromBuild="true"
-									>
-									<Tool
-										Name="VCCLCompilerTool"
-									/>
-								</FileConfiguration>
-							</File>
-							<File
-								RelativePath="..\..\shared\Irrlicht\source\COGLES2Texture.h"
-								>
-								<FileConfiguration
-									Name="Debug GL|Win32"
-									ExcludedFromBuild="true"
-									>
-									<Tool
-										Name="VCCLCompilerTool"
-									/>
-								</FileConfiguration>
-							</File>
 							<File
 								RelativePath="..\..\shared\Irrlicht\source\COGLESDriver.cpp"
 								>
@@ -5970,6 +5778,202 @@
 							<File
 								RelativePath="..\..\shared\Irrlicht\source\CNullDriver.h"
 								>
+							</File>
+						</Filter>
+						<Filter
+							Name="OGLES2"
+							>
+							<File
+								RelativePath="..\..\shared\Irrlicht\source\COGLES2Driver.cpp"
+								>
+								<FileConfiguration
+									Name="Debug GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
+							</File>
+							<File
+								RelativePath="..\..\shared\Irrlicht\source\COGLES2Driver.h"
+								>
+								<FileConfiguration
+									Name="Debug GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
+							</File>
+							<File
+								RelativePath="..\..\shared\Irrlicht\source\COGLES2ExtensionHandler.cpp"
+								>
+								<FileConfiguration
+									Name="Debug GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
+							</File>
+							<File
+								RelativePath="..\..\shared\Irrlicht\source\COGLES2ExtensionHandler.h"
+								>
+								<FileConfiguration
+									Name="Debug GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
+							</File>
+							<File
+								RelativePath="..\..\shared\Irrlicht\source\COGLES2FixedPipelineRenderer.cpp"
+								>
+								<FileConfiguration
+									Name="Debug GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
+							</File>
+							<File
+								RelativePath="..\..\shared\Irrlicht\source\COGLES2FixedPipelineRenderer.h"
+								>
+								<FileConfiguration
+									Name="Debug GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
+							</File>
+							<File
+								RelativePath="..\..\shared\Irrlicht\source\COGLES2MaterialRenderer.cpp"
+								>
+								<FileConfiguration
+									Name="Debug GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
+							</File>
+							<File
+								RelativePath="..\..\shared\Irrlicht\source\COGLES2MaterialRenderer.h"
+								>
+								<FileConfiguration
+									Name="Debug GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
+							</File>
+							<File
+								RelativePath="..\..\shared\Irrlicht\source\COGLES2NormalMapRenderer.cpp"
+								>
+								<FileConfiguration
+									Name="Debug GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
+							</File>
+							<File
+								RelativePath="..\..\shared\Irrlicht\source\COGLES2NormalMapRenderer.h"
+								>
+								<FileConfiguration
+									Name="Debug GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
+							</File>
+							<File
+								RelativePath="..\..\shared\Irrlicht\source\COGLES2ParallaxMapRenderer.cpp"
+								>
+								<FileConfiguration
+									Name="Debug GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
+							</File>
+							<File
+								RelativePath="..\..\shared\Irrlicht\source\COGLES2ParallaxMapRenderer.h"
+								>
+								<FileConfiguration
+									Name="Debug GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
+							</File>
+							<File
+								RelativePath="..\..\shared\Irrlicht\source\COGLES2Renderer2D.cpp"
+								>
+								<FileConfiguration
+									Name="Debug GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
+							</File>
+							<File
+								RelativePath="..\..\shared\Irrlicht\source\COGLES2Renderer2D.h"
+								>
+								<FileConfiguration
+									Name="Debug GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
+							</File>
+							<File
+								RelativePath="..\..\shared\Irrlicht\source\COGLES2Texture.cpp"
+								>
+								<FileConfiguration
+									Name="Debug GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
+							</File>
+							<File
+								RelativePath="..\..\shared\Irrlicht\source\COGLES2Texture.h"
+								>
+								<FileConfiguration
+									Name="Debug GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
 							</File>
 						</Filter>
 					</Filter>
