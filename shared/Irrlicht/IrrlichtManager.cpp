@@ -91,7 +91,7 @@ bool IrrlichtManager::Init(irr::IEventReceiver *pEventReceiver)
 {
 	LogMsg("initting irrlicht");
 
-	bool bStencilBuffer = false;
+	bool bStencilBuffer = true;
 	
     //E_DRIVER_TYPE driverType = video::EDT_OGLES1;
     E_DRIVER_TYPE driverType = AppGetOGLESType(); //by stone

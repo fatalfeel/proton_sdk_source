@@ -13,6 +13,7 @@ using namespace io;
 #include "QuakeShaderMenu.h"
 #include "HouseMenu.h"
 #include "ShaderMenu.h"
+#include "StencilMenu.h"
 
 /*void MainMenuOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity sent from
 {
@@ -114,13 +115,14 @@ enum EnMenuSelect
     QUAKE,
     QUAKESHADER,
     HOUSESCENE,
-    HIGHSHADER
+    HIGHSHADER,
+	STENCIL
 };
 
 Entity* MainMenuCreate(Entity* pParentEnt)
 {
     Entity* pBG;
-	EnMenuSelect menuid = TERRAIN;
+	EnMenuSelect menuid = STENCIL;
     
     switch(menuid)
     {
@@ -146,6 +148,10 @@ Entity* MainMenuCreate(Entity* pParentEnt)
             
         case HIGHSHADER:
             pBG = ShaderMenuCreate(pParentEnt);
+            break;
+
+		case STENCIL:
+            pBG = StencilMenuCreate(pParentEnt);
             break;
     }
 

@@ -327,7 +327,7 @@ namespace irr
 		const core::dimension2d<u32>& windowSize = (core::dimension2d<u32>(640,480)),
 		u32 bits = 16,
 		bool fullscreen = false,
-		bool stencilbuffer = false,
+		bool stencilbuffer = true,
 		bool vsync = false,
 		IEventReceiver* receiver = 0);
 

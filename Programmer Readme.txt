@@ -19,11 +19,3 @@ xxxxxx/media/update_media.bat
 On MacOs
 chmod 777 xxxxxx/media/update_media.sh
 xxxxxx/media/update_media.sh
-
-4.
-This version do not have Stencil Shadow(node->addShadowVolumeSceneNode).
-If you want to impelement Stencil Shadow, download follows, then compare and modify.
-on OGLES1 OGLES2
-svn://svn.code.sf.net/p/irrlicht/code/branches/ogl-es
-on OpenGL
-svn://svn.code.sf.net/p/irrlicht/code/branches/releases/1.8

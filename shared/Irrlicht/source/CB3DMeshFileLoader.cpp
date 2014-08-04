@@ -952,7 +952,7 @@ bool CB3DMeshFileLoader::readChunkBRUS()
 		//Two textures:
 		if (B3dMaterial.Textures[1])
 		{
-			if (B3dMaterial.alpha==1.f)
+			/*if (B3dMaterial.alpha==1.f)
 			{
 				if (B3dMaterial.Textures[1]->Blend == 5) //(Multiply 2)
 					B3dMaterial.Material.MaterialType = video::EMT_LIGHTMAP_M2;
@@ -964,6 +964,40 @@ bool CB3DMeshFileLoader::readChunkBRUS()
 			{
 				B3dMaterial.Material.MaterialType = video::EMT_TRANSPARENT_VERTEX_ALPHA;
 				B3dMaterial.Material.ZWriteEnable = false;
+			}*/
+
+			//by stone
+			if (B3dMaterial.Textures[0]->Flags & 0x2) //(Alpha mapped)
+			{
+				if (B3dMaterial.fx & 4)
+				{
+					//they clicked "facetted" in max, let that mean "boolean alpha" mode, less processing. will cut off at 128 alpha
+					B3dMaterial.Material.MaterialType = video::EMT_TRANSPARENT_ALPHA_CHANNEL_REF; //this would be faster!
+
+				} 
+				else
+				{
+					//normal slow alpha
+					B3dMaterial.Material.MaterialType = video::EMT_TRANSPARENT_ALPHA_CHANNEL;
+					B3dMaterial.Material.ZWriteEnable = false;
+
+				}
+			} 
+			else
+			{
+				if (B3dMaterial.alpha==1.f)
+				{
+					if (B3dMaterial.Textures[1]->Blend == 5) //(Multiply 2)
+						B3dMaterial.Material.MaterialType = video::EMT_LIGHTMAP_M2;
+					else
+						B3dMaterial.Material.MaterialType = video::EMT_LIGHTMAP;
+					B3dMaterial.Material.Lighting = false;
+				}
+				else
+				{
+					B3dMaterial.Material.MaterialType = video::EMT_TRANSPARENT_VERTEX_ALPHA;
+					B3dMaterial.Material.ZWriteEnable = false;
+				}
 			}
 		}
 		else if (B3dMaterial.Textures[0]) //One texture:
@@ -971,8 +1005,23 @@ bool CB3DMeshFileLoader::readChunkBRUS()
 			// Flags & 0x1 is usual SOLID, 0x8 is mipmap (handled before)
 			if (B3dMaterial.Textures[0]->Flags & 0x2) //(Alpha mapped)
 			{
-				B3dMaterial.Material.MaterialType = video::EMT_TRANSPARENT_ALPHA_CHANNEL;
-				B3dMaterial.Material.ZWriteEnable = false;
+				//B3dMaterial.Material.MaterialType = video::EMT_TRANSPARENT_ALPHA_CHANNEL;
+				//B3dMaterial.Material.ZWriteEnable = false;
+				
+				//by stone
+				if (B3dMaterial.fx & 4)
+				{
+					//they clicked "facetted" in max, let that mean "boolean alpha" mode, less processing. will cut off at 128 alpha
+					B3dMaterial.Material.MaterialType = video::EMT_TRANSPARENT_ALPHA_CHANNEL_REF; //this would be faster!
+
+				} 
+				else
+				{
+					//normal slow alpha
+					B3dMaterial.Material.MaterialType = video::EMT_TRANSPARENT_ALPHA_CHANNEL;
+					B3dMaterial.Material.ZWriteEnable = false;
+
+				}
 			}
 			else if (B3dMaterial.Textures[0]->Flags & 0x4) //(Masked)
 				B3dMaterial.Material.MaterialType = video::EMT_TRANSPARENT_ALPHA_CHANNEL_REF; // TODO: create color key texture

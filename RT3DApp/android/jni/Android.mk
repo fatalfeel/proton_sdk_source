@@ -103,7 +103,7 @@ $(IRRSRC)/CSkyBoxSceneNode.cpp $(IRRSRC)/CSkyDomeSceneNode.cpp $(IRRSRC)/CSphere
 \
 $(IRRSRC)/CNullDriver.cpp $(IRRSRC)/COGLESDriver.cpp $(IRRSRC)/COGLESExtensionHandler.cpp $(IRRSRC)/COGLESTexture.cpp $(IRRSRC)/COGLES2Driver.cpp $(IRRSRC)/COGLES2ExtensionHandler.cpp $(IRRSRC)/COGLES2Texture.cpp $(IRRSRC)/COGLES2FixedPipelineRenderer.cpp $(IRRSRC)/COGLES2MaterialRenderer.cpp $(IRRSRC)/COGLES2NormalMapRenderer.cpp $(IRRSRC)/COGLES2ParallaxMapRenderer.cpp $(IRRSRC)/COGLES2Renderer2D.cpp $(IRRSRC)/BuiltInFont.cpp \
 \
-$(APP)/App.cpp $(APP)/GUI/MainMenu.cpp $(APP)/GUI/Mesh3DMenu.cpp $(APP)/GUI/QuakeMenu.cpp $(APP)/GUI/QuakeShaderMenu.cpp $(APP)/GUI/HouseMenu.cpp $(APP)/GUI/TerrainMenu.cpp $(APP)/GUI/ShaderMenu.cpp \
+$(APP)/App.cpp $(APP)/GUI/MainMenu.cpp $(APP)/GUI/Mesh3DMenu.cpp $(APP)/GUI/QuakeMenu.cpp $(APP)/GUI/QuakeShaderMenu.cpp $(APP)/GUI/HouseMenu.cpp $(APP)/GUI/TerrainMenu.cpp $(APP)/GUI/ShaderMenu.cpp $(APP)/GUI/StencilMenu.cpp \
 \
 $(APP)/Component/EventControlComponent.cpp
 

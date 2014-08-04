@@ -504,6 +504,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\source\GUI\StencilMenu.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\source\GUI\StencilMenu.h"
+					>
+				</File>
+				<File
 					RelativePath="..\source\GUI\TerrainMenu.cpp"
 					>
 				</File>

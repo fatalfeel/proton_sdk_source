@@ -74,7 +74,8 @@ COpenGLTexture::COpenGLTexture(const io::path& name, COpenGLDriver* driver)
 	TextureName(0), InternalFormat(GL_RGBA), PixelFormat(GL_BGRA_EXT),
 	PixelType(GL_UNSIGNED_BYTE), MipLevelStored(0), HasMipMaps(true),
 	MipmapLegacyMode(true), IsRenderTarget(false), IsCompressed(false),
-	AutomaticMipmapUpdate(false), ReadOnlyLock(false), KeepImage(false)
+	AutomaticMipmapUpdate(false), 
+	ReadOnlyLock(false), KeepImage(true)
 {
 	#ifdef _DEBUG
 	setDebugName("COpenGLTexture");
@@ -945,8 +946,7 @@ void COpenGLTexture::Reload()
 			}
 
 			glGenTextures(1, &TextureName);
-			glBindTexture( GL_TEXTURE_2D, TextureName);
-
+			//glBindTexture( GL_TEXTURE_2D, TextureName);
 			uploadTexture(true, 0);
 											
 			if (bIsFont)
