@@ -153,11 +153,12 @@ void Mesh3DInitScene()
 	}
 
 //////////////////////////////////cam/////////////////////////////////////////////    
-   	ICameraSceneNode* pCam = smgr->addCameraSceneNode(0, vector3df(0,2,-10));
+   	ICameraSceneNode* camera = smgr->addCameraSceneNodeFPS(0, 100.0f, .02f, 0, 0, 0, true, 1.0f);
+	//camera->addCameraSceneNode(0, vector3df(0,2,-10));
+	camera->setPosition(core::vector3df(0,2,-10));
 	float fov = float(GetPrimaryGLX())/ float(GetPrimaryGLY());
-	LogMsg("Setting fov to %.2f", fov);
-	pCam->setAspectRatio(fov);
-	pCam->setFOV((120 * M_PI / 360.0f));
+	camera->setAspectRatio(fov);
+	camera->setFOV((120 * M_PI / 360.0f));
 
 #ifdef _IRR_COMPILE_WITH_GUI_
 	EventControlComponent* receiver = new EventControlComponent();
