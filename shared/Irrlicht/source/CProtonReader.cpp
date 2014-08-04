@@ -123,7 +123,7 @@ const IFileList* CProtonReader::getFileList() const
 //! opens a file by file name
 IReadFile* CProtonReader::createAndOpenFile(const io::path& filename)
 {
-	int				size,apk_size;
+	int				size;
 	int				pos_slash, pos_dot;
 	unsigned int	decompressedSize;
 	//std::string	workingDir;
@@ -132,7 +132,6 @@ IReadFile* CProtonReader::createAndOpenFile(const io::path& filename)
 	std::string		load_data;
 	FileSystemZip*	pfilesystem;
 	byte*			pDecompressedData;
-	byte*			apk_buffer;
 	
 #ifdef _DEBUG
     
