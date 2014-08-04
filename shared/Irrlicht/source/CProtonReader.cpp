@@ -181,6 +181,8 @@ IReadFile* CProtonReader::createAndOpenFile(const io::path& filename)
 	
 	if (pBytes)
 	{
+		LogError("Proton open file %s OK", filename.c_str());
+		
 		if (IsAPackedFile(pBytes)) //applicable to rttex files
 		{
 			//let's decompress it to memory before passing it back

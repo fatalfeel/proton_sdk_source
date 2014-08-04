@@ -141,10 +141,10 @@ byte* FileManager::Get( string fileName, int *pSizeOut, bool bAddBasePath, bool 
         FILE *fp = fopen(fileName.c_str(), "rb");
         if (!fp)
         {
-				
             //not really an error, we might just want to know if a file exists
             LogError("Proton FileManager says can't open %s", fileName.c_str());
-            //file not found	
+            
+			//file not found	
             if (!fp)
                 return NULL;
         }
