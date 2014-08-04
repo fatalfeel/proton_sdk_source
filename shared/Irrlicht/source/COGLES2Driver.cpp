@@ -2216,32 +2216,38 @@ namespace video
 		else
 			BridgeCalls->setDepthMask(false);
 
-		// Back face culling
-		if ((material.FrontfaceCulling) && (material.BackfaceCulling))
+		if (resetAllRenderStates || (lastmaterial.FrontfaceCulling != material.FrontfaceCulling) || (lastmaterial.BackfaceCulling != material.BackfaceCulling))
 		{
-			BridgeCalls->setCullFaceFunc(GL_FRONT_AND_BACK);
-			BridgeCalls->setCullFace(true);
-		}
-		else if (material.BackfaceCulling)
-		{
-			BridgeCalls->setCullFaceFunc(GL_BACK);
-			BridgeCalls->setCullFace(true);
-		}
-		else if (material.FrontfaceCulling)
-		{
-			BridgeCalls->setCullFaceFunc(GL_FRONT);
-			BridgeCalls->setCullFace(true);
-		}
-		else
-		{
-			BridgeCalls->setCullFace(false);
+			// Back face culling
+			if ((material.FrontfaceCulling) && (material.BackfaceCulling))
+			{
+				BridgeCalls->setCullFaceFunc(GL_FRONT_AND_BACK);
+				BridgeCalls->setCullFace(true);
+			}
+			else if (material.BackfaceCulling)
+			{
+				BridgeCalls->setCullFaceFunc(GL_BACK);
+				BridgeCalls->setCullFace(true);
+			}
+			else if (material.FrontfaceCulling)
+			{
+				BridgeCalls->setCullFaceFunc(GL_FRONT);
+				BridgeCalls->setCullFace(true);
+			}
+			else
+			{
+				BridgeCalls->setCullFace(false);
+			}
 		}
 
-		// Color Mask
-		BridgeCalls->setColorMask(	(material.ColorMask & ECP_RED)?GL_TRUE:GL_FALSE,
-									(material.ColorMask & ECP_GREEN)?GL_TRUE:GL_FALSE,
-									(material.ColorMask & ECP_BLUE)?GL_TRUE:GL_FALSE,
-									(material.ColorMask & ECP_ALPHA)?GL_TRUE:GL_FALSE  );
+		if (resetAllRenderStates || lastmaterial.ColorMask != material.ColorMask)
+		{
+			// Color Mask
+			BridgeCalls->setColorMask(	(material.ColorMask & ECP_RED)?GL_TRUE:GL_FALSE,
+										(material.ColorMask & ECP_GREEN)?GL_TRUE:GL_FALSE,
+										(material.ColorMask & ECP_BLUE)?GL_TRUE:GL_FALSE,
+										(material.ColorMask & ECP_ALPHA)?GL_TRUE:GL_FALSE  );
+		}
 			
 		// Blend Equation
 		if (resetAllRenderStates|| lastmaterial.BlendOperation != material.BlendOperation)
