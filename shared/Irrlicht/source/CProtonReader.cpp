@@ -132,7 +132,11 @@ IReadFile* CProtonReader::createAndOpenFile(const io::path& filename)
 	std::string		load_data;
 	FileSystemZip*	pfilesystem;
 	byte*			pDecompressedData;
-	
+#ifdef ANDROID_NDK
+	int				apk_size;
+	byte*			apk_buffer;
+#endif
+
 #ifdef _DEBUG
     
   //  LogMsg("CProtonReader: going open %s", filename.c_str());
@@ -180,7 +184,7 @@ IReadFile* CProtonReader::createAndOpenFile(const io::path& filename)
 	
 	if (pBytes)
 	{
-		LogError("Proton open file %s OK", filename.c_str());
+		LogMsg("Proton open file %s OK", filename.c_str());
 		
 		if (IsAPackedFile(pBytes)) //applicable to rttex files
 		{

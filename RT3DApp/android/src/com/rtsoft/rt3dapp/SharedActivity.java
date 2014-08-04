@@ -1290,7 +1290,7 @@ class AppGLSurfaceView extends GLSurfaceView
     	super(context);
         app = _app;
 	
-		setEGLConfigChooser(8, 8, 8, 8, 16, 1);
+		setEGLConfigChooser(8, 8, 8, 8, 16, 8);
 		//getHolder().setFormat(PixelFormat.TRANSLUCENT);
         
         //by stone, Create an OGLES2 context

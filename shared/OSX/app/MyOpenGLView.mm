@@ -37,7 +37,7 @@ CVReturn MyDisplayLinkCallback(CVDisplayLinkRef      displayLink,
     {
 		kCGLPFAAccelerated,
 		kCGLPFANoRecovery,
-        NSOpenGLPFAStencilSize,1,
+        NSOpenGLPFAStencilSize,8,
 		kCGLPFADoubleBuffer,
 		kCGLPFAColorSize, 24,
 		kCGLPFADepthSize, 16,

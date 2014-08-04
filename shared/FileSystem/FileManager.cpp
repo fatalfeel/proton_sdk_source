@@ -142,7 +142,7 @@ byte* FileManager::Get( string fileName, int *pSizeOut, bool bAddBasePath, bool 
         if (!fp)
         {
             //not really an error, we might just want to know if a file exists
-            LogError("Proton FileManager says can't open %s", fileName.c_str());
+            LogError("FileManager can't open %s try zip now", fileName.c_str());
             
 			//file not found	
             if (!fp)
