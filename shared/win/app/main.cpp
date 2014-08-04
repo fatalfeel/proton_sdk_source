@@ -873,8 +873,8 @@ bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
 		0,											// Shift Bit Ignored
 		0,											// No Accumulation Buffer
 		0, 0, 0, 0,									// Accumulation Bits Ignored
-		16,											// 16Bit Z-Buffer (Depth Buffer)  
-		1,											// Yes Stencil Buffer
+		16,											// 16 bits Z-Buffer (Depth Buffer)  
+		8,											// Yes 8bits Stencil Buffer
 		0,											// No Auxiliary Buffer
 		PFD_MAIN_PLANE,								// Main Drawing Layer
 		0,											// Reserved
