@@ -2168,7 +2168,7 @@ namespace video
 	void COGLES2Driver::setBasicRenderStates(const SMaterial& material, const SMaterial& lastmaterial, bool resetAllRenderStates)
 	{
 		// ZBuffer
-		if (resetAllRenderStates || lastmaterial.ZBuffer != material.ZBuffer)
+		//if (resetAllRenderStates || lastmaterial.ZBuffer != material.ZBuffer)
 		{
 			switch (material.ZBuffer)
 			{
@@ -2211,12 +2211,15 @@ namespace video
 		}
 
 		// ZWrite
-		if (material.ZWriteEnable && (AllowZWriteOnTransparent || !material.isTransparent()))
+		//if (material.ZWriteEnable && (AllowZWriteOnTransparent || !material.isTransparent()))
+		if ( material.ZWriteEnable 
+			 && 
+			 (AllowZWriteOnTransparent || (material.BlendOperation == EBO_NONE && !MaterialRenderers[material.MaterialType].Renderer->isTransparent())) )
 			BridgeCalls->setDepthMask(true);
 		else
 			BridgeCalls->setDepthMask(false);
 
-		if (resetAllRenderStates || (lastmaterial.FrontfaceCulling != material.FrontfaceCulling) || (lastmaterial.BackfaceCulling != material.BackfaceCulling))
+		//if (resetAllRenderStates || (lastmaterial.FrontfaceCulling != material.FrontfaceCulling) || (lastmaterial.BackfaceCulling != material.BackfaceCulling))
 		{
 			// Back face culling
 			if ((material.FrontfaceCulling) && (material.BackfaceCulling))
@@ -2240,7 +2243,7 @@ namespace video
 			}
 		}
 
-		if (resetAllRenderStates || lastmaterial.ColorMask != material.ColorMask)
+		//if (resetAllRenderStates || lastmaterial.ColorMask != material.ColorMask)
 		{
 			// Color Mask
 			BridgeCalls->setColorMask(	(material.ColorMask & ECP_RED)?GL_TRUE:GL_FALSE,
@@ -2250,7 +2253,7 @@ namespace video
 		}
 			
 		// Blend Equation
-		if (resetAllRenderStates|| lastmaterial.BlendOperation != material.BlendOperation)
+		//if (resetAllRenderStates|| lastmaterial.BlendOperation != material.BlendOperation)
 		{
 			if (material.BlendOperation == EBO_NONE)
 			{
@@ -2275,6 +2278,22 @@ namespace video
 					break;
 				}
 			}
+		}
+
+		// Blend Factor
+		if (IR(material.BlendFactor) & 0xFFFFFFFF)
+		{
+		    E_BLEND_FACTOR srcRGBFact = EBF_ZERO;
+		    E_BLEND_FACTOR dstRGBFact = EBF_ZERO;
+		    E_BLEND_FACTOR srcAlphaFact = EBF_ZERO;
+		    E_BLEND_FACTOR dstAlphaFact = EBF_ZERO;
+		    E_MODULATE_FUNC modulo = EMFN_MODULATE_1X;
+		    u32 alphaSource = 0;
+
+		    unpack_textureBlendFuncSeparate(srcRGBFact, dstRGBFact, srcAlphaFact, dstAlphaFact, modulo, alphaSource, material.BlendFactor);
+
+			BridgeCalls->setBlendFuncSeparate(	getGLBlend(srcRGBFact), getGLBlend(dstRGBFact),
+												getGLBlend(srcAlphaFact), getGLBlend(dstAlphaFact));
 		}
 
 		// Anti aliasing
@@ -3168,7 +3187,13 @@ namespace video
 	}
 
 	COGLES2CallBridge::COGLES2CallBridge(COGLES2Driver* driver) : Driver(driver),
-		BlendSource(GL_ONE), BlendDestination(GL_ZERO), Blend(false),
+		//BlendSource(GL_ONE), BlendDestination(GL_ZERO),
+		BlendEquation(GL_FUNC_ADD), 
+		BlendSourceRGB(GL_ONE), 
+		BlendDestinationRGB(GL_ZERO),
+		BlendSourceAlpha(GL_ONE), 
+		BlendDestinationAlpha(GL_ZERO),
+		Blend(false),
 		CullFaceMode(GL_BACK), CullFace(false),
 		DepthFunc(GL_LESS), DepthMask(true), DepthTest(false),
 		Program(0), ActiveTexture(GL_TEXTURE0), Viewport(core::rect<s32>(0, 0, 0, 0))
@@ -3194,7 +3219,7 @@ namespace video
 		glDisable(GL_DEPTH_TEST);
 	}
 
-	void COGLES2CallBridge::setBlendFunc(GLenum source, GLenum destination)
+	/*void COGLES2CallBridge::setBlendFunc(GLenum source, GLenum destination)
 	{
 		if (BlendSource != source || BlendDestination != destination)
 		{
@@ -3202,6 +3227,19 @@ namespace video
 
 			BlendSource = source;
 			BlendDestination = destination;
+		}
+	}*/
+	void COGLES2CallBridge::setBlendFunc(GLenum source, GLenum destination)
+	{
+		if (BlendSourceRGB != source || BlendDestinationRGB != destination ||
+		    BlendSourceAlpha != source || BlendDestinationAlpha != destination)
+		{
+			glBlendFunc(source, destination);
+
+			BlendSourceRGB = source;
+			BlendDestinationRGB = destination;
+			BlendSourceAlpha = source;
+			BlendDestinationAlpha = destination;
 		}
 	}
 
@@ -3215,6 +3253,37 @@ namespace video
 				glDisable(GL_BLEND);
 
 			Blend = enable;
+		}
+	}
+
+	void COGLES2CallBridge::setBlendEquation(GLenum mode)
+	{
+		if (BlendEquation != mode)
+		{
+			glBlendEquation(mode);
+
+			BlendEquation = mode;
+		}
+	}
+
+	void COGLES2CallBridge::setBlendFuncSeparate(GLenum sourceRGB, GLenum destinationRGB, GLenum sourceAlpha, GLenum destinationAlpha)
+	{
+		if (sourceRGB != sourceAlpha || destinationRGB != destinationAlpha)
+		{
+		    if (BlendSourceRGB != sourceRGB || BlendDestinationRGB != destinationRGB ||
+		        BlendSourceAlpha != sourceAlpha || BlendDestinationAlpha != destinationAlpha)
+		    {
+		        glBlendFuncSeparate(sourceRGB, destinationRGB, sourceAlpha, destinationAlpha);
+
+				BlendSourceRGB = sourceRGB;
+				BlendDestinationRGB = destinationRGB;
+				BlendSourceAlpha = sourceAlpha;
+				BlendDestinationAlpha = destinationAlpha;
+		    }
+		}
+		else
+		{
+		    setBlendFunc(sourceRGB, destinationRGB);
 		}
 	}
 

@@ -309,10 +309,14 @@ void App::OnExitApp(VariantList *pVarList)
 
 	OSMessage o;
 	o.m_type = OSMessage::MESSAGE_FINISH_APP;
-	GetBaseApp()->AddOSMessage(o);
+	BaseApp::GetBaseApp()->AddOSMessage(o);
 }
 
-const char * GetAppName() {return "RTPhysics";};
+const char * GetAppName() 
+{
+	return "RTPhysics";
+}
+
 //for palm webos, android, App Store
 const char * GetBundlePrefix()
 {

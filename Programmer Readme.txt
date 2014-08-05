@@ -19,3 +19,12 @@ xxxxxx/media/update_media.bat
 On MacOs
 chmod 777 xxxxxx/media/update_media.sh
 xxxxxx/media/update_media.sh
+
+4.
+Switch OGLES1 -> OGLES2
+a. find c++
+irr::video::E_DRIVER_TYPE AppGetOGLESType()
+return irr::video::EDT_OGLES1; -> return irr::video::EDT_OGLES2;
+b. find java
+public AppGLSurfaceView(Context context, SharedActivity _app)
+//setEGLContextClientVersion(2); -> setEGLContextClientVersion(2);

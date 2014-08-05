@@ -45,6 +45,7 @@ namespace irr
 {
 namespace video
 {
+	class COGLES1CallBridge;
 	class COGLES1Texture;
 
 	class COGLES1Driver : public CNullDriver, public IMaterialRendererServices, public COGLES1ExtensionHandler
@@ -312,14 +313,82 @@ namespace video
 
 		ITexture* createDepthTexture(ITexture* texture, bool shared=true);
 		void removeDepthTexture(ITexture* texture);
-        
-        //! sets the needed renderstates //by stone
-		void setRenderStates3DMode(); //SETH  I made this public because I need it to fix the renderstate
-        
-		//! sets the needed renderstates
-		void setRenderStates2DMode(bool alpha, bool texture, bool alphaChannel); //SETH  I made this public because I need it to fix the renderstate
+
+		void removeTexture(ITexture* texture);
+
+		//! Convert E_BLEND_FACTOR to OpenGL equivalent
+		GLenum getGLBlend(E_BLEND_FACTOR factor) const;
+
+		//! Get bridge calls.
+		COGLES1CallBridge* getBridgeCalls() const;
 
 	private:
+
+		class STextureStageCache
+		{
+		public:
+			STextureStageCache()
+			{
+				for (u32 i = 0; i < MATERIAL_MAX_TEXTURES; ++i)
+					CurrentTexture[i] = 0;
+			}
+
+			~STextureStageCache()
+			{
+				clear();
+			}
+
+			void set(u32 stage, const ITexture* tex)
+			{
+				if (stage < MATERIAL_MAX_TEXTURES)
+				{
+					const ITexture* oldTexture = CurrentTexture[stage];
+
+					if (tex)
+						tex->grab();
+
+					CurrentTexture[stage] = tex;
+
+					if (oldTexture)
+						oldTexture->drop();
+				}
+			}
+
+			const ITexture* operator[](int stage) const
+			{
+				if ((u32)stage < MATERIAL_MAX_TEXTURES)
+					return CurrentTexture[stage];
+				else
+					return 0;
+			}
+
+			void remove(ITexture* tex)
+			{
+				for (s32 i = MATERIAL_MAX_TEXTURES-1; i>= 0; --i)
+				{
+					if (CurrentTexture[i] == tex)
+					{
+						tex->drop();
+						CurrentTexture[i] = 0;
+					}
+				}
+			}
+
+			void clear()
+			{
+				for (u32 i = 0; i < MATERIAL_MAX_TEXTURES; ++i)
+				{
+					if (CurrentTexture[i])
+					{
+						CurrentTexture[i]->drop();
+						CurrentTexture[i] = 0;
+					}
+				}
+			}
+
+		private:
+			const ITexture* CurrentTexture[MATERIAL_MAX_TEXTURES];
+		};
 
 		void uploadClipPlane(u32 index);
 
@@ -343,10 +412,10 @@ namespace video
 		GLint getTextureWrapMode(u8 clamp) const;
 
 		//! sets the needed renderstates
-		//void setRenderStates3DMode();
+		void setRenderStates3DMode();
 
 		//! sets the needed renderstates
-		//void setRenderStates2DMode(bool alpha, bool texture, bool alphaChannel);
+		void setRenderStates2DMode(bool alpha, bool texture, bool alphaChannel);
 
 		// returns the current size of the screen or rendertarget
 		virtual const core::dimension2d<u32>& getCurrentRenderTargetSize() const;
@@ -378,7 +447,7 @@ namespace video
 
 		SMaterial Material, LastMaterial;
 		COGLES1Texture* RenderTargetTexture;
-		const ITexture* CurrentTexture[MATERIAL_MAX_TEXTURES];
+		STextureStageCache CurrentTexture;
 		core::array<ITexture*> DepthTextures;
 		core::array<core::plane3df> UserClipPlane;
 		core::array<bool> UserClipPlaneEnabled;
@@ -405,6 +474,8 @@ namespace video
 		};
 		core::array<RequestedLight> RequestedLights;
 
+		COGLES1CallBridge* BridgeCalls;
+
 #ifdef _IRR_COMPILE_WITH_WINDOWS_DEVICE_
 		HDC HDc;
 #endif
@@ -419,6 +490,35 @@ namespace video
 		EGLSurface EglSurface;
 		EGLContext EglContext;
 #endif
+	};
+
+	//! This bridge between Irlicht pseudo OpenGL ES1.x calls
+	//! and true OpenGL ES1.x calls.
+
+	class COGLES1CallBridge
+	{
+	public:
+		COGLES1CallBridge(COGLES1Driver* driver);
+
+		// Blending calls.
+
+		void setBlendEquation(GLenum mode);
+
+		void setBlendFunc(GLenum source, GLenum destination);
+
+		void setBlendFuncSeparate(GLenum sourceRGB, GLenum destinationRGB, GLenum sourceAlpha, GLenum destinationAlpha);
+
+		void setBlend(bool enable);
+
+	private:
+		COGLES1Driver* Driver;
+
+		GLenum BlendEquation;
+		GLenum BlendSourceRGB;
+		GLenum BlendDestinationRGB;
+		GLenum BlendSourceAlpha;
+		GLenum BlendDestinationAlpha;
+		bool Blend;
 	};
 
 } // end namespace video

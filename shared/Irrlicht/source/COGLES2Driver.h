@@ -496,6 +496,10 @@ namespace video
 
 		void setBlend(bool enable);
 
+		void setBlendEquation(GLenum mode);
+
+		void setBlendFuncSeparate(GLenum sourceRGB, GLenum destinationRGB, GLenum sourceAlpha, GLenum destinationAlpha);
+
 		// Color Mask.
 
 		void setColorMask(bool red, bool green, bool blue, bool alpha);
@@ -531,8 +535,14 @@ namespace video
     private:
         COGLES2Driver* Driver;
 
-		GLenum BlendSource;
-		GLenum BlendDestination;
+		//GLenum BlendSource;
+		//GLenum BlendDestination;
+		GLenum BlendEquation;
+		GLenum BlendSourceRGB;
+		GLenum BlendDestinationRGB;
+		GLenum BlendSourceAlpha;
+		GLenum BlendDestinationAlpha;
+				
 		bool Blend;
 
 		bool ColorMask[4];

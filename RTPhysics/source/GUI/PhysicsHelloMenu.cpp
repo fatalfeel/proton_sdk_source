@@ -73,32 +73,21 @@ void HelloMenuInitScene()
     
 	smgr->getParameters()->setAttribute(B3D_LOADER_IGNORE_MIPMAP_FLAG, true);
 
-	scene::ICameraSceneNode* camera =
-	smgr->addCameraSceneNodeFPS(0,100.0f,0.1f, 0, 0, 0, true, 3.f);
+	scene::ICameraSceneNode* camera = smgr->addCameraSceneNodeFPS(0,100.0f,0.1f, 0, 0, 0, true, 3.f);
 	camera->setPosition(core::vector3df(50,15,70)); 
 	camera->setTarget(core::vector3df(20,7,10));
-
-	//	scene::ICameraSceneNode* camera = smgr->addCameraSceneNodeFPS(0,100.0f,0.5f);
 
 	float fov = float(GetPrimaryGLX())/ float(GetPrimaryGLY());
 	LogMsg("Setting fov to %.2f", fov);
 	camera->setAspectRatio(fov);
 	camera->setFOV((120 * M_PI / 360.0f));
-  
-	//camera->setFarValue(700.0f);
-	/*
-	The mouse cursor needs not be visible, so we hide it via the
-	irr::IrrlichtDevice::ICursorControl.
-	*/
-
-	driver->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
-
+	
 	device->getSceneManager()->addLightSceneNode(0, vector3df(20, 40, -50), SColorf(1.0f, 1.0f, 1.0f), 4000.0f);
     device->getSceneManager()->addLightSceneNode(0, vector3df(-20, 40, -50), SColorf(1.0f, 1.0f, 1.0f), 4000.0f);
 
-	irrBulletWorld *world = IrrlichtManager::GetIrrlichtManager()->GetBulletWorld();
+	irrBulletWorld* world = IrrlichtManager::GetIrrlichtManager()->GetBulletWorld();
 	
-	
+	driver->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
 
 	scene::ISceneNode* skybox = 
 	smgr->addSkyBoxSceneNode(IrrlichtManager::GetIrrlichtManager()->GetTexture("game/irrlicht2_up.jpg"),
@@ -120,10 +109,9 @@ void HelloMenuInitScene()
 	Node->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
 	Node->setMaterialTexture(0,IrrlichtManager::GetIrrlichtManager()->GetTexture("game/rockwall.jpg"));
 
-	ICollisionShape *shape = new IBoxShape(Node, 0, false);
-	//shape->setMargin(0.01);
+	IRigidBody*			body;
+	ICollisionShape*	shape = new IBoxShape(Node, 0, false);
 	
-    IRigidBody *body;
 	body = world->addRigidBody(shape);
 
 	//add the blocks

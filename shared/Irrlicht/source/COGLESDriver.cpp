@@ -262,12 +262,10 @@ COGLES1Driver::COGLES1Driver(const SIrrlichtCreationParameters& params,
     CNullDriver::ScreenSize = WindowSize;
     CNullDriver::ViewPort = core::rect<s32>(core::position2d<s32>(0,0), core::dimension2di(WindowSize));
     */
-    
+#endif
 	//genericDriverInit(WindowSize, params.Stencilbuffer);
     genericDriverInit(params.WindowSize, params.Stencilbuffer);
-#endif
 }
-
 
 //! destructor
 COGLES1Driver::~COGLES1Driver()
@@ -316,23 +314,18 @@ bool COGLES1Driver::genericDriverInit(const core::dimension2d<u32>& screenSize, 
 	Name=glGetString(GL_VERSION);
 	printVersion();
 
-#if defined(EGL_VERSION_1_0)
-	os::Printer::log(eglQueryString(EglDisplay, EGL_CLIENT_APIS));
-#endif
-
 	// print renderer information
 	vendorName = glGetString(GL_VENDOR);
 	os::Printer::log(vendorName.c_str(), ELL_INFORMATION);
 
-	u32 i;
-	for (i=0; i<MATERIAL_MAX_TEXTURES; ++i)
-		CurrentTexture[i]=0;
+	CurrentTexture.clear();
+
 	// load extensions
-	initExtensions(this,
-#if defined(EGL_VERSION_1_0)
-			EglDisplay,
-#endif
-			stencilBuffer);
+	initExtensions(this, stencilBuffer);
+
+	if (!BridgeCalls)
+		BridgeCalls = new COGLES1CallBridge(this);
+
 	StencilBuffer=stencilBuffer;
 
 	DriverAttributes->setAttribute("MaxTextures", MaxTextureUnits);
@@ -356,6 +349,8 @@ bool COGLES1Driver::genericDriverInit(const core::dimension2d<u32>& screenSize, 
 
 	UserClipPlane.reallocate(MaxUserClipPlanes);
 	UserClipPlaneEnabled.reallocate(MaxUserClipPlanes);
+
+	u32 i = 0;
 	for (i=0; i<MaxUserClipPlanes; ++i)
 	{
 		UserClipPlane.push_back(core::plane3df());
@@ -408,33 +403,29 @@ bool COGLES1Driver::genericDriverInit(const core::dimension2d<u32>& screenSize, 
 bool COGLES1Driver::OnAgainDriverInit() //by stone
 {
 	bool stencilBuffer = queryFeature(video::EVDF_STENCIL_BUFFER);
-	
+
 	Name=glGetString(GL_VERSION);
 	printVersion();
-
-#if defined(EGL_VERSION_1_0)
-	os::Printer::log(eglQueryString(EglDisplay, EGL_CLIENT_APIS));
-#endif
 
 	// print renderer information
 	vendorName = glGetString(GL_VENDOR);
 	os::Printer::log(vendorName.c_str(), ELL_INFORMATION);
 
-	u32 i;
-	for (i=0; i<MATERIAL_MAX_TEXTURES; ++i)
-		CurrentTexture[i]=0;
+	CurrentTexture.clear();
+
 	// load extensions
-	initExtensions(this,
-#if defined(EGL_VERSION_1_0)
-			EglDisplay,
-#endif
-			stencilBuffer);
-	
-	StencilBuffer = stencilBuffer;
+	initExtensions(this, stencilBuffer);
+
+	if(BridgeCalls)
+		delete BridgeCalls;
 
 	//deleteMaterialRenders();
 	//removeAllHardwareBuffers();
 	CNullDriver::OnAgainDriverInit(); //by stone
+
+	BridgeCalls = new COGLES1CallBridge(this);
+
+	StencilBuffer=stencilBuffer;
 
 	DriverAttributes->setAttribute("MaxTextures", MaxTextureUnits);
 	DriverAttributes->setAttribute("MaxSupportedTextures", MaxSupportedTextures);
@@ -457,6 +448,8 @@ bool COGLES1Driver::OnAgainDriverInit() //by stone
 
 	UserClipPlane.reallocate(MaxUserClipPlanes);
 	UserClipPlaneEnabled.reallocate(MaxUserClipPlanes);
+
+	u32 i = 0;
 	for (i=0; i<MaxUserClipPlanes; ++i)
 	{
 		UserClipPlane.push_back(core::plane3df());
@@ -484,7 +477,7 @@ bool COGLES1Driver::OnAgainDriverInit() //by stone
 	glHint(GL_POINT_SMOOTH_HINT, GL_FASTEST);
 	glDepthFunc(GL_LEQUAL);
 	glFrontFace( GL_CW );
-	
+
 	// create material renderers
 	createMaterialRenderers();
 
@@ -535,29 +528,15 @@ void COGLES1Driver::createMaterialRenderers()
 	addAndDropMaterialRenderer(new COGLES1MaterialRenderer_TRANSPARENT_REFLECTION_2_LAYER(this));
 
 	// add normal map renderers
-	//s32 tmp = 0;
-	//video::IMaterialRenderer* renderer = 0;
 // TODO ogl-es
 	addAndDropMaterialRenderer(new COGLES1MaterialRenderer_SOLID(this));
-//	renderer = new COGLES1NormalMapRenderer(this, tmp, MaterialRenderers[EMT_SOLID].Renderer);
-//	renderer->drop();
 	addAndDropMaterialRenderer(new COGLES1MaterialRenderer_SOLID(this));
-//	renderer = new COGLES1NormalMapRenderer(this, tmp, MaterialRenderers[EMT_TRANSPARENT_ADD_COLOR].Renderer);
-//	renderer->drop();
 	addAndDropMaterialRenderer(new COGLES1MaterialRenderer_SOLID(this));
-//	renderer = new COGLES1NormalMapRenderer(this, tmp, MaterialRenderers[EMT_TRANSPARENT_VERTEX_ALPHA].Renderer);
-//	renderer->drop();
 
 	// add parallax map renderers
 	addAndDropMaterialRenderer(new COGLES1MaterialRenderer_SOLID(this));
-//	renderer = new COGLES1ParallaxMapRenderer(this, tmp, MaterialRenderers[EMT_SOLID].Renderer);
-//	renderer->drop();
 	addAndDropMaterialRenderer(new COGLES1MaterialRenderer_SOLID(this));
-//	renderer = new COGLES1ParallaxMapRenderer(this, tmp, MaterialRenderers[EMT_TRANSPARENT_ADD_COLOR].Renderer);
-//	renderer->drop();
 	addAndDropMaterialRenderer(new COGLES1MaterialRenderer_SOLID(this));
-//	renderer = new COGLES1ParallaxMapRenderer(this, tmp, MaterialRenderers[EMT_TRANSPARENT_VERTEX_ALPHA].Renderer);
-//	renderer->drop();
 
 	// add basic 1 texture blending
 	addAndDropMaterialRenderer(new COGLES1MaterialRenderer_ONETEXTURE_BLEND(this));
@@ -779,8 +758,7 @@ bool COGLES1Driver::updateVertexHardwareBuffer(SHWBufferLink_opengl *HWBuffer)
 
 	extGlBindBuffer(GL_ARRAY_BUFFER, HWBuffer->vbo_verticesID );
 
-	//copy data to graphics card
-	glGetError(); // clear error storage
+	// copy data to graphics card
 	if (!newBuffer)
 		extGlBufferSubData(GL_ARRAY_BUFFER, 0, vertexCount * vertexSize, buffer.const_pointer());
 	else
@@ -795,7 +773,7 @@ bool COGLES1Driver::updateVertexHardwareBuffer(SHWBufferLink_opengl *HWBuffer)
 
 	extGlBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	return (glGetError() == GL_NO_ERROR);
+	return (!testGLError());
 }
 
 
@@ -844,8 +822,7 @@ bool COGLES1Driver::updateIndexHardwareBuffer(SHWBufferLink_opengl *HWBuffer)
 
 	extGlBindBuffer(GL_ELEMENT_ARRAY_BUFFER, HWBuffer->vbo_indicesID);
 
-	//copy data to graphics card
-	glGetError(); // clear error storage
+	// copy data to graphics card
 	if (!newBuffer)
 		extGlBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, indexCount * indexSize, indices);
 	else
@@ -860,7 +837,7 @@ bool COGLES1Driver::updateIndexHardwareBuffer(SHWBufferLink_opengl *HWBuffer)
 
 	extGlBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-	return (glGetError() == GL_NO_ERROR);
+	return (!testGLError());
 }
 
 
@@ -1323,7 +1300,7 @@ void COGLES1Driver::draw2DImage(const video::ITexture* texture,
 		if (!setActiveTexture(0, texture))
 			return;
 		setRenderStates2DMode(color.getAlpha()<255, true, useAlphaChannelOfTexture);
-		const GLint crop[] = {sourceRect.UpperLeftCorner.X, getCurrentRenderTargetSize().Height-sourceRect.LowerRightCorner.Y, sourceRect.getWidth(), sourceRect.getHeight()};
+		const GLint crop[] = {sourceRect.UpperLeftCorner.X, static_cast<GLint>(getCurrentRenderTargetSize().Height-sourceRect.LowerRightCorner.Y), sourceRect.getWidth(), sourceRect.getHeight()};
 		glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_CROP_RECT_OES, crop);
 
 		const bool isRTT = true;//texture->isRenderTarget();
@@ -1832,7 +1809,7 @@ bool COGLES1Driver::setActiveTexture(u32 stage, const video::ITexture* texture)
 	if (MultiTextureExtension)
 		extGlActiveTexture(GL_TEXTURE0 + stage);
 
-	CurrentTexture[stage]=texture;
+	CurrentTexture.set(stage,texture);
 
 	if (!texture)
 	{
@@ -1844,6 +1821,7 @@ bool COGLES1Driver::setActiveTexture(u32 stage, const video::ITexture* texture)
 	{
 		if (texture->getDriverType() != EDT_OGLES1)
 		{
+			CurrentTexture.set(stage, 0);
 			glDisable(GL_TEXTURE_2D);
 			os::Printer::log("Fatal Error: Tried to set a texture not owned by this driver.", ELL_ERROR);
 			return false;
@@ -2007,9 +1985,9 @@ void COGLES1Driver::setRenderStates3DMode()
 	if (CurrentRenderMode != ERM_3D)
 	{
 		// Reset Texture Stages
-		glDisable(GL_BLEND);
+		BridgeCalls->setBlend(false);
 		glDisable(GL_ALPHA_TEST);
-		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR);
+		BridgeCalls->setBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR);
 
 		// switch back the matrices
 		glMatrixMode(GL_MODELVIEW);
@@ -2227,10 +2205,9 @@ void COGLES1Driver::setBasicRenderStates(const SMaterial& material, const SMater
 			(material.TextureLayer[i].BilinearFilter || material.TextureLayer[i].TrilinearFilter) ? GL_LINEAR : GL_NEAREST);
 
 		if (material.getTexture(i) && material.getTexture(i)->hasMipMaps())
-            //SETH commented out the above check - it causes a crash on iOS with textures that use 3 textures at once, don't feel like debugging why right now
-            // the npot extensions need some checks, because APPLE
+			// the npot extensions need some checks, because APPLE
 			// npot is somewhat restricted and only support non-mipmap filter
-			/*if (queryFeature(EVDF_TEXTURE_NPOT) && !FeatureAvailable[IRR_OES_texture_npot] &&
+			if (queryFeature(EVDF_TEXTURE_NPOT) && !FeatureAvailable[IRR_OES_texture_npot] &&
 					(CurrentTexture[i]->getSize() != CurrentTexture[i]->getOriginalSize()))
 			{
 				glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
@@ -2238,7 +2215,7 @@ void COGLES1Driver::setBasicRenderStates(const SMaterial& material, const SMater
 					material.TextureLayer[i].BilinearFilter ? GL_LINEAR:
 					GL_NEAREST);
 			}
-			else*/
+			else
 			{
 				glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
 					material.TextureLayer[i].TrilinearFilter ? GL_LINEAR_MIPMAP_LINEAR :
@@ -2321,7 +2298,8 @@ void COGLES1Driver::setBasicRenderStates(const SMaterial& material, const SMater
 	// zwrite
 //	if (resetAllRenderStates || lastmaterial.ZWriteEnable != material.ZWriteEnable)
 	{
-		if (material.ZWriteEnable && (AllowZWriteOnTransparent || !material.isTransparent()))
+		if (material.ZWriteEnable && (AllowZWriteOnTransparent || (material.BlendOperation == EBO_NONE &&
+					!MaterialRenderers[material.MaterialType].Renderer->isTransparent())))
 		{
 			glDepthMask(GL_TRUE);
 		}
@@ -2380,7 +2358,62 @@ void COGLES1Driver::setBasicRenderStates(const SMaterial& material, const SMater
 			(material.ColorMask & ECP_BLUE)?GL_TRUE:GL_FALSE,
 			(material.ColorMask & ECP_ALPHA)?GL_TRUE:GL_FALSE);
 	}
- 
+
+	// Blend Equation
+	if (material.BlendOperation == EBO_NONE)
+		BridgeCalls->setBlend(false);
+	else
+	{
+		BridgeCalls->setBlend(true);
+
+		if (queryFeature(EVDF_BLEND_OPERATIONS))
+		{
+			switch (material.BlendOperation)
+			{
+			case EBO_ADD:
+#if defined(GL_OES_blend_subtract)
+				BridgeCalls->setBlendEquation(GL_FUNC_ADD_OES);
+#endif
+				break;
+			case EBO_SUBTRACT:
+#if defined(GL_OES_blend_subtract)
+				BridgeCalls->setBlendEquation(GL_FUNC_SUBTRACT_OES);
+#endif
+				break;
+			case EBO_REVSUBTRACT:
+#if defined(GL_OES_blend_subtract)
+				BridgeCalls->setBlendEquation(GL_FUNC_REVERSE_SUBTRACT_OES);
+#endif
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+    // Blend Factor
+	if (IR(material.BlendFactor) & 0xFFFFFFFF)
+	{
+        E_BLEND_FACTOR srcRGBFact = EBF_ZERO;
+        E_BLEND_FACTOR dstRGBFact = EBF_ZERO;
+        E_BLEND_FACTOR srcAlphaFact = EBF_ZERO;
+        E_BLEND_FACTOR dstAlphaFact = EBF_ZERO;
+        E_MODULATE_FUNC modulo = EMFN_MODULATE_1X;
+        u32 alphaSource = 0;
+
+        unpack_textureBlendFuncSeparate(srcRGBFact, dstRGBFact, srcAlphaFact, dstAlphaFact, modulo, alphaSource, material.BlendFactor);
+
+        if (queryFeature(EVDF_BLEND_SEPARATE))
+        {
+            BridgeCalls->setBlendFuncSeparate(getGLBlend(srcRGBFact), getGLBlend(dstRGBFact),
+                getGLBlend(srcAlphaFact), getGLBlend(dstAlphaFact));
+        }
+        else
+        {
+            BridgeCalls->setBlendFunc(getGLBlend(srcRGBFact), getGLBlend(dstRGBFact));
+        }
+	}
+
 	// thickness
 	if (resetAllRenderStates || lastmaterial.Thickness != material.Thickness)
 	{
@@ -2482,7 +2515,7 @@ void COGLES1Driver::setRenderStates2DMode(bool alpha, bool texture, bool alphaCh
 			LastMaterial = InitMaterial2D;
 		}*/
 
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 	
 	//by stone, fix gui bug
@@ -2500,13 +2533,14 @@ void COGLES1Driver::setRenderStates2DMode(bool alpha, bool texture, bool alphaCh
 
 	if (alphaChannel || alpha)
 	{
-		glEnable(GL_BLEND);
+		BridgeCalls->setBlend(true);
+		BridgeCalls->setBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_ALPHA_TEST);
 		glAlphaFunc(GL_GREATER, 0.f);
 	}
 	else
 	{
-		glDisable(GL_BLEND);
+		BridgeCalls->setBlend(false);
 		glDisable(GL_ALPHA_TEST);
 	}
 
@@ -2663,6 +2697,8 @@ void COGLES1Driver::assignHardwareLight(u32 lightIndex)
 		glLightf(lidx, GL_SPOT_EXPONENT, 0.0f);
 		glLightf(lidx, GL_SPOT_CUTOFF, 180.0f);
 	break;
+	case video::ELT_COUNT:
+		return;
 	}
 
 	// set diffuse color
@@ -2864,11 +2900,9 @@ void COGLES1Driver::drawStencilShadowVolume(const core::array<core::vector3df>& 
 }
 
 
-void COGLES1Driver::drawStencilShadow(	bool clearStencilBuffer,
-										video::SColor leftUpEdge, 
-										video::SColor rightUpEdge,
-										video::SColor leftDownEdge, 
-										video::SColor rightDownEdge)
+void COGLES1Driver::drawStencilShadow(bool clearStencilBuffer,
+		video::SColor leftUpEdge, video::SColor rightUpEdge,
+		video::SColor leftDownEdge, video::SColor rightDownEdge)
 {
 	if (!StencilBuffer)
 		return;
@@ -3023,7 +3057,7 @@ s32 COGLES1Driver::getVertexShaderConstantID(const c8* name)
 //! Get a pixel shader constant index.
 s32 COGLES1Driver::getPixelShaderConstantID(const c8* name)
 {
-	os::Printer::log("Error: Please call services->getPixelShaderConstantID(), not VideoDriver->getPixelShaderConstantID().");
+	os::Printer::log("Error: Please use IMaterialRendererServices from IShaderConstantSetCallBack::OnSetConstants not VideoDriver->getPixelShaderConstantID().");
 	return -1;
 }
 
@@ -3043,14 +3077,14 @@ bool COGLES1Driver::setVertexShaderConstant(s32 index, const s32* ints, int coun
 //! Sets a constant for the pixel shader based on an index.
 bool COGLES1Driver::setPixelShaderConstant(s32 index, const f32* floats, int count)
 {
-	os::Printer::log("Error: Please call services->setPixelShaderConstant(), not VideoDriver->setPixelShaderConstant().");
+	os::Printer::log("Error: Please use IMaterialRendererServices from IShaderConstantSetCallBack::OnSetConstants not VideoDriver->setPixelShaderConstant().");
 	return false;
 }
 
 //! Int interface for the above.
 bool COGLES1Driver::setPixelShaderConstant(s32 index, const s32* ints, int count)
 {
-	os::Printer::log("Error: Please call services->setPixelShaderConstant(), not VideoDriver->setPixelShaderConstant().");
+	os::Printer::log("Error: Please use IMaterialRendererServices from IShaderConstantSetCallBack::OnSetConstants not VideoDriver->setPixelShaderConstant().");
 	return false;
 }
 
@@ -3133,14 +3167,25 @@ ITexture* COGLES1Driver::addRenderTargetTexture(const core::dimension2d<u32>& si
 		rtt = new COGLES1FBOTexture(size, name, this, format);
 		if (rtt)
 		{
+			bool success = false;
 			addTexture(rtt);
+
 			ITexture* tex = createDepthTexture(rtt);
 			if (tex)
 			{
-				static_cast<video::COGLES1FBODepthTexture*>(tex)->attach(rtt);
+				success = static_cast<video::COGLES1FBODepthTexture*>(tex)->attach(rtt);
+				if (!success)
+				{
+					removeDepthTexture(tex);
+				}
 				tex->drop();
 			}
 			rtt->drop();
+			if (!success)
+			{
+				removeTexture(rtt);
+				rtt=0;
+			}
 		}
 	}
 	else
@@ -3207,6 +3252,9 @@ bool COGLES1Driver::setRenderTarget(video::ITexture* texture, bool clearBackBuff
 	GLbitfield mask = 0;
 	if (clearBackBuffer)
 	{
+		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+		Material.ColorMask = ECP_ALL;
+
 		const f32 inv = 1.0f / 255.0f;
 		glClearColor(color.getRed() * inv, color.getGreen() * inv,
 				color.getBlue() * inv, color.getAlpha() * inv);
@@ -3216,7 +3264,8 @@ bool COGLES1Driver::setRenderTarget(video::ITexture* texture, bool clearBackBuff
 	if (clearZBuffer)
 	{
 		glDepthMask(GL_TRUE);
-		LastMaterial.ZWriteEnable=true;
+		Material.ZWriteEnable = true;
+
 		mask |= GL_DEPTH_BUFFER_BIT;
 	}
 
@@ -3239,13 +3288,10 @@ const core::dimension2d<u32>& COGLES1Driver::getCurrentRenderTargetSize() const
 //! Clears the ZBuffer.
 void COGLES1Driver::clearZBuffer()
 {
-	GLboolean enabled = GL_TRUE;
-	glGetBooleanv(GL_DEPTH_WRITEMASK, &enabled);
-
 	glDepthMask(GL_TRUE);
-	glClear(GL_DEPTH_BUFFER_BIT);
+	Material.ZWriteEnable = true;
 
-	glDepthMask(enabled);
+	glClear(GL_DEPTH_BUFFER_BIT);
 }
 
 
@@ -3369,6 +3415,16 @@ void COGLES1Driver::removeDepthTexture(ITexture* texture)
 }
 
 
+void COGLES1Driver::removeTexture(ITexture* texture)
+{
+	if (!texture)
+		return;
+
+	CNullDriver::removeTexture(texture);
+	CurrentTexture.remove(texture);
+}
+
+
 //! Set/unset a clipping plane.
 bool COGLES1Driver::setClipPlane(u32 index, const core::plane3df& plane, bool enable)
 {
@@ -3416,6 +3472,113 @@ void COGLES1Driver::enableClipPlane(u32 index, bool enable)
 core::dimension2du COGLES1Driver::getMaxTextureSize() const
 {
 	return core::dimension2du(MaxTextureSize, MaxTextureSize);
+}
+
+
+GLenum COGLES1Driver::getGLBlend(E_BLEND_FACTOR factor) const
+{
+	GLenum r = 0;
+	switch (factor)
+	{
+		case EBF_ZERO:			r = GL_ZERO; break;
+		case EBF_ONE:			r = GL_ONE; break;
+		case EBF_DST_COLOR:		r = GL_DST_COLOR; break;
+		case EBF_ONE_MINUS_DST_COLOR:	r = GL_ONE_MINUS_DST_COLOR; break;
+		case EBF_SRC_COLOR:		r = GL_SRC_COLOR; break;
+		case EBF_ONE_MINUS_SRC_COLOR:	r = GL_ONE_MINUS_SRC_COLOR; break;
+		case EBF_SRC_ALPHA:		r = GL_SRC_ALPHA; break;
+		case EBF_ONE_MINUS_SRC_ALPHA:	r = GL_ONE_MINUS_SRC_ALPHA; break;
+		case EBF_DST_ALPHA:		r = GL_DST_ALPHA; break;
+		case EBF_ONE_MINUS_DST_ALPHA:	r = GL_ONE_MINUS_DST_ALPHA; break;
+		case EBF_SRC_ALPHA_SATURATE:	r = GL_SRC_ALPHA_SATURATE; break;
+	}
+	return r;
+}
+
+
+COGLES1CallBridge* COGLES1Driver::getBridgeCalls() const
+{
+	return BridgeCalls;
+}
+
+
+COGLES1CallBridge::COGLES1CallBridge(COGLES1Driver* driver) : Driver(driver),
+#if defined(GL_OES_blend_subtract)
+	BlendEquation(GL_FUNC_ADD_OES),
+#endif
+	BlendSourceRGB(GL_ONE), BlendDestinationRGB(GL_ZERO),
+	BlendSourceAlpha(GL_ONE), BlendDestinationAlpha(GL_ZERO),
+	Blend(false)
+{
+	// Initial OpenGL ES1.x values from specification.
+
+	if (Driver->queryFeature(EVDF_BLEND_OPERATIONS))
+	{
+#if defined(GL_OES_blend_subtract)
+		Driver->extGlBlendEquation(GL_FUNC_ADD_OES);
+#endif
+	}
+
+	glBlendFunc(GL_ONE, GL_ZERO);
+	glDisable(GL_BLEND);
+}
+
+void COGLES1CallBridge::setBlendEquation(GLenum mode)
+{
+	if (BlendEquation != mode)
+	{
+		Driver->extGlBlendEquation(mode);
+
+		BlendEquation = mode;
+	}
+}
+
+void COGLES1CallBridge::setBlendFunc(GLenum source, GLenum destination)
+{
+	if (BlendSourceRGB != source || BlendDestinationRGB != destination ||
+        BlendSourceAlpha != source || BlendDestinationAlpha != destination)
+	{
+		glBlendFunc(source, destination);
+
+		BlendSourceRGB = source;
+		BlendDestinationRGB = destination;
+		BlendSourceAlpha = source;
+		BlendDestinationAlpha = destination;
+	}
+}
+
+void COGLES1CallBridge::setBlendFuncSeparate(GLenum sourceRGB, GLenum destinationRGB, GLenum sourceAlpha, GLenum destinationAlpha)
+{
+    if (sourceRGB != sourceAlpha || destinationRGB != destinationAlpha)
+    {
+        if (BlendSourceRGB != sourceRGB || BlendDestinationRGB != destinationRGB ||
+            BlendSourceAlpha != sourceAlpha || BlendDestinationAlpha != destinationAlpha)
+        {
+            Driver->extGlBlendFuncSeparate(sourceRGB, destinationRGB, sourceAlpha, destinationAlpha);
+
+			BlendSourceRGB = sourceRGB;
+			BlendDestinationRGB = destinationRGB;
+			BlendSourceAlpha = sourceAlpha;
+			BlendDestinationAlpha = destinationAlpha;
+        }
+    }
+    else
+    {
+        setBlendFunc(sourceRGB, destinationRGB);
+    }
+}
+
+void COGLES1CallBridge::setBlend(bool enable)
+{
+	if (Blend != enable)
+	{
+		if (enable)
+			glEnable(GL_BLEND);
+		else
+			glDisable(GL_BLEND);
+
+		Blend = enable;
+	}
 }
 
 } // end namespace

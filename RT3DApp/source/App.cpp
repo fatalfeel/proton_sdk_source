@@ -193,8 +193,8 @@ bool App::Init()
 
 void App::Kill()
 {
+	Entity::GetEntityManager()->RemoveAllEntities();
 	IrrlichtManager::GetIrrlichtManager()->Kill();
-	
 	BaseApp::Kill();
 }
 

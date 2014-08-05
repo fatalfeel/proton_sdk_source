@@ -159,7 +159,7 @@ protected:
 
 
 //! OGLES1 FBO depth texture.
-class COGLES1FBODepthTexture : public COGLES1FBOTexture
+class COGLES1FBODepthTexture : public COGLES1Texture
 {
 public:
 	//! FrameBufferObject depth constructor
@@ -174,7 +174,7 @@ public:
 	//! Unbind RenderTargetTexture
 	virtual void unbindRTT();
 
-	void attach(ITexture*);
+	bool attach(ITexture*);
 
 protected:
 	GLuint DepthRenderBuffer;
