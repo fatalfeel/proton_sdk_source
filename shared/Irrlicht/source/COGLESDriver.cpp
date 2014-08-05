@@ -261,8 +261,8 @@ COGLES1Driver::COGLES1Driver(const SIrrlichtCreationParameters& params,
     core::dimension2d<u32> WindowSize(backingWidth, backingHeight);
     CNullDriver::ScreenSize = WindowSize;
     CNullDriver::ViewPort = core::rect<s32>(core::position2d<s32>(0,0), core::dimension2di(WindowSize));
-    */
-#endif
+#endif*/
+
 	//genericDriverInit(WindowSize, params.Stencilbuffer);
     genericDriverInit(params.WindowSize, params.Stencilbuffer);
 }
@@ -3584,7 +3584,7 @@ void COGLES1CallBridge::setBlend(bool enable)
 } // end namespace
 } // end namespace
 
-//#endif // _IRR_COMPILE_WITH_OGLES1_
+#endif // _IRR_COMPILE_WITH_OGLES1_
 
 namespace irr
 {
