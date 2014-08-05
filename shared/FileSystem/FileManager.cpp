@@ -130,18 +130,15 @@ byte* FileManager::Get( string fileName, int *pSizeOut, bool bAddBasePath, bool 
 
 	if (!pData)
 	{
-	
 		if (bAddBasePath)
 		{
 			fileName = GetBaseAppPath() + fileName;
 		}
 
-		//just try to load it from the default filesystem.  Should I create a FileSystemDefault for this to make it cleaner?
-		
+		//try to load it from the default filesystem.  Should I create a FileSystemDefault for this to make it cleaner?
         FILE *fp = fopen(fileName.c_str(), "rb");
         if (!fp)
         {
-            //not really an error, we might just want to know if a file exists
             LogError("FileManager can't open %s try zip now", fileName.c_str());
             
 			//file not found	
@@ -162,7 +159,7 @@ byte* FileManager::Get( string fileName, int *pSizeOut, bool bAddBasePath, bool 
         
         //we add an extra null at the end to be nice, when loading text files this can be useful
         pData[*pSizeOut] = 0; 
-        fread(pData, *pSizeOut, 1, fp);
+        fread(pData, 1, *pSizeOut, fp);
         fclose(fp);
     }
 

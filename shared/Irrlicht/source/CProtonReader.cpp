@@ -130,32 +130,18 @@ IReadFile* CProtonReader::createAndOpenFile(const io::path& filename)
 	std::string		newFileName;
 	std::string		load_zip;
 	std::string		load_data;
-	FileSystemZip*	pfilesystem;
-	byte*			pDecompressedData;
+	byte*			pDecompressedData	= NULL;
+	byte*			pDataBytes			= NULL;
+	FileSystemZip*	pfilesystem			= NULL;
 #ifdef ANDROID_NDK
 	int				apk_size;
 	byte*			apk_buffer;
 #endif
-
-#ifdef _DEBUG
     
-  //  LogMsg("CProtonReader: going open %s", filename.c_str());
-#endif
-    
-	byte* pBytes = FileManager::GetFileManager()->Get( filename.c_str(), &size, false);
+	pDataBytes = FileManager::GetFileManager()->Get( filename.c_str(), &size, false);
 
-	if (!pBytes)
+	if ( !pDataBytes )
 	{
-		/*workingDir = IrrlichtManager::GetIrrlichtManager()->GetDevice()->getFileSystem()->getWorkingDirectoryChange().c_str();
-		if (!workingDir.empty())
-		{
-            //try again with full path
-            newFileName = workingDir+"/"+string(filename.c_str());
-			
-			//LogMsg("CProtonReader: Trying with WD %s", newFileName.c_str());
-            pBytes = FileManager::GetFileManager()->Get( newFileName, &size, true);
-		}*/
-
 		newFileName	= std::string(filename.c_str());
 	
 		pos_dot		= newFileName.rfind(".");
@@ -169,41 +155,46 @@ IReadFile* CProtonReader::createAndOpenFile(const io::path& filename)
 		if(  pos_dot > 0 && pos_slash > 0 )
 		{
 #ifdef ANDROID_NDK
-			apk_buffer	= FileManager::GetFileManager()->Get(load_zip.c_str(), &apk_size, false, false);
-			pfilesystem	= new FileSystemZip();
-			pfilesystem->Init_unzMemory(apk_buffer, apk_size);
-			pBytes = pfilesystem->Get_unz(load_data, &size);
+			apk_buffer = FileManager::GetFileManager()->Get(load_zip.c_str(), &apk_size, false, false);
+			
+			if( apk_buffer )
+			{
+				pfilesystem	= new FileSystemZip();
+				pfilesystem->Init_unzMemory(apk_buffer, apk_size);
+				pDataBytes = pfilesystem->Get_unz(load_data, &size);
+
+				delete apk_buffer;
+				apk_buffer = NULL;
+			}
 #else
 			pfilesystem = new FileSystemZip();
 			pfilesystem->Init_unz(load_zip.c_str());
-			pBytes = pfilesystem->Get_unz(load_data.c_str(), &size);
+			pDataBytes = pfilesystem->Get_unz(load_data.c_str(), &size);
 #endif
-			delete pfilesystem;
+			if( pfilesystem )
+			{
+				delete pfilesystem;
+				pfilesystem = NULL;
+			}
 		}
 	}
 	
-	if (pBytes)
+	if ( pDataBytes )
 	{
 		LogMsg("Proton open file %s OK", filename.c_str());
 		
-		if (IsAPackedFile(pBytes)) //applicable to rttex files
+		if (IsAPackedFile(pDataBytes)) //applicable to rttex files
 		{
 			//let's decompress it to memory before passing it back
-			pDecompressedData	= DecompressRTPackToMemory(pBytes, &decompressedSize);
+			pDecompressedData	= DecompressRTPackToMemory(pDataBytes, &decompressedSize);
 			size				= decompressedSize;
-			delete pBytes; //done with the original
+			delete pDataBytes; //done with the original
 			
-			pBytes = pDecompressedData;
+			pDataBytes = pDecompressedData;
 		}
 		
-		return io::createMemoryReadFile(pBytes, size, filename, true);
+		return io::createMemoryReadFile(pDataBytes, size, filename, true);
 	} 
-	else
-	{
-#ifdef _DEBUG
-		//LogMsg("Proton Irrlicht Filesystem: Was unable to locate the file %s", filename.c_str());
-#endif
-	}
 
 	return 0;
 }
