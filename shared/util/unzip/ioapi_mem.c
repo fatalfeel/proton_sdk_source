@@ -109,10 +109,11 @@ voidpf ZCALLBACK fopen_mem_func (opaque, buf, size)
    unsigned char* buf;
    int size;
 {
-    ourmemory_t *mem = malloc(sizeof(*mem));
+    //ourmemory_t *mem = malloc(sizeof(*mem));
+	ourmemory_t* mem = malloc(sizeof(ourmemory_t));
     
 	if (mem==NULL)
-      return NULL;
+		return NULL;
 
     //if (sscanf(filename,"%x+%x",&mem->base,&mem->size)!=2)
     //  return NULL;
