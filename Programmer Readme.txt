@@ -28,3 +28,9 @@ return irr::video::EDT_OGLES1; -> return irr::video::EDT_OGLES2;
 b. find java
 public AppGLSurfaceView(Context context, SharedActivity _app)
 //setEGLContextClientVersion(2); -> setEGLContextClientVersion(2);
+
+5.
+Quake, QuakeShader samples have a bug
+when reload, can not find correct texture path name.
+because "maps/20kdm2.bsp.lightmap.0~10" are packed into 20kdm2.bsp.
+
