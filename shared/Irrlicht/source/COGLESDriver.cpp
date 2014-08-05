@@ -31,7 +31,7 @@ COGLES1Driver::COGLES1Driver(const SIrrlichtCreationParameters& params,
 		)
 : CNullDriver(io, params.WindowSize), COGLES1ExtensionHandler(),
 	CurrentRenderMode(ERM_NONE), ResetRenderStates(true),
-	Transformation3DChanged(true), AntiAlias(params.AntiAlias),
+	Transformation3DChanged(true), AntiAlias(params.AntiAlias), BridgeCalls(0),
 	RenderTargetTexture(0), CurrentRendertargetSize(0,0), ColorFormat(ECF_R8G8B8)
 #if defined(_IRR_COMPILE_WITH_WINDOWS_DEVICE_)
 	,HDc(0)
