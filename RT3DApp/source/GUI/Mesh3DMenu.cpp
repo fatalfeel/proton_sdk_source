@@ -79,26 +79,27 @@ void Mesh3DInitScene()
 	
 #ifdef ANDROID_NDK
 	apk_buffer	= FileManager::GetFileManager()->Get(load_zip.c_str(), &apk_size, false, false);
-	pfilesystem	= new FileSystemZip();
-	pfilesystem->Init_unzMemory(apk_buffer, apk_size);
-	buff_extract = pfilesystem->Get_unz(load_data, &size);
+	
+	if( apk_buffer )
+	{
+		pfilesystem	= new FileSystemZip();
+		pfilesystem->Init_unzMemory(apk_buffer, apk_size);
+		buff_extract = pfilesystem->Get_unz(load_data, &size);
+
+		delete apk_buffer;
+		apk_buffer = NULL;
+	}
 #else
 	pfilesystem = new FileSystemZip();
 	pfilesystem->Init_unz(load_zip.c_str());
 	buff_extract = pfilesystem->Get_unz(load_data.c_str(), &size);
-
 #endif
 	
 	memfile = device->getFileSystem()->createMemoryReadFile(buff_extract, size, reload_path.c_str(), true);
+	//new buffer copy on file->read(Buffer, size) of CXMeshFileLoader::readFileIntoMemory
 	mesh	= smgr->getMesh( memfile );
 	node	= smgr->addAnimatedMeshSceneNode( mesh );
-	
-	if( apk_buffer )
-	{
-		delete apk_buffer;
-		apk_buffer = NULL;
-	}
-
+		
 	if( buff_extract )
 	{
 		delete buff_extract;
@@ -118,9 +119,16 @@ void Mesh3DInitScene()
 	
 #ifdef ANDROID_NDK
 	apk_buffer	= FileManager::GetFileManager()->Get(load_zip.c_str(), &apk_size, false, false);
-	pfilesystem	= new FileSystemZip();
-	pfilesystem->Init_unzMemory(apk_buffer, apk_size);
-	buff_extract = pfilesystem->Get_unz(load_data, &size);
+	
+	if( apk_buffer )
+	{
+		pfilesystem	= new FileSystemZip();
+		pfilesystem->Init_unzMemory(apk_buffer, apk_size);
+		buff_extract = pfilesystem->Get_unz(load_data, &size);
+
+		delete apk_buffer;
+		apk_buffer = NULL;
+	}
 #else
 	pfilesystem = new FileSystemZip();
 	pfilesystem->Init_unz(load_zip.c_str());
@@ -133,12 +141,6 @@ void Mesh3DInitScene()
     anim = smgr->createRotationAnimator(core::vector3df(0,0.3f,0));
     node->addAnimator(anim);
     anim->drop();
-
-	if( apk_buffer )
-	{
-		delete apk_buffer;
-		apk_buffer = NULL;
-	}
 
 	if( buff_extract )
 	{

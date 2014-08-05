@@ -130,9 +130,10 @@ IReadFile* CProtonReader::createAndOpenFile(const io::path& filename)
 	std::string		newFileName;
 	std::string		load_zip;
 	std::string		load_data;
-	byte*			pDecompressedData	= NULL;
-	byte*			pDataBytes			= NULL;
-	FileSystemZip*	pfilesystem			= NULL;
+	IReadFile*		iread			= NULL;
+	byte*			pDecompresse	= NULL;
+	byte*			pDataBytes		= NULL;
+	FileSystemZip*	pfilesystem		= NULL;
 #ifdef ANDROID_NDK
 	int				apk_size;
 	byte*			apk_buffer;
@@ -185,18 +186,20 @@ IReadFile* CProtonReader::createAndOpenFile(const io::path& filename)
 		
 		if (IsAPackedFile(pDataBytes)) //applicable to rttex files
 		{
-			//let's decompress it to memory before passing it back
-			pDecompressedData	= DecompressRTPackToMemory(pDataBytes, &decompressedSize);
-			size				= decompressedSize;
+			pDecompresse	= DecompressRTPackToMemory(pDataBytes, &decompressedSize);
+			size			= decompressedSize;
+			
 			delete pDataBytes; //done with the original
 			
-			pDataBytes = pDecompressedData;
+			pDataBytes = pDecompresse;
 		}
-		
-		return io::createMemoryReadFile(pDataBytes, size, filename, true);
+						
+		//release on file->drop() of CNullDriver::createImageFromFile
+		iread = io::createMemoryReadFile(pDataBytes, size, filename, true);
 	} 
 
-	return 0;
+	//return 0;
+	return iread;
 }
 
 irr::s32 CProtonReader::findFile( const io::path& filename, bool isFolder ) const
