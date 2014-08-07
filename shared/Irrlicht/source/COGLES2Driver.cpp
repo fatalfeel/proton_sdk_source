@@ -293,12 +293,15 @@ namespace video
 	}
 
 	//! destructor
-	COGLES2Driver::~COGLES2Driver()
-	{
-		deleteMaterialRenders();
-		delete MaterialRenderer2D;
-		deleteAllTextures();
-		delete BridgeCalls;
+COGLES2Driver::~COGLES2Driver()
+{
+	RequestedLights.clear();
+	CurrentTexture.clear();
+	deleteMaterialRenders();
+	delete MaterialRenderer2D;
+	deleteAllTextures();
+
+	delete BridgeCalls;
 
 /*
 #if defined(EGL_VERSION_1_0)
@@ -349,9 +352,12 @@ namespace video
 		vendorName = glGetString(GL_VENDOR);
 		os::Printer::log(vendorName.c_str(), ELL_INFORMATION);
 
-		u32 i;
+		/*u32 i;
 		for (i = 0; i < MATERIAL_MAX_TEXTURES; ++i)
-			CurrentTexture[i] = 0;
+			CurrentTexture[i] = 0;*/
+
+		CurrentTexture.clear();
+
 		// load extensions
 		initExtensions(this,
 #if defined(EGL_VERSION_1_0)
@@ -432,9 +438,12 @@ namespace video
 		vendorName = glGetString(GL_VENDOR);
 		os::Printer::log(vendorName.c_str(), ELL_INFORMATION);
 
-		u32 i;
+		/*u32 i;
 		for (i = 0; i < MATERIAL_MAX_TEXTURES; ++i)
-			CurrentTexture[i] = 0;
+			CurrentTexture[i] = 0;*/
+
+		CurrentTexture.clear();
+
 		// load extensions
 		initExtensions(this,
 #if defined(EGL_VERSION_1_0)
@@ -693,11 +702,12 @@ namespace video
 		addAndDropMaterialRenderer(new COGLES2ParallaxMapRenderer(PMVSData, PMFSData, EMT_PARALLAX_MAP_SOLID, this));
 		addAndDropMaterialRenderer(new COGLES2ParallaxMapRenderer(PMVSData, PMFSData, EMT_PARALLAX_MAP_TRANSPARENT_ADD_COLOR, this));
 		addAndDropMaterialRenderer(new COGLES2ParallaxMapRenderer(PMVSData, PMFSData, EMT_PARALLAX_MAP_TRANSPARENT_VERTEX_ALPHA, this));
-
-		addAndDropMaterialRenderer(new COGLES2FixedPipelineRenderer(FPVSData, FPFSData, EMT_ONETEXTURE_BLEND, this));
-
+		
 		delete PMVSData;
 		delete PMFSData;
+		
+		addAndDropMaterialRenderer(new COGLES2FixedPipelineRenderer(FPVSData, FPFSData, EMT_ONETEXTURE_BLEND, this));
+		
 		// now also remove the fixed pipeline data
 		delete FPVSData;
 		delete FPFSData;
@@ -1955,13 +1965,15 @@ namespace video
 		if (CurrentTexture[stage]==texture)
 			return true;
 
-		CurrentTexture[stage] = texture;
+		//CurrentTexture[stage] = texture;
+		CurrentTexture.set(stage,texture);
 
 		if (!texture)
 			return true;
 		else if (texture->getDriverType() != EDT_OGLES2)
 		{
-			CurrentTexture[stage] = 0;
+			//CurrentTexture[stage] = 0;
+			CurrentTexture.set(stage, 0);
 			os::Printer::log("Fatal Error: Tried to set a texture not owned by this driver.", ELL_ERROR);
 			return false;
 		}
@@ -2133,7 +2145,8 @@ namespace video
 		{
 			// Reset Texture Stages
 			BridgeCalls->setBlend(false);
-			BridgeCalls->setBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			//BridgeCalls->setBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			BridgeCalls->setBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR);
 
 			ResetRenderStates = true;
 		}
@@ -2254,7 +2267,7 @@ namespace video
 			
 		// Blend Equation
 		//if (resetAllRenderStates|| lastmaterial.BlendOperation != material.BlendOperation)
-		{
+		//{
 			if (material.BlendOperation == EBO_NONE)
 			{
 				BridgeCalls->setBlend(false);
@@ -2266,19 +2279,19 @@ namespace video
 				switch (material.BlendOperation)
 				{
 				case EBO_ADD:
-					glBlendEquation(GL_FUNC_ADD);
+					BridgeCalls->setBlendEquation(GL_FUNC_ADD);
 					break;
 				case EBO_SUBTRACT:
-					glBlendEquation(GL_FUNC_SUBTRACT);
+					BridgeCalls->setBlendEquation(GL_FUNC_SUBTRACT);
 					break;
 				case EBO_REVSUBTRACT:
-					glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
+					BridgeCalls->setBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
 					break;
 				default:
 					break;
 				}
 			}
-		}
+		//}
 
 		// Blend Factor
 		if (IR(material.BlendFactor) & 0xFFFFFFFF)
@@ -3075,6 +3088,15 @@ namespace video
 				return;
 			}
 		}
+	}
+
+	void COGLES2Driver::removeTexture(ITexture* texture)
+	{
+		if (!texture)
+			return;
+
+		CNullDriver::removeTexture(texture);
+		CurrentTexture.remove(texture);
 	}
 
 	void COGLES2Driver::deleteFramebuffers(s32 n, const u32 *framebuffers)

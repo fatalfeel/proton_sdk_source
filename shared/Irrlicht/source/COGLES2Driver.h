@@ -363,6 +363,8 @@ namespace video
 		ITexture* createDepthTexture(ITexture* texture, bool shared = true);
 		void removeDepthTexture(ITexture* texture);
 
+		void removeTexture(ITexture* texture);
+
 		void deleteFramebuffers(s32 n, const u32 *framebuffers);
 		void deleteRenderbuffers(s32 n, const u32 *renderbuffers);
 
@@ -382,6 +384,80 @@ namespace video
         COGLES2CallBridge* getBridgeCalls() const;
 
 	private:
+		class STextureStageCache
+		{
+		public:
+			STextureStageCache()
+			{
+				for (u32 i = 0; i < MATERIAL_MAX_TEXTURES; ++i)
+					m_opCurrentTexture[i] = 0;
+			}
+
+			~STextureStageCache()
+			{
+				clear();
+			}
+
+			const ITexture* operator[](int stage)
+			{
+				if ((u32)stage < MATERIAL_MAX_TEXTURES)
+					return m_opCurrentTexture[stage];
+				else
+					return 0;
+			}
+
+			void set(u32 stage, const ITexture* tex)
+			{
+				if (stage < MATERIAL_MAX_TEXTURES)
+				{
+					const ITexture* oldTexture = m_opCurrentTexture[stage];
+
+					if (tex)
+						tex->grab();
+
+					m_opCurrentTexture[stage] = tex;
+
+					if (oldTexture)
+						oldTexture->drop();
+				}
+			}
+
+			/*const ITexture* operator[](int stage) const
+			{
+				if ((u32)stage < MATERIAL_MAX_TEXTURES)
+					return m_opCurrentTexture[stage];
+				else
+					return 0;
+			}*/
+
+			void remove(ITexture* tex)
+			{
+				for (s32 i = MATERIAL_MAX_TEXTURES-1; i>= 0; --i)
+				{
+					if (m_opCurrentTexture[i] == tex)
+					{
+						tex->drop();
+						m_opCurrentTexture[i] = 0;
+					}
+				}
+			}
+
+			void clear()
+			{
+				for (u32 i = 0; i < MATERIAL_MAX_TEXTURES; ++i)
+				{
+					if (m_opCurrentTexture[i])
+					{
+						m_opCurrentTexture[i]->drop();
+						m_opCurrentTexture[i] = 0;
+					}
+				}
+			}
+
+		private:
+			const ITexture* m_opCurrentTexture[MATERIAL_MAX_TEXTURES];
+		};
+
 		// Bridge calls.
         COGLES2CallBridge* BridgeCalls;
 
@@ -430,7 +506,8 @@ namespace video
 
 		SMaterial Material, LastMaterial;
 		COGLES2Texture* RenderTargetTexture;
-		const ITexture* CurrentTexture[MATERIAL_MAX_TEXTURES];
+		//const ITexture* CurrentTexture[MATERIAL_MAX_TEXTURES];
+		STextureStageCache CurrentTexture;
 		core::array<ITexture*> DepthTextures;
 
 		struct SUserClipPlane

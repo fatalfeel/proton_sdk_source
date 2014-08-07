@@ -127,7 +127,8 @@ COGLES2Texture::~COGLES2Texture()
 		{
 			Driver->setActiveTexture(i, 0);
 			Driver->getBridgeCalls()->setTexture(i);
-			Driver->CurrentTexture[i] = 0;
+			//Driver->CurrentTexture[i] = 0;
+			Driver->CurrentTexture.set(i, 0);
 		}
 
 	// Remove this texture from active materials as well	
