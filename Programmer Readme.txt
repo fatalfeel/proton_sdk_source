@@ -25,7 +25,7 @@ public AppGLSurfaceView(Context context, SharedActivity _app)
 //setEGLContextClientVersion(2); -> setEGLContextClientVersion(2);
 
 5.
-Quake, QuakeShader samples have a bug
+Quake, QuakeShader samples have a small problem.
 when reload, can not find correct texture path name.
-because "maps/20kdm2.bsp.lightmap.0~10" are packed into 20kdm2.bsp.
+because "maps/20kdm2.bsp.lightmap.0~10" can not find in normal path, they are packed into 20kdm2.bsp.
 
