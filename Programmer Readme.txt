@@ -26,6 +26,6 @@ public AppGLSurfaceView(Context context, SharedActivity _app)
 
 5.
 Quake, QuakeShader samples have a small problem.
-when reload, can not find correct texture path name.
-because "maps/20kdm2.bsp.lightmap.0~10" can not find in normal path, they are packed into 20kdm2.bsp.
+when resume process and reload texture, can not find correct image.
+because "maps/20kdm2.bsp.lightmap.0~10" can not find in resource path, they are packed into 20kdm2.bsp.
 
