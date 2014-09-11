@@ -189,12 +189,12 @@ IReadFile* CProtonReader::createAndOpenFile(const io::path& filename)
 			pDecompresse	= DecompressRTPackToMemory(pDataBytes, &decompressedSize);
 			size			= decompressedSize;
 			
-			delete pDataBytes; //done with the original
+			delete pDataBytes; //release input source
 			
 			pDataBytes = pDecompresse;
 		}
 						
-		//release on file->drop() of CNullDriver::createImageFromFile
+		//release in file->drop() of CNullDriver::createImageFromFile
 		iread = io::createMemoryReadFile(pDataBytes, size, filename, true);
 	} 
 
