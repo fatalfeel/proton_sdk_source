@@ -221,7 +221,6 @@
 
 - (void)destroyFramebuffer
 {
-
 	
 	glDeleteFramebuffersOES(1, &viewFramebuffer);
 	viewFramebuffer = 0;
