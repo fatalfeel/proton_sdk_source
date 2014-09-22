@@ -8081,7 +8081,7 @@
 							>
 						</File>
 						<Filter
-							Name="LibJPeg"
+							Name="LibJpeg"
 							>
 							<File
 								RelativePath="..\..\shared\Irrlicht\source\jpeglib\cderror.h"
