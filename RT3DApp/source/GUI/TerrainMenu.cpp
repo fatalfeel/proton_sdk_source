@@ -51,7 +51,7 @@ void TerrainInitScene()
     
 	camera->setPosition(core::vector3df(2700*2,255*2,2600*2));
 	camera->setTarget(core::vector3df(2397*2,343*2,2700*2));
-	camera->setFarValue(22000.0f);
+	camera->setFarValue(2200.0f);
     
 	scene::ITerrainSceneNode* terrain =
     smgr->addTerrainSceneNode((GetBaseAppPath() + "game/terrain-heightmap.bmp").c_str(),
