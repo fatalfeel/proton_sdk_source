@@ -45,13 +45,12 @@ void TerrainInitScene()
     IrrlichtDevice*         device  = IrrlichtManager::GetIrrlichtManager()->GetDevice();
 	
 	driver->setTextureCreationFlag(video::ETCF_ALWAYS_32_BIT, true);
-	scene::ICameraSceneNode* camera = smgr->addCameraSceneNodeFPS(0,100.0f,0.5f);
+	scene::ICameraSceneNode* camera = smgr->addCameraSceneNodeFPS(0,100.0f,0.6f);
     
-	camera->setAspectRatio(GetScreenSizeXf()/GetScreenSizeYf());
-    
+	//camera->setAspectRatio(GetScreenSizeXf()/GetScreenSizeYf());
 	camera->setPosition(core::vector3df(2700*2,255*2,2600*2));
 	camera->setTarget(core::vector3df(2397*2,343*2,2700*2));
-	camera->setFarValue(2200.0f);
+	camera->setFarValue(20000.0f);
     
 	scene::ITerrainSceneNode* terrain =
     smgr->addTerrainSceneNode((GetBaseAppPath() + "game/terrain-heightmap.bmp").c_str(),
@@ -63,8 +62,7 @@ void TerrainInitScene()
                               video::SColor ( 255, 255, 255, 255 ),	// vertexColor
                               4,					// maxLOD
                               scene::ETPS_9,				// patchSize
-                              4					// smoothFactor
-                              );
+                              4	);				// smoothFactor
     
 	if (!terrain)
 	{
