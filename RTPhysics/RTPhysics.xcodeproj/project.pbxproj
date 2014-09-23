@@ -1332,6 +1332,7 @@
 		B75649BA1823B5E700B42188 /* CXMLWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CXMLWriter.h; path = ../shared/Irrlicht/source/CXMLWriter.h; sourceTree = "<group>"; };
 		B75649BB1823B5E700B42188 /* CZipReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CZipReader.cpp; path = ../shared/Irrlicht/source/CZipReader.cpp; sourceTree = "<group>"; };
 		B75649BC1823B5E700B42188 /* CZipReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CZipReader.h; path = ../shared/Irrlicht/source/CZipReader.h; sourceTree = "<group>"; };
+		B75F6FD619D115E900F1F7B7 /* named_slot_map.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = named_slot_map.hpp; path = util/boost/boost/signals/detail/named_slot_map.hpp; sourceTree = "<group>"; };
 		B777162D17D73C1F003044DF /* ioapi_mem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ioapi_mem.c; path = util/unzip/ioapi_mem.c; sourceTree = "<group>"; };
 		B78C67C11815026900FEC242 /* zip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip.c; path = util/unzip/zip.c; sourceTree = "<group>"; };
 		B78C67C21815026900FEC242 /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zip.h; path = util/unzip/zip.h; sourceTree = "<group>"; };
@@ -2329,24 +2330,25 @@
 			name = Entity;
 			sourceTree = "<group>";
 		};
-		5D8486DF0F9240A3007338A2 /* Boost */ = {
+		5D8486DF0F9240A3007338A2 /* boost */ = {
 			isa = PBXGroup;
 			children = (
-				5D8486E00F9240AF007338A2 /* Signals */,
+				5D8486E00F9240AF007338A2 /* signals */,
 			);
-			name = Boost;
+			name = boost;
 			sourceTree = "<group>";
 		};
-		5D8486E00F9240AF007338A2 /* Signals */ = {
+		5D8486E00F9240AF007338A2 /* signals */ = {
 			isa = PBXGroup;
 			children = (
+				B75F6FD519D115BB00F1F7B7 /* detail */,
 				5D8486D50F92409B007338A2 /* connection.cpp */,
 				5D8486D60F92409B007338A2 /* named_slot_map.cpp */,
 				5D8486D70F92409B007338A2 /* signal_base.cpp */,
 				5D8486D80F92409B007338A2 /* slot.cpp */,
 				5D8486D90F92409B007338A2 /* trackable.cpp */,
 			);
-			name = Signals;
+			name = signals;
 			sourceTree = "<group>";
 		};
 		5D9831DA0F7B625000D94D9B /* Math */ = {
@@ -2852,7 +2854,7 @@
 			isa = PBXGroup;
 			children = (
 				5D5C11DB1279871D00A4E4E3 /* unzip */,
-				5D8486DF0F9240A3007338A2 /* Boost */,
+				5D8486DF0F9240A3007338A2 /* boost */,
 				5D7BBCF610144FDC0015A90E /* CRandom.cpp */,
 				5D7BBCF710144FDC0015A90E /* CRandom.h */,
 				5D7BBCF810144FDC0015A90E /* PrimeSearch.cpp */,
@@ -3001,6 +3003,14 @@
 			);
 			name = GLES;
 			path = ../shared/Renderer/GLES;
+			sourceTree = "<group>";
+		};
+		B75F6FD519D115BB00F1F7B7 /* detail */ = {
+			isa = PBXGroup;
+			children = (
+				B75F6FD619D115E900F1F7B7 /* named_slot_map.hpp */,
+			);
+			name = detail;
 			sourceTree = "<group>";
 		};
 		B78C67C4181502C600FEC242 /* Header */ = {
@@ -3296,6 +3306,8 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "RTPhysics" */;
 			compatibilityVersion = "Xcode 3.1";
 			developmentRegion = English;

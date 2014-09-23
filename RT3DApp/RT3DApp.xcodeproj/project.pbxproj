@@ -1155,6 +1155,7 @@
 		B75647B41823AE5A00B42188 /* CProtonReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CProtonReader.h; path = ../shared/Irrlicht/source/CProtonReader.h; sourceTree = "<group>"; };
 		B75647B61823B21A00B42188 /* CLWOMeshFileLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CLWOMeshFileLoader.h; path = ../shared/Irrlicht/source/CLWOMeshFileLoader.h; sourceTree = "<group>"; };
 		B75647B71823B23000B42188 /* CLMTSMeshFileLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CLMTSMeshFileLoader.h; path = ../shared/Irrlicht/source/CLMTSMeshFileLoader.h; sourceTree = "<group>"; };
+		B75F6FD419D114AF00F1F7B7 /* named_slot_map.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = named_slot_map.hpp; path = util/boost/boost/signals/detail/named_slot_map.hpp; sourceTree = "<group>"; };
 		B78C6CD418153EEB00FEC242 /* BuiltInFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BuiltInFont.h; path = ../shared/Irrlicht/source/BuiltInFont.h; sourceTree = "<group>"; };
 		B78CDB341802820400C202B0 /* zip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip.c; path = util/unzip/zip.c; sourceTree = "<group>"; };
 		B78CDB351802820400C202B0 /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zip.h; path = util/unzip/zip.h; sourceTree = "<group>"; };
@@ -1997,24 +1998,25 @@
 			name = Entity;
 			sourceTree = "<group>";
 		};
-		5D8486DF0F9240A3007338A2 /* Boost */ = {
+		5D8486DF0F9240A3007338A2 /* boost */ = {
 			isa = PBXGroup;
 			children = (
-				5D8486E00F9240AF007338A2 /* Signals */,
+				5D8486E00F9240AF007338A2 /* signals */,
 			);
-			name = Boost;
+			name = boost;
 			sourceTree = "<group>";
 		};
-		5D8486E00F9240AF007338A2 /* Signals */ = {
+		5D8486E00F9240AF007338A2 /* signals */ = {
 			isa = PBXGroup;
 			children = (
+				B75F6FD319D1138100F1F7B7 /* detail */,
 				5D8486D50F92409B007338A2 /* connection.cpp */,
 				5D8486D60F92409B007338A2 /* named_slot_map.cpp */,
 				5D8486D70F92409B007338A2 /* signal_base.cpp */,
 				5D8486D80F92409B007338A2 /* slot.cpp */,
 				5D8486D90F92409B007338A2 /* trackable.cpp */,
 			);
-			name = Signals;
+			name = signals;
 			sourceTree = "<group>";
 		};
 		5D8500B610BE27AD0083C437 /* LibPng */ = {
@@ -2072,7 +2074,7 @@
 		5DA556EA0E9B3D5C00D16247 /* util */ = {
 			isa = PBXGroup;
 			children = (
-				5D8486DF0F9240A3007338A2 /* Boost */,
+				5D8486DF0F9240A3007338A2 /* boost */,
 				5D5C11DB1279871D00A4E4E3 /* unzip */,
 				5D7BBCF610144FDC0015A90E /* CRandom.cpp */,
 				5D7BBCF710144FDC0015A90E /* CRandom.h */,
@@ -2316,6 +2318,14 @@
 				B739B98217D72FF000F60FA4 /* thread_unix.cpp */,
 			);
 			name = Unix;
+			sourceTree = "<group>";
+		};
+		B75F6FD319D1138100F1F7B7 /* detail */ = {
+			isa = PBXGroup;
+			children = (
+				B75F6FD419D114AF00F1F7B7 /* named_slot_map.hpp */,
+			);
+			name = detail;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
