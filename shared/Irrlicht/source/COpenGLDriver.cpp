@@ -475,8 +475,7 @@ bool COpenGLDriver::initDriver(irr::SIrrlichtCreationParameters params, CIrrDevi
 	genericDriverInit();*/
 
 	genericDriverInit(params.WindowSize, params.Stencilbuffer);
-
-	extGlSwapInterval(Params.Vsync ? 1 : 0);
+	extGlSwapInterval(params.Vsync ? 1 : 0);
 	
 	return true;
 }
@@ -731,7 +730,8 @@ bool COpenGLDriver::genericDriverInit(const core::dimension2d<u32>& screenSize, 
 	glPixelStorei(GL_PACK_ALIGNMENT, 1);
 
 	// Reset The Current Viewport
-	glViewport(0, 0, Params.WindowSize.Width, Params.WindowSize.Height);
+	//glViewport(0, 0, Params.WindowSize.Width, Params.WindowSize.Height);
+	glViewport(0, 0, ScreenSize.Width, ScreenSize.Height); //ScreenSize from nulldriver
 
 	UserClipPlanes.reallocate(MaxUserClipPlanes);
 	for (i=0; i<MaxUserClipPlanes; ++i)
@@ -861,7 +861,8 @@ bool COpenGLDriver::OnAgainDriverInit()
 	glPixelStorei(GL_PACK_ALIGNMENT, 1);
 
 	// Reset The Current Viewport
-	glViewport(0, 0, Params.WindowSize.Width, Params.WindowSize.Height);
+	//glViewport(0, 0, Params.WindowSize.Width, Params.WindowSize.Height);
+	glViewport(0, 0, ScreenSize.Width, ScreenSize.Height); //ScreenSize from nulldriver
 
 	UserClipPlanes.reallocate(MaxUserClipPlanes);
 	for (i=0; i<MaxUserClipPlanes; ++i)

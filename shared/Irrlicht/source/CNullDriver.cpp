@@ -1776,10 +1776,12 @@ u32 CNullDriver::getOcclusionQueryResult(scene::ISceneNode* node) const
 //! the window was resized.
 void CNullDriver::OnResize(const core::dimension2d<u32>& size)
 {
-	if (ViewPort.getWidth() == (s32)ScreenSize.Width &&
+	if (ViewPort.getWidth() == (s32)ScreenSize.Width 
+		&&
 		ViewPort.getHeight() == (s32)ScreenSize.Height)
-		ViewPort = core::rect<s32>(core::position2d<s32>(0,0),
-									core::dimension2di(size));
+	{
+		ViewPort = core::rect<s32>(core::position2d<s32>(0,0), core::dimension2di(size));
+	}
 
 	ScreenSize = size;
 }

@@ -170,23 +170,20 @@ CVReturn MyDisplayLinkCallback(CVDisplayLinkRef      displayLink,
 
 - (void) drawView
 {
-	//Add critical section to avoid
-    //(void)drawRect:(NSRect)dirtyRect and (void)reshape
-    //accessing the context simultaneously
-	CGLLockContext( (_CGLContextObject*) [[self openGLContext] CGLContextObj]);
+    CGLLockContext( (_CGLContextObject*) [[self openGLContext] CGLContextObj]);
+
+   	OSMessage osm;
     
-    OSMessage m;
-    	
 	// Make sure we draw to the right context
 	[[self openGLContext] makeCurrentContext];
     
     while (!BaseApp::GetBaseApp()->GetOSMessages()->empty())
 	{
-		m = BaseApp::GetBaseApp()->GetOSMessages()->front();
+		osm = BaseApp::GetBaseApp()->GetOSMessages()->front();
 		BaseApp::GetBaseApp()->GetOSMessages()->pop_front();
 		
 		//LogMsg("Got OS message %d, %s", m.m_type, m.m_string.c_str());
-		[self onOSMessage: &m];
+		[self onOSMessage: &osm];
 	}
     
     if( m_bViewSetting ) //by stone, after openglview setting done
@@ -212,9 +209,14 @@ CVReturn MyDisplayLinkCallback(CVDisplayLinkRef      displayLink,
     // Add a mutex around to avoid the threads accessing the context simultaneously
 	CGLLockContext( (_CGLContextObject*)[[self openGLContext] CGLContextObj]);
 	
-	NSRect bounds = [self bounds];
+	core::dimension2d<u32>  size;
+    NSRect                  bounds = [self bounds];
+    
+    size.Width  = bounds.size.width;
+    size.Height = bounds.size.height;
 	
-	glViewport(0, 0, bounds.size.width, bounds.size.height);
+	//glViewport(0, 0, bounds.size.width, bounds.size.height);
+    IrrlichtManager::GetIrrlichtManager()->SetReSize(size);
 	
 	if (![self inLiveResize])
 	{

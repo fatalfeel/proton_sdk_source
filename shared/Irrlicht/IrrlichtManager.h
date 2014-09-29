@@ -57,10 +57,17 @@ public:
 
 	bool GetDebugEnabled() {return m_bDebugEnabled;}
 	void SetDebugEnabled(bool bNew) {m_bDebugEnabled = bNew;}
-	void SetBulletPhysicsEnabled(bool bNew) {m_bBulletPhysicsEnabled = bNew;} //only applicable if RT_IRRBULLET was defined
+		
+	void SetReSize(core::dimension2d<u32> size);
 	void OnUnloadSurfaces();
 	void OnReLoadSurfaces();
-    
+
+	//only applicable if RT_IRRBULLET was defined
+	void SetBulletPhysicsEnabled(bool bNew) 
+	{ 
+		m_bBulletPhysicsEnabled = bNew;
+	}
+	    
 #ifdef RT_IRRBULLET
 	irrBulletWorld * GetBulletWorld() {return m_pWorld;}
 #endif

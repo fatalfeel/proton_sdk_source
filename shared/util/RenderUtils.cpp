@@ -603,7 +603,7 @@ void SetupScreenInfo(int x, int y, int orientation)
         
     }
     
-    NotifyOSOfOrientationPreference(eOrientationMode(orientation));
+    //NotifyOSOfOrientationPreference(eOrientationMode(orientation));
     
     //by stone
     /*if (IsBaseAppInitted())

@@ -622,10 +622,10 @@ bool CheckIfOtherAudioIsPlaying()
 	return false;
 }
 
-void NotifyOSOfOrientationPreference(eOrientationMode orientation)
+/*void NotifyOSOfOrientationPreference(eOrientationMode orientation)
 {
 
-}
+}*/
 
 bool HasVibration()
 {

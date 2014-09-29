@@ -146,10 +146,10 @@ bool BaseApp::Init()
 	return true;
 }
 
-void DrawConsole()
+/*void DrawConsole()
 {
 	//not implemented
-}
+}*/
 
 void BaseApp::Draw()
 {
@@ -212,12 +212,12 @@ void BaseApp::Draw()
 	}
 
 	//draw the console messages?
-	if (GetConsoleVisible())
+	/*if (GetConsoleVisible())
 	{
 		DrawConsole();
 	}
 
-	/*switch (GetLastError())
+	switch (GetLastError())
 	{
 		case ERROR_MEM:
 			GetFont(FONT_SMALL)->DrawScaled(2,14, "LOW MEM!", 0.7f);
@@ -655,13 +655,14 @@ void BaseApp::SetFPSLimit(float fps)
 void BaseApp::SetVideoMode(int width, int height, bool bFullScreen, float aspectRatio) //aspectRatio should be 0 to ignore
 {
 	//this message is only going to be processed by platforms that can change size during runtime and have such a thing as fullscreen
-	
 	OSMessage o;
-	o.m_type = OSMessage::MESSAGE_SET_VIDEO_MODE;
-	o.m_x =(float) width;
-	o.m_y = (float) height;
-	o.m_fullscreen = bFullScreen;	
-	o.m_fontSize = aspectRatio;
+	
+	o.m_type		= OSMessage::MESSAGE_SET_VIDEO_MODE;
+	o.m_x			= (float) width;
+	o.m_y			= (float) height;
+	o.m_fullscreen	= bFullScreen;	
+	o.m_fontSize	= aspectRatio;
+	
 	BaseApp::GetBaseApp()->AddOSMessage(o);
 }
 
@@ -673,7 +674,7 @@ void BaseApp::SetVideoMode(int width, int height, bool bFullScreen, float aspect
 extern bool g_bIsFullScreen;
 #endif
 
-bool BaseApp::OnPreInitVideo()
+/*bool BaseApp::OnPreInitVideo()
 {
 	//only called for desktop systems
 	//override in App.* if you want to do something here.  You'd have to
@@ -685,7 +686,7 @@ bool BaseApp::OnPreInitVideo()
 
 	
 	return true; //no error
-}
+}*/
 
 
 void BaseApp::OnFullscreenToggleRequest()

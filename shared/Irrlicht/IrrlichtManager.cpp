@@ -323,6 +323,14 @@ std::string PrintVector3(core::vector3df v)
 	return PrintVector3(ToCLVector3(v));
 }
 
+void IrrlichtManager::SetReSize(core::dimension2d<u32> size)
+{
+	if (m_pDriver)
+	{
+		m_pDriver->OnResize(size);
+	}
+}
+
 void IrrlichtManager::OnUnloadSurfaces()
 {
 	if (m_pScene && m_pDriver)

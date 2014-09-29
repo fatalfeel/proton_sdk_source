@@ -31,7 +31,7 @@
 
 @property (nonatomic, retain) IBOutlet MyOpenGLView* openGLView;
 
-- (IBAction) goFullScreen:(id)sender;
+//- (IBAction) goFullScreen:(id)sender;
 - (void) goWindow;
 
 //- (Scene*) scene;

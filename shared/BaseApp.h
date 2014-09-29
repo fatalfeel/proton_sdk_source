@@ -204,7 +204,7 @@ public:
 
 	virtual bool Init();
 	virtual void Kill();
-	virtual bool OnPreInitVideo();
+	//virtual bool OnPreInitVideo();
 	virtual void Draw();
 	virtual void Update();
 	virtual void OnEnterBackground(); //OS4 got a phonecall or changed apps, should save your junk

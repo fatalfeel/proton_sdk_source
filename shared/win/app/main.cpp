@@ -49,7 +49,7 @@ void InitVideoSize()
 	return;
 #endif
 
-	AddVideoMode("Windows", 1024, 768, PLATFORM_ID_WINDOWS);
+	AddVideoMode("Windows", 1024, 742, PLATFORM_ID_WINDOWS);
 	AddVideoMode("Windows Wide", 1280, 800, PLATFORM_ID_WINDOWS);
 	
 #ifndef RT_WEBOS
@@ -109,18 +109,19 @@ void InitVideoSize()
 	AddVideoMode("Flash", 640, 480, PLATFORM_ID_FLASH);
 
 	//WORK: Change device emulation here
-	string desiredVideoMode = "iPad Landscape"; //name needs to match one of the ones defined above
+	string desiredVideoMode = "Windows"; //name needs to match one of the ones defined above
  	SetVideoModeByName(desiredVideoMode);
-	BaseApp::GetBaseApp()->OnPreInitVideo(); //gives the app level code a chance to override any of these parms if it wants to
+	
+	//BaseApp::GetBaseApp()->OnPreInitVideo(); //gives the app level code a chance to override any of these parms if it wants to
 }
 
 //***************************************************************************
 
-int g_winVideoScreenX = 0;
-int g_winVideoScreenY = 0;
-bool g_bIsFullScreen = false;
-int g_fpsLimit = 0; //0 for no fps limit (default)  Use MESSAGE_SET_FPS_LIMIT to set
-bool g_bIsMinimized = false;
+int		g_fpsLimit			= 0; //0 for no fps limit (default)  Use MESSAGE_SET_FPS_LIMIT to set
+int		g_winVideoScreenX	= 0;
+int		g_winVideoScreenY	= 0;
+bool	g_bIsFullScreen		= false;
+bool	g_bIsMinimized		= false;
 
 
 void AddVideoMode(string name, int x, int y, ePlatformID platformID, eOrientationMode forceOrientation)
@@ -141,12 +142,11 @@ void SetVideoModeByName(string name)
 			g_winVideoScreenY = v->y;
 			SetEmulatedPlatformID(v->platformID);
 			SetForcedOrientation(v->forceOrientation);
-			return;
+			break;
 		}
 	}
-
-	LogError("Don't have %s registered as a video mode.", name.c_str());
-	assert(!"huh?");
+	//LogError("Don't have %s registered as a video mode.", name.c_str());
+	//assert(!"huh?");
 }
 
 #ifdef _IRR_STATIC_LIB_
@@ -177,11 +177,11 @@ int GetPrimaryGLY()
 	return g_winVideoScreenY;
 }	
 
-bool g_bHasFocus = true;
 int mousePosX = 0;
 int mousePosY = 0;
-bool g_bAppFinished = false;
-bool g_escapeMessageSent = false; //work around for problems on my dev machine with escape not being sent on keydown sometimes, fixed by reboot (!?)
+bool g_bHasFocus			= true;
+bool g_bAppFinished			= false;
+bool g_escapeMessageSent	= false; //work around for problems on my dev machine with escape not being sent on keydown sometimes, fixed by reboot (!?)
 
 #ifndef RT_WEBOS
 
@@ -195,13 +195,14 @@ bool g_escapeMessageSent = false; //work around for problems on my dev machine w
 #ifndef GET_Y_LPARAM
 #define GET_Y_LPARAM(lp)                        ((int)(short)HIWORD(lp))
 #endif
-bool g_leftMouseButtonDown = false; //to help emulate how an iphone works
+bool g_leftMouseButtonDown	= false; //to help emulate how an iphone works
 bool g_rightMouseButtonDown = false; //to help emulate how an iphone works
 
 // Windows variables
-HWND				g_hWnd	= 0;
-HDC					g_hDC		= 0;
-HINSTANCE g_hInstance = 0;
+HINSTANCE			g_hInstance = NULL;
+HWND				g_hWnd		= NULL;
+HDC					g_hDC		= NULL;
+HGLRC				g_hRC		= NULL;		// Permanent Rendering Context
 
 #define KEY_DOWN  0x8000
 
@@ -300,8 +301,6 @@ int VKeyToWMCharKey(int vKey)
 	return vKey;
 }
 
-HGLRC		g_hRC=NULL;		// Permanent Rendering Context
-
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 #ifdef _IRR_COMPILE_WITH_GUI_	
@@ -313,9 +312,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			// Handles the close message when a user clicks the quit icon of the window
 		case WM_CLOSE:
 			g_bAppFinished = true;
-			
 			//PostQuitMessage(0);
-			return 1;
+			return true;
 
 
 		case WM_PAINT:
@@ -357,7 +355,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	#endif
 			break;
 
-		case WM_SIZING:
+		/*case WM_SIZING:
 			{
 				if ((GetForceAspectRatioWhenResizing() && !(GetKeyState(VK_SHIFT)& 0xfe))
 					||
@@ -406,40 +404,34 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					return TRUE;
 				}
 			}
-			break;
+			break;*/
 		
 		case WM_SIZE:
 			{
 				// Respond to the message:				
-				int Width = LOWORD( lParam );
-				int Height = HIWORD( lParam ); 
+				int Width	= LOWORD( lParam );
+				int Height	= HIWORD( lParam ); 
 						
 				if (Width != GetPrimaryGLX() || Height != GetPrimaryGLY())
 				{
-					//LogMsg("Got new size: %d, %d", Width, Height);
 					BaseApp::GetBaseApp()->KillOSMessagesByType(OSMessage::MESSAGE_SET_VIDEO_MODE);
 					BaseApp::GetBaseApp()->SetVideoMode(Width, Height, false, 0);
 				
-					if (GetFakePrimaryScreenSizeX() != 0)
+					/*if (GetFakePrimaryScreenSizeX() != 0)
 					{
-						//we're stretching the screen to fit, so make this look a little better
-						//by drawing what we have during the drag operation.  Why does it only
-						//draw when dragging bigger, not smaller?  GL surface thing?  Hrm.
-
 						RECT rect;
 						if (GetUpdateRect(g_hWnd, &rect, FALSE))
 						{
 							PAINTSTRUCT paint;
 							BeginPaint(g_hWnd, &paint);
-	#ifdef C_GL_MODE
+#ifdef C_GL_MODE
 							SwapBuffers(g_hDC);
-	#endif
+#endif
 							EndPaint(g_hWnd, &paint);
 						}
-					}
+					}*/
 				}
 			}
-			
 			break;
 
 		case WM_COMMAND:
@@ -556,7 +548,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						bWasChanged = true;
 					}
 				
-	#ifdef C_DONT_USE_WM_CHAR
+#ifdef C_DONT_USE_WM_CHAR
 					//also send as a normal key press.  Yes this convoluted.. it's done this way so Fkeys also go out as WM proton virtual keys to help with
 					//hotkeys and such.   -Seth
 					if ( !bWasChanged || (wParam < 37 || wParam > 40 )) //filter out the garbage the arrow keys make
@@ -593,12 +585,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 							}
 						}
 					}
-	#endif
+#endif
 				}
 				else
 				{
 					//repeat key
-	#ifdef C_DONT_USE_WM_CHAR
+#ifdef C_DONT_USE_WM_CHAR
 					int vKey = ConvertWindowsKeycodeToProtonVirtualKey(wParam); 
 					if (vKey != wParam)
 					{
@@ -614,7 +606,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 							MessageManager::GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CHAR, (float)wmCharKey, 1.0f, 0, GetWinkeyModifiers());  
 						}
 					}
-	#endif
+#endif
 				}
 			} 
 			break;
@@ -625,9 +617,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		case WM_KEYUP:
 			{
-	#ifdef _DEBUG
-			//	LogMsg("Got key up %d (%c)", (int)wParam, (char)wParam);
-	#endif
 				uint32 key = ConvertWindowsKeycodeToProtonVirtualKey(wParam);
 
 				/*
@@ -700,7 +689,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				ev.EventType            	= irr::EET_MOUSE_INPUT_EVENT;
 				ev.MouseInput.ButtonStates 	= 0;
 				ev.MouseInput.X				= GET_X_LPARAM(lParam);
-				ev.MouseInput.Y				= GET_Y_LPARAM(lParam)+GetSystemMetrics(SM_CYSIZE);
+				//ev.MouseInput.Y				= GET_Y_LPARAM(lParam)+GetSystemMetrics(SM_CYSIZE);
+				ev.MouseInput.Y				= GET_Y_LPARAM(lParam);
 				IrrlichtManager::GetIrrlichtManager()->GetDevice()->postEventFromUser(ev);
 #endif
 
@@ -843,9 +833,13 @@ void CenterWindow(HWND hWnd)
 
 bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
 {
-	LogMsg("Setting native video mode to %d, %d - Fullscreen: %d  Aspect Ratio: %.2f", width, height, int(bFullscreen), aspectRatio);
-	g_winVideoScreenY = height;
-	g_winVideoScreenX = width;
+	//LogMsg("Setting native video mode to %d, %d - Fullscreen: %d  Aspect Ratio: %.2f", width, height, int(bFullscreen), aspectRatio);
+	bool	bCenterWindow	= false;
+	DWORD	ex_style		= 0;
+	
+	g_winVideoScreenY	= height;
+	g_winVideoScreenX	= width;
+	g_bIsFullScreen		= bFullscreen;
 
 	// EGL variables
 #ifndef C_GL_MODE
@@ -855,8 +849,8 @@ bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
 	EGLint				pi32ConfigAttribs[128];
 	int				i;
 #else
-	int bits = 16;
-	GLuint		PixelFormat;			// Holds The Results After Searching For A Match
+	int		bits = 16;
+	GLuint	PixelFormat;			// Holds The Results After Searching For A Match
 
 	// pfd Tells Windows How We Want Things To Be
 	static PIXELFORMATDESCRIPTOR pfd =
@@ -896,27 +890,23 @@ bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
 #ifndef C_BORDERLESS_WINDOW_MODE_FOR_SCREENSHOT_EASE
 	if (g_winAllowWindowResize)
 	{
-		style = style |WS_SIZEBOX | WS_MAXIMIZEBOX | WS_MINIMIZEBOX ;
+		style = style | WS_SIZEBOX | WS_MAXIMIZEBOX | WS_MINIMIZEBOX ;
 	}
 #endif
+
 	if (bFullscreen)
 	{
 		//actually, do it this way:
 		style = WS_POPUP;
 	}
-
-	g_bIsFullScreen = bFullscreen;
-	DWORD ex_style = 0;
-
+				
 	AdjustWindowRectEx(&sRect, style, false, ex_style);
 	
 	g_bHasFocus = true;
 
-	bool bCenterWindow = false;
-
-	if (g_hWnd)
+	/*if (g_hWnd)
 	{
-		RECT clientRect;
+		//RECT clientRect;
 		GetClientRect(g_hWnd, &clientRect);
 	
 		if (clientRect.right != width || clientRect.bottom != height)
@@ -925,9 +915,10 @@ bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
 			DestroyWindow(g_hWnd);
 			g_hWnd = NULL;
 		}
-	}
+	}*/
 
-	if (!g_hWnd)
+	//if (!g_hWnd)
+	if ( g_hWnd == NULL )
 	{
 		bCenterWindow = true;
 
@@ -949,7 +940,7 @@ bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
 		SetWindowLong(g_hWnd, GWL_STYLE, style);
 	}
 	
-assert(!g_hDC);
+	assert(!g_hDC);
 
 #ifndef C_GL_MODE
 	eglWindow = g_hWnd;
@@ -963,7 +954,33 @@ assert(!g_hDC);
 		return false;
 	}
 
-#ifndef C_GL_MODE
+#ifdef C_GL_MODE
+	//NORMAL GL INIT
+	if (!(PixelFormat=ChoosePixelFormat(g_hDC,&pfd)))	// Did Windows Find A Matching Pixel Format?
+	{
+		MessageBox(NULL,"Can't Find A Suitable PixelFormat.","ERROR",MB_OK|MB_ICONEXCLAMATION);
+		return FALSE;								// Return FALSE
+	}
+
+	if(!SetPixelFormat(g_hDC,PixelFormat,&pfd))		// Are We Able To Set The Pixel Format?
+	{
+		MessageBox(NULL,"Can't Set The PixelFormat.","ERROR",MB_OK|MB_ICONEXCLAMATION);
+		return FALSE;								// Return FALSE
+	}
+
+	if (!(g_hRC=wglCreateContext(g_hDC)))				// Are We Able To Get A Rendering Context?
+	{
+		MessageBox(NULL,"Can't Create A GL Rendering Context.","ERROR",MB_OK|MB_ICONEXCLAMATION);
+		return FALSE;								// Return FALSE
+	}
+
+	if(!wglMakeCurrent(g_hDC,g_hRC))					// Try To Activate The Rendering Context
+	{
+		MessageBox(NULL,"Can't Activate The GL Rendering Context.","ERROR",MB_OK|MB_ICONEXCLAMATION);
+		return FALSE;								// Return FALSE
+	}
+	
+#else
 	g_eglDisplay = eglGetDisplay((NativeDisplayType) g_hDC);
 
 	if(g_eglDisplay == EGL_NO_DISPLAY)
@@ -1029,48 +1046,22 @@ assert(!g_hDC);
 	{
 		return false;
 	}
-		/*
 	
+	/*
 	GLuint viewFramebuffer;
 	GLuint textureFrameBuffer;
 
 	glGenFramebuffersOES(1, &textureFrameBuffer);
-*/
-#else
-
-	//NORMAL GL INIT
-
-	
-	if (!(PixelFormat=ChoosePixelFormat(g_hDC,&pfd)))	// Did Windows Find A Matching Pixel Format?
-	{
-		MessageBox(NULL,"Can't Find A Suitable PixelFormat.","ERROR",MB_OK|MB_ICONEXCLAMATION);
-		return FALSE;								// Return FALSE
-	}
-
-	if(!SetPixelFormat(g_hDC,PixelFormat,&pfd))		// Are We Able To Set The Pixel Format?
-	{
-		MessageBox(NULL,"Can't Set The PixelFormat.","ERROR",MB_OK|MB_ICONEXCLAMATION);
-		return FALSE;								// Return FALSE
-	}
-
-	if (!(g_hRC=wglCreateContext(g_hDC)))				// Are We Able To Get A Rendering Context?
-	{
-		MessageBox(NULL,"Can't Create A GL Rendering Context.","ERROR",MB_OK|MB_ICONEXCLAMATION);
-		return FALSE;								// Return FALSE
-	}
-
-	if(!wglMakeCurrent(g_hDC,g_hRC))					// Try To Activate The Rendering Context
-	{
-		MessageBox(NULL,"Can't Activate The GL Rendering Context.","ERROR",MB_OK|MB_ICONEXCLAMATION);
-		return FALSE;								// Return FALSE
-	}
+	*/
 #endif
+	
 	BaseApp::GetBaseApp()->InitializeGLDefaults();
 
 	if (!bFullscreen && bCenterWindow)
 	{
 		CenterWindow(g_hWnd);
 	}
+	
 	ShowWindow(g_hWnd, SW_SHOW);
 	
 	SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), GetOrientation());
@@ -1082,7 +1073,6 @@ assert(!g_hDC);
 
 void DestroyVideo(bool bDestroyHWNDAlso)
 {
-
 #ifdef C_GL_MODE
 
 	if (g_hRC)											// Do We Have A Rendering Context?
@@ -1200,9 +1190,14 @@ void CheckIfMouseLeftWindowArea()
 //by jesse stone
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLine, int nCmdShow)
 {
+	OSMessage		osm;
+	MSG				msg;
+	int				ret;
+	static float	fpsTimer=0;
+
+	core::dimension2d<u32> size;
 	
 #ifdef WIN32
-	
 	//I don't *think* we need this...
 	::SetProcessAffinityMask( ::GetCurrentProcess(), 1 );
 	SetDoubleClickTime(0);
@@ -1261,16 +1256,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 		goto cleanup;
 	}
 
-
-
 	if (!BaseApp::GetBaseApp()->Init())
 	{
 		assert(!"Unable to init - did you run media/update_media.bat to build the resources?");
 		MessageBox(NULL, "Error initializing the game.  Did you unzip everything right?", "Unable to load stuff", NULL);
 		goto cleanup;
 	}
-
-
 
 /*#ifdef C_GL_MODE
 	if (!g_glesExt.InitExtensions())
@@ -1281,15 +1272,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 #endif*/
 
 	//our main loop
-	static float fpsTimer=0;
-
-	while(1)
+	while( g_bAppFinished == false )
 	{
-		
-		if (GetAsyncKeyState('Q') && GetAsyncKeyState(VK_MENU))
+		/*if (GetAsyncKeyState('Q') && GetAsyncKeyState(VK_MENU))
 		{
 			SendMessage(g_hWnd, WM_CLOSE, 0, 0);
-		}
+		}*/
 
 		if (g_winAllowFullscreenToggle)
 		{
@@ -1297,17 +1285,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 			{
 				LogMsg("Toggle fullscreen");
 				MessageManager::GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_TOGGLE_FULLSCREEN, 0, 0);  //lParam holds a lot of random data about the press, look it up if
-				//return true;
 			}
-
 		}
 
-		if (g_bAppFinished) 
-			break;
+		//if (g_bAppFinished) 
+		//	break;
 
 		if (g_bHasFocus)
 		{
-
 			CheckIfMouseLeftWindowArea();
 			BaseApp::GetBaseApp()->Update();
 		
@@ -1316,8 +1301,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 		} 
 		else
 		{
-			//LogMsg("Sleeping");
-			Sleep(50);
+			Sleep(10);
 		}
 
 		if (g_fpsLimit != 0)
@@ -1326,73 +1310,76 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 			{
 				Sleep(0);
 			}
+			
 			fpsTimer = float(GetSystemTimeAccurate())+(1000.0f/ (float(g_fpsLimit)));
 		}
 
-		while (!BaseApp::GetBaseApp()->GetOSMessages()->empty())
+		while( !BaseApp::GetBaseApp()->GetOSMessages()->empty() )
 		{
-			OSMessage m = BaseApp::GetBaseApp()->GetOSMessages()->front();
+			osm = BaseApp::GetBaseApp()->GetOSMessages()->front();
 			BaseApp::GetBaseApp()->GetOSMessages()->pop_front();
-			//LogMsg("Got OS message %d, %s", m.m_type, m.m_string.c_str());
 
-			switch (m.m_type)
+			switch (osm.m_type)
 			{
 				case OSMessage::MESSAGE_CHECK_CONNECTION:
 					//pretend we did it
 					MessageManager::GetMessageManager()->SendGUI(MESSAGE_TYPE_OS_CONNECTION_CHECKED, RT_kCFStreamEventOpenCompleted, 0);	
 					break;
+
 				case OSMessage::MESSAGE_OPEN_TEXT_BOX:
 					break;
+				
 				case OSMessage::MESSAGE_CLOSE_TEXT_BOX:
 					SetIsUsingNativeUI(false);
 					break;
 				
 				case OSMessage::MESSAGE_FINISH_APP:
 				case OSMessage::MESSAGE_SUSPEND_TO_HOME_SCREEN:
-
 					PostMessage(g_hWnd, WM_CLOSE, 0, 0);
 					break;
 				
 				case OSMessage::MESSAGE_SET_FPS_LIMIT:
-					g_fpsLimit = int(m.m_x);
-					
+					g_fpsLimit = int(osm.m_x);
 					break;
-				case OSMessage::MESSAGE_SET_VIDEO_MODE:
 				
-					SwapBuffers(g_hDC);
+				case OSMessage::MESSAGE_SET_VIDEO_MODE:
+					/*SwapBuffers(g_hDC);
 					BaseApp::GetBaseApp()->Draw();
 
 					g_bHasFocus = true;
 					
 					if (g_bIsMinimized) 
-						goto skipRender; //we don't need to re-init anything, we're just minimized
+						goto skipRender*/
 
-					BaseApp::GetBaseApp()->OnEnterBackground();
-					BaseApp::GetBaseApp()->m_sig_unloadSurfaces();
-#ifdef C_GL_MODE
-					DestroyVideo(false);
-				
-					g_bHasFocus = false;
-					if (!InitVideo(int(m.m_x), int(m.m_y), m.m_fullscreen, m.m_fontSize))
+					size.Width	= (unsigned int)osm.m_x;
+					size.Height = (unsigned int)osm.m_y;
+
+					IrrlichtManager::GetIrrlichtManager()->SetReSize(size);
+					
+					//test reload, no remove for debug
+					//BaseApp::GetBaseApp()->OnEnterBackground();
+					//BaseApp::GetBaseApp()->m_sig_unloadSurfaces();
+
+					/*DestroyVideo(false);
+					if (!InitVideo(int(osm.m_x), int(osm.m_y), osm.m_fullscreen, osm.m_fontSize))
 					{
 						MessageBox(NULL, "Error changing video mode", "Error", NULL);
 						goto cleanup;
-					}
-#else
-					LogMsg("Ignoring SET_VIDEO_MODE, only setup to work with normal GL, not GLES");
-#endif
+					}*/
 										
-					BaseApp::GetBaseApp()->m_sig_loadSurfaces();
-					BaseApp::GetBaseApp()->OnEnterForeground();
-										
-					goto skipRender;
+					//test reload, no remove for debug
+					//BaseApp::GetBaseApp()->m_sig_loadSurfaces();
+					//BaseApp::GetBaseApp()->OnEnterForeground();
+					
+					//goto skipRender;
+					break;
 			}
 		}// end while (!BaseApp::GetBaseApp()->GetOSMessages()->empty())
 	
 		if (g_bHasFocus && !g_bIsMinimized)
 		{
 #ifdef C_GL_MODE
-			SwapBuffers(g_hDC);
+			SwapBuffers(g_hDC); //need it
 #else
 			eglSwapBuffers(g_eglDisplay, g_eglSurface);
 			if (!TestEGLError(g_hWnd, "eglSwapBuffers"))
@@ -1402,12 +1389,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 #endif
 		}
 
-skipRender:
+//skipRender:
 		// Managing the window messages
-		MSG msg;
 		while (PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE) == TRUE)
 		{
-			int ret = GetMessage(&msg, NULL, 0, 0);
+			ret = GetMessage(&msg, NULL, 0, 0);
+			
 			if (ret > 0)
 			{
 				TranslateMessage(&msg);
@@ -1418,11 +1405,11 @@ skipRender:
 				LogMsg("Error?");
 			}
 		}
+		
 		Sleep(0);
 	}
 
 cleanup:
-
 	if (IsBaseAppInitted())
 	{
 		BaseApp::GetBaseApp()->OnEnterBackground();
@@ -1439,8 +1426,10 @@ cleanup:
 
 void AddText(const char *tex ,char *filename)
 {
-	FILE *          fp;
-	if (strlen(tex) < 1) return;
+	FILE*	fp;
+	
+	if (strlen(tex) < 1) 
+		return;
 
 	if (FileExists(filename) == false)
 	{
@@ -1449,8 +1438,9 @@ void AddText(const char *tex ,char *filename)
 		if (!fp) return;
 		fwrite( tex, strlen(tex), 1, fp);      
 		fclose(fp);
-		return;
-	} else
+		//return;
+	} 
+	else
 	{
 		fp = fopen( (GetBaseAppPath()+filename).c_str(), "ab");
 		if (!fp) return;

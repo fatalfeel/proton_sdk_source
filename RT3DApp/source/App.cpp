@@ -178,11 +178,11 @@ bool App::Init()
         IrrlichtDevice*         device  = IrrlichtManager::GetIrrlichtManager()->GetDevice();
         gui::IGUIEnvironment*   gui     = device->getGUIEnvironment();
 
-#ifdef _WIN32
-		gui::IGUIStaticText*    text    = gui->addStaticText(L"FPS:", core::rect<s32>(0,25,GetScreenSizeX()-1,35), true, false, NULL, 0x10000, true);
-#else
+//#ifdef _WIN32
+//		gui::IGUIStaticText*    text    = gui->addStaticText(L"FPS:", core::rect<s32>(0,25,GetScreenSizeX()-1,35), true, false, NULL, 0x10000, true);
+//#else
 		gui::IGUIStaticText*    text    = gui->addStaticText(L"FPS:", core::rect<s32>(0,0,GetScreenSizeX()-1,10), true, false, NULL, 0x10000, true);
-#endif
+//#endif
         
         text->setOverrideColor(video::SColor(255,0,0,0));
         text->setBackgroundColor(video::SColor(255,255,255,255));

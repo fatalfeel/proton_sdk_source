@@ -6,11 +6,11 @@
 
 @synthesize openGLView = _glView;
 
-- (IBAction) goFullScreen:(id)sender
+/*- (IBAction) goFullScreen:(id)sender
 {
 	isInFullScreenMode = YES;
 	
-	/*
+	
 	// Pause the non-fullscreen view
 	[self.openGLView stopAnimation];
 	
@@ -164,8 +164,8 @@
 	}
 	
 #endif
-	 */
-}
+	 
+}*/
 
 - (void) goWindow
 {
