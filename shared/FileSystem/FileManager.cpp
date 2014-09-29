@@ -68,7 +68,7 @@ FileManager::FileManager()
 
 FileManager::~FileManager()
 {
-	list<FileSystem*>::iterator itor = m_fileSystems.begin();
+	//list<FileSystem*>::iterator itor = m_fileSystems.begin();
 
 	while (!m_fileSystems.empty())
 	{
