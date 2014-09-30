@@ -17,15 +17,15 @@ android:installLocation="internalOnly" of AndroidManifest.xml
 
 4.
 Switch OGLES1 -> OGLES2
-(a.) find c++
+(a.) find App.cpp
 irr::video::E_DRIVER_TYPE AppGetOGLESType()
 return irr::video::EDT_OGLES1; -> return irr::video::EDT_OGLES2;
-(b.) find java
+(b.) find SharedActivity.java
 public AppGLSurfaceView(Context context, SharedActivity _app)
 //setEGLContextClientVersion(2); -> setEGLContextClientVersion(2);
 
 5.
 Quake, QuakeShader samples have a small problem.
-when resume process and reload texture, can not find correct image.
+when android resume process and reload texture, can not find image correctly.
 because "maps/20kdm2.bsp.lightmap.0~10" can not find in resource path, they are packed into 20kdm2.bsp.
 
