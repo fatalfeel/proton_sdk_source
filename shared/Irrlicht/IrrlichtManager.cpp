@@ -345,9 +345,8 @@ void IrrlichtManager::OnReLoadSurfaces()
 	if (m_pScene && m_pDriver)
 	{
 		LogMsg("Irrlicht loading surfaces..");
-
 		//m_pDriver->OnResume();
-		//SetupOrtho(); //by stone, spent long time fixed android resume bug
+
 		m_againInit = 1;
 	}
 }
