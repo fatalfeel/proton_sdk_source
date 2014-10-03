@@ -12,7 +12,7 @@ chmod 777 xxxxxx/media/update_media.sh
 xxxxxx/media/update_media.sh
 
 3.
-If debug ndk c++ please set
+If debug c++ in Android, please set
 android:installLocation="internalOnly" of AndroidManifest.xml
 
 4.
