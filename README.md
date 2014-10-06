@@ -12,6 +12,7 @@ xxxxxx/media/update_media.bat
 
 On MacOs --->
 chmod 777 xxxxxx/media/update_media.sh
+
 xxxxxx/media/update_media.sh
 
 3.
