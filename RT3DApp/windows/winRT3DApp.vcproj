@@ -267,6 +267,7 @@
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			CharacterSet="2"
+			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -288,6 +289,7 @@
 				AdditionalIncludeDirectories="..\source;..\..\shared;..\..\shared\win\;..\..\shared\util\boost;&quot;..\..\shared\ClanLib-2.0\Sources&quot;;..\..\shared\win\include;..\..\shared\FliteTTS\include;..\..\shared\Irrlicht\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;BOOST_ALL_NO_LIB;_USE_32BIT_TIME_T;C_GL_MODE;_IRR_STATIC_LIB_"
 				RuntimeLibrary="0"
+				EnableEnhancedInstructionSet="1"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="PlatformPrecomp.h"
 				WarningLevel="3"
@@ -1229,6 +1231,14 @@
 								UsePrecompiledHeader="0"
 							/>
 						</FileConfiguration>
+						<FileConfiguration
+							Name="Release GL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
 					</File>
 					<File
 						RelativePath="..\..\shared\util\unzip\unzip.c"
@@ -1283,6 +1293,14 @@
 						>
 						<FileConfiguration
 							Name="Debug GL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release GL|Win32"
 							>
 							<Tool
 								Name="VCCLCompilerTool"
@@ -1475,6 +1493,14 @@
 						>
 						<FileConfiguration
 							Name="Debug GL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release GL|Win32"
 							>
 							<Tool
 								Name="VCCLCompilerTool"
@@ -1808,12 +1834,28 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\ClanLib-2.0\Sources\Core\System\runnable.cpp"
 							>
 							<FileConfiguration
 								Name="Debug GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -1832,12 +1874,28 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\ClanLib-2.0\Sources\Core\System\thread.cpp"
 							>
 							<FileConfiguration
 								Name="Debug GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -1856,12 +1914,28 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\ClanLib-2.0\Sources\Core\System\thread_local_storage_impl.cpp"
 							>
 							<FileConfiguration
 								Name="Debug GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -1877,6 +1951,14 @@
 								>
 								<FileConfiguration
 									Name="Debug GL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										UsePrecompiledHeader="0"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release GL|Win32"
 									>
 									<Tool
 										Name="VCCLCompilerTool"
@@ -3215,6 +3297,14 @@
 						>
 						<FileConfiguration
 							Name="Debug GL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release GL|Win32"
 							>
 							<Tool
 								Name="VCCLCompilerTool"
@@ -4853,6 +4943,14 @@
 										UsePrecompiledHeader="0"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Release GL|Win32"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+										UsePrecompiledHeader="0"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\..\shared\Irrlicht\source\COpenGLCgMaterialRenderer.h"
@@ -5571,6 +5669,14 @@
 									/>
 								</FileConfiguration>
 								<FileConfiguration
+									Name="Release GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCustomBuildTool"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
 									Name="Debug WebOS|Win32"
 									>
 									<Tool
@@ -5636,6 +5742,14 @@
 									/>
 								</FileConfiguration>
 								<FileConfiguration
+									Name="Release GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCustomBuildTool"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
 									Name="Debug WebOS|Win32"
 									>
 									<Tool
@@ -5648,6 +5762,14 @@
 								>
 								<FileConfiguration
 									Name="Debug GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCustomBuildTool"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release GL|Win32"
 									ExcludedFromBuild="true"
 									>
 									<Tool
@@ -5713,6 +5835,14 @@
 								>
 								<FileConfiguration
 									Name="Debug GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCustomBuildTool"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release GL|Win32"
 									ExcludedFromBuild="true"
 									>
 									<Tool
@@ -5794,6 +5924,14 @@
 										Name="VCCLCompilerTool"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Release GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\..\shared\Irrlicht\source\COGLES2Driver.h"
@@ -5806,12 +5944,28 @@
 										Name="VCCLCompilerTool"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Release GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCustomBuildTool"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\..\shared\Irrlicht\source\COGLES2ExtensionHandler.cpp"
 								>
 								<FileConfiguration
 									Name="Debug GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release GL|Win32"
 									ExcludedFromBuild="true"
 									>
 									<Tool
@@ -5830,12 +5984,28 @@
 										Name="VCCLCompilerTool"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Release GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCustomBuildTool"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\..\shared\Irrlicht\source\COGLES2FixedPipelineRenderer.cpp"
 								>
 								<FileConfiguration
 									Name="Debug GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release GL|Win32"
 									ExcludedFromBuild="true"
 									>
 									<Tool
@@ -5854,12 +6024,28 @@
 										Name="VCCLCompilerTool"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Release GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCustomBuildTool"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\..\shared\Irrlicht\source\COGLES2MaterialRenderer.cpp"
 								>
 								<FileConfiguration
 									Name="Debug GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release GL|Win32"
 									ExcludedFromBuild="true"
 									>
 									<Tool
@@ -5878,12 +6064,28 @@
 										Name="VCCLCompilerTool"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Release GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCustomBuildTool"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\..\shared\Irrlicht\source\COGLES2NormalMapRenderer.cpp"
 								>
 								<FileConfiguration
 									Name="Debug GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release GL|Win32"
 									ExcludedFromBuild="true"
 									>
 									<Tool
@@ -5902,12 +6104,28 @@
 										Name="VCCLCompilerTool"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Release GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCustomBuildTool"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\..\shared\Irrlicht\source\COGLES2ParallaxMapRenderer.cpp"
 								>
 								<FileConfiguration
 									Name="Debug GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release GL|Win32"
 									ExcludedFromBuild="true"
 									>
 									<Tool
@@ -5926,12 +6144,28 @@
 										Name="VCCLCompilerTool"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Release GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCustomBuildTool"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\..\shared\Irrlicht\source\COGLES2Renderer2D.cpp"
 								>
 								<FileConfiguration
 									Name="Debug GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release GL|Win32"
 									ExcludedFromBuild="true"
 									>
 									<Tool
@@ -5950,12 +6184,28 @@
 										Name="VCCLCompilerTool"
 									/>
 								</FileConfiguration>
+								<FileConfiguration
+									Name="Release GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCustomBuildTool"
+									/>
+								</FileConfiguration>
 							</File>
 							<File
 								RelativePath="..\..\shared\Irrlicht\source\COGLES2Texture.cpp"
 								>
 								<FileConfiguration
 									Name="Debug GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release GL|Win32"
 									ExcludedFromBuild="true"
 									>
 									<Tool
@@ -5972,6 +6222,14 @@
 									>
 									<Tool
 										Name="VCCLCompilerTool"
+									/>
+								</FileConfiguration>
+								<FileConfiguration
+									Name="Release GL|Win32"
+									ExcludedFromBuild="true"
+									>
+									<Tool
+										Name="VCCustomBuildTool"
 									/>
 								</FileConfiguration>
 							</File>
@@ -6231,6 +6489,14 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\Irrlicht\source\CDMFLoader.h"
@@ -6247,6 +6513,14 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\Irrlicht\source\CLMTSMeshFileLoader.h"
@@ -6257,6 +6531,14 @@
 							>
 							<FileConfiguration
 								Name="Debug GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -6523,6 +6805,14 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\Irrlicht\source\COgreMeshFileLoader.h"
@@ -6533,6 +6823,14 @@
 							>
 							<FileConfiguration
 								Name="Debug GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -6645,6 +6943,14 @@
 							>
 							<FileConfiguration
 								Name="Debug GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -7700,6 +8006,14 @@
 							>
 							<FileConfiguration
 								Name="Debug GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -11438,6 +11752,14 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\Irrlicht\source\CProtonReader.h"
@@ -12098,6 +12420,14 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\Irrlicht\source\BuiltInFont.h"
@@ -12108,6 +12438,14 @@
 							>
 							<FileConfiguration
 								Name="Debug GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -12130,6 +12468,14 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\Irrlicht\source\CGUIButton.h"
@@ -12140,6 +12486,14 @@
 							>
 							<FileConfiguration
 								Name="Debug GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -12162,6 +12516,14 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\Irrlicht\source\CGUIColorSelectDialog.h"
@@ -12172,6 +12534,14 @@
 							>
 							<FileConfiguration
 								Name="Debug GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -12194,6 +12564,14 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\Irrlicht\source\CGUIContextMenu.h"
@@ -12204,6 +12582,14 @@
 							>
 							<FileConfiguration
 								Name="Debug GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -12226,6 +12612,14 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\Irrlicht\source\CGUIEnvironment.h"
@@ -12236,6 +12630,14 @@
 							>
 							<FileConfiguration
 								Name="Debug GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -12258,6 +12660,14 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\Irrlicht\source\CGUIFont.h"
@@ -12268,6 +12678,14 @@
 							>
 							<FileConfiguration
 								Name="Debug GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -12290,6 +12708,14 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\Irrlicht\source\CGUIImageList.h"
@@ -12300,6 +12726,14 @@
 							>
 							<FileConfiguration
 								Name="Debug GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -12322,6 +12756,14 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\Irrlicht\source\CGUIListBox.h"
@@ -12332,6 +12774,14 @@
 							>
 							<FileConfiguration
 								Name="Debug GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -12354,6 +12804,14 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\Irrlicht\source\CGUIMeshViewer.h"
@@ -12364,6 +12822,14 @@
 							>
 							<FileConfiguration
 								Name="Debug GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -12386,6 +12852,14 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\Irrlicht\source\CGUIModalScreen.h"
@@ -12396,6 +12870,14 @@
 							>
 							<FileConfiguration
 								Name="Debug GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -12418,6 +12900,14 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\Irrlicht\source\CGUISkin.h"
@@ -12428,6 +12918,14 @@
 							>
 							<FileConfiguration
 								Name="Debug GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -12450,6 +12948,14 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\Irrlicht\source\CGUISpriteBank.h"
@@ -12460,6 +12966,14 @@
 							>
 							<FileConfiguration
 								Name="Debug GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -12482,6 +12996,14 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\Irrlicht\source\CGUITabControl.h"
@@ -12492,6 +13014,14 @@
 							>
 							<FileConfiguration
 								Name="Debug GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -12514,6 +13044,14 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\Irrlicht\source\CGUIToolBar.h"
@@ -12530,6 +13068,14 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\Irrlicht\source\CGUITreeView.h"
@@ -12540,6 +13086,14 @@
 							>
 							<FileConfiguration
 								Name="Debug GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
