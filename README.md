@@ -1,5 +1,3 @@
-proton_sdk_source
-=================
 Cross Platform 3D engine OpenGL OGLES1 OGLES2 on Proton
 =================
 1.
