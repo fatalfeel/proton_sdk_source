@@ -1,4 +1,4 @@
-Cross Platform 3D engine OpenGL OGLES1 OGLES2 on Proton
+Cross Platform 3D engine with OpenGL OGLES1 OGLES2 on Proton
 =================
 1.
 Proton 3d engine impelement irrlicht 1.9.0 with OGLES1.0, OGLES2.0 and OpenGL
@@ -6,6 +6,7 @@ You can build on Win32, MacOS, Android, Ios
 
 2.
 Rember first run
+
 On Win32 --->
 xxxxxx/media/update_media.bat
 
@@ -19,6 +20,7 @@ android:installLocation="internalOnly" of AndroidManifest.xml
 
 4.
 Switch OGLES1 -> OGLES2
+
 (a.) find App.cpp
 irr::video::E_DRIVER_TYPE AppGetOGLESType()
 return irr::video::EDT_OGLES1; -> return irr::video::EDT_OGLES2;
