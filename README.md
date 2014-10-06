@@ -8,6 +8,7 @@ You can build on Win32, MacOS, Android, Ios
 Rember first run
 On Win32 --->
 xxxxxx/media/update_media.bat
+
 On MacOs --->
 chmod 777 xxxxxx/media/update_media.sh
 xxxxxx/media/update_media.sh
@@ -21,6 +22,7 @@ Switch OGLES1 -> OGLES2
 (a.) find App.cpp
 irr::video::E_DRIVER_TYPE AppGetOGLESType()
 return irr::video::EDT_OGLES1; -> return irr::video::EDT_OGLES2;
+
 (b.) find SharedActivity.java
 public AppGLSurfaceView(Context context, SharedActivity _app)
 //setEGLContextClientVersion(2); -> setEGLContextClientVersion(2);
