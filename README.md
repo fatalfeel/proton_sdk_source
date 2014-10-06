@@ -6,10 +6,9 @@ You can build on Win32, MacOS, Android, Ios
 
 2.
 Rember first run
-On Win32
+On Win32 --->
 xxxxxx/media/update_media.bat
-&
-On MacOs
+On MacOs --->
 chmod 777 xxxxxx/media/update_media.sh
 xxxxxx/media/update_media.sh
 
