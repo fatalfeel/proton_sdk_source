@@ -2261,7 +2261,7 @@ void COGLES1Driver::setBasicRenderStates(const SMaterial& material, const SMater
 	{
 		switch (material.ZBuffer)
 		{
-			case ECFN_NEVER:
+			case ECFN_DISABLED:
 				glDisable(GL_DEPTH_TEST);
 				break;
 			case ECFN_LESSEQUAL:
@@ -2291,6 +2291,10 @@ void COGLES1Driver::setBasicRenderStates(const SMaterial& material, const SMater
 			case ECFN_ALWAYS:
 				glEnable(GL_DEPTH_TEST);
 				glDepthFunc(GL_ALWAYS);
+				break;
+			case ECFN_NEVER:
+				glEnable(GL_DEPTH_TEST);
+				glDepthFunc(GL_NEVER);
 				break;
 		}
 	}
