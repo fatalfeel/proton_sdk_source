@@ -350,12 +350,13 @@ bool COGLES2MaterialRenderer::linkProgram()
 
 		// seems that some implementations use an extra null terminator
 		++maxlen;
-		c8 *buf = new c8[maxlen];
+		
+		c8* buf = new c8[maxlen];
 
 		UniformInfo.clear();
 		UniformInfo.reallocate(num);
 
-		for (GLint i=0; i < num; ++i)
+		/*for (GLint i=0; i < num; ++i)
 		{
 			SUniformInfo ui;
 			memset(buf, 0, maxlen);
@@ -363,6 +364,34 @@ bool COGLES2MaterialRenderer::linkProgram()
 			GLint size;
 			glGetActiveUniform(Program, i, maxlen, 0, &size, &ui.type, reinterpret_cast<GLchar*>(buf));
 			ui.name = buf;
+			ui.location = glGetUniformLocation(Program, buf);
+
+			UniformInfo.push_back(ui);
+		}*/
+		
+		GLint			i;
+		GLint			size;
+		int				pos;
+		SUniformInfo	ui;
+		core::stringc	name;
+		
+		for (i=0; i < num; ++i)
+		{
+			memset(buf, 0, maxlen);
+
+			glGetActiveUniform(Program, i, maxlen, 0, &size, &ui.type, reinterpret_cast<GLchar*>(buf));
+            			
+			name = "";
+			
+			for (pos = 0; pos < maxlen; ++pos)
+			{
+				if (buf[pos] == '[' || buf[pos] == '\0')
+					break;
+
+                name += buf[pos];
+			}
+
+			ui.name		= name;
 			ui.location = glGetUniformLocation(Program, buf);
 
 			UniformInfo.push_back(ui);
