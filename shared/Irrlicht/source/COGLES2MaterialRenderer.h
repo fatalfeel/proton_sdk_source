@@ -67,6 +67,8 @@ public:
 	//! Returns if the material is transparent.
 	virtual bool isTransparent() const;
 
+	virtual s32 getRenderCapability() const;
+
 	// implementations for the render services
 	virtual void setBasicRenderStates(const SMaterial& material, const SMaterial& lastMaterial, bool resetAllRenderstates);
 	

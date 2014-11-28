@@ -515,108 +515,193 @@ bool COGLES2Driver::OnAgainDriverInit() //by stone
 	return true;
 }
 
-
 void COGLES2Driver::createMaterialRenderers()
 {
-	// Fixed pipeline.
-    std::string FPVSPath = IRR_OGLES2_SHADER_PATH;
-	FPVSPath += "COGLES2FixedPipeline.vsh";
-    
-	std::string FPFSPath = IRR_OGLES2_SHADER_PATH;
-	FPFSPath += "COGLES2FixedPipeline.fsh";
-            
-	char* vsFixedPipelineData = 0;
-	char* fsFixedPipelineData = 0;
-    int Size;
-	
-    vsFixedPipelineData = (char*)FileManager::GetFileManager()->Get(FPVSPath, &Size, true);
-    fsFixedPipelineData = (char*)FileManager::GetFileManager()->Get(FPFSPath, &Size, true);
-	
-	// Create fixed pipeline materials.
-	addAndDropMaterialRenderer(new COGLES2FixedPipelineRenderer(vsFixedPipelineData, fsFixedPipelineData, EMT_SOLID, this));
-	addAndDropMaterialRenderer(new COGLES2FixedPipelineRenderer(vsFixedPipelineData, fsFixedPipelineData, EMT_SOLID_2_LAYER, this));
-	addAndDropMaterialRenderer(new COGLES2FixedPipelineRenderer(vsFixedPipelineData, fsFixedPipelineData, EMT_LIGHTMAP, this));
-	addAndDropMaterialRenderer(new COGLES2FixedPipelineRenderer(vsFixedPipelineData, fsFixedPipelineData, EMT_LIGHTMAP_ADD, this));
-	addAndDropMaterialRenderer(new COGLES2FixedPipelineRenderer(vsFixedPipelineData, fsFixedPipelineData, EMT_LIGHTMAP_M2, this));
-	addAndDropMaterialRenderer(new COGLES2FixedPipelineRenderer(vsFixedPipelineData, fsFixedPipelineData, EMT_LIGHTMAP_M4, this));
-	addAndDropMaterialRenderer(new COGLES2FixedPipelineRenderer(vsFixedPipelineData, fsFixedPipelineData, EMT_LIGHTMAP_LIGHTING, this));
-	addAndDropMaterialRenderer(new COGLES2FixedPipelineRenderer(vsFixedPipelineData, fsFixedPipelineData, EMT_LIGHTMAP_LIGHTING_M2, this));
-	addAndDropMaterialRenderer(new COGLES2FixedPipelineRenderer(vsFixedPipelineData, fsFixedPipelineData, EMT_LIGHTMAP_LIGHTING_M4, this));
-	addAndDropMaterialRenderer(new COGLES2FixedPipelineRenderer(vsFixedPipelineData, fsFixedPipelineData, EMT_DETAIL_MAP, this));
-	addAndDropMaterialRenderer(new COGLES2FixedPipelineRenderer(vsFixedPipelineData, fsFixedPipelineData, EMT_SPHERE_MAP, this));
-	addAndDropMaterialRenderer(new COGLES2FixedPipelineRenderer(vsFixedPipelineData, fsFixedPipelineData, EMT_REFLECTION_2_LAYER, this));
-	addAndDropMaterialRenderer(new COGLES2FixedPipelineRenderer(vsFixedPipelineData, fsFixedPipelineData, EMT_TRANSPARENT_ADD_COLOR, this));
-	addAndDropMaterialRenderer(new COGLES2FixedPipelineRenderer(vsFixedPipelineData, fsFixedPipelineData, EMT_TRANSPARENT_ALPHA_CHANNEL, this));
-	addAndDropMaterialRenderer(new COGLES2FixedPipelineRenderer(vsFixedPipelineData, fsFixedPipelineData, EMT_TRANSPARENT_ALPHA_CHANNEL_REF, this));
-	addAndDropMaterialRenderer(new COGLES2FixedPipelineRenderer(vsFixedPipelineData, fsFixedPipelineData, EMT_TRANSPARENT_VERTEX_ALPHA, this));
-	addAndDropMaterialRenderer(new COGLES2FixedPipelineRenderer(vsFixedPipelineData, fsFixedPipelineData, EMT_TRANSPARENT_REFLECTION_2_LAYER, this));
-	// do not remove fsFixedPipelineData here, we need it later on for
+	// Create callbacks.
 
-	
-	// Normal Mapping.
-    std::string NMVSPath = IRR_OGLES2_SHADER_PATH;
-	NMVSPath += "COGLES2NormalMap.vsh";
-    
-	std::string NMFSPath = IRR_OGLES2_SHADER_PATH;
-	NMFSPath += "COGLES2NormalMap.fsh";
+	COGLES2MaterialSolidCB*		SolidCB = new COGLES2MaterialSolidCB();
+	COGLES2MaterialSolid2CB*	Solid2LayerCB = new COGLES2MaterialSolid2CB();
+	COGLES2MaterialLightmapCB*	LightmapCB = new COGLES2MaterialLightmapCB(1.f);
+	COGLES2MaterialLightmapCB*	LightmapAddCB = new COGLES2MaterialLightmapCB(1.f);
+	COGLES2MaterialLightmapCB*	LightmapM2CB = new COGLES2MaterialLightmapCB(2.f);
+	COGLES2MaterialLightmapCB*	LightmapM4CB = new COGLES2MaterialLightmapCB(4.f);
+	COGLES2MaterialLightmapCB*	LightmapLightingCB = new COGLES2MaterialLightmapCB(1.f);
+	COGLES2MaterialLightmapCB*	LightmapLightingM2CB = new COGLES2MaterialLightmapCB(2.f);
+	COGLES2MaterialLightmapCB*	LightmapLightingM4CB = new COGLES2MaterialLightmapCB(4.f);
+	COGLES2MaterialSolid2CB*	DetailMapCB = new COGLES2MaterialSolid2CB();
+	COGLES2MaterialReflectionCB* SphereMapCB = new COGLES2MaterialReflectionCB();
+	COGLES2MaterialReflectionCB* Reflection2LayerCB = new COGLES2MaterialReflectionCB();
+	COGLES2MaterialSolidCB* TransparentAddColorCB = new COGLES2MaterialSolidCB();
+	COGLES2MaterialSolidCB* TransparentAlphaChannelCB = new COGLES2MaterialSolidCB();
+	COGLES2MaterialSolidCB* TransparentAlphaChannelRefCB = new COGLES2MaterialSolidCB();
+	COGLES2MaterialSolidCB* TransparentVertexAlphaCB = new COGLES2MaterialSolidCB();
+	COGLES2MaterialReflectionCB*		TransparentReflection2LayerCB = new COGLES2MaterialReflectionCB();
+	COGLES2MaterialNormalMapCB*			NormalMapCB = new COGLES2MaterialNormalMapCB();
+	COGLES2MaterialNormalMapCB*			NormalMapAddColorCB = new COGLES2MaterialNormalMapCB();
+	COGLES2MaterialNormalMapCB*			NormalMapVertexAlphaCB = new COGLES2MaterialNormalMapCB();
+	COGLES2MaterialParallaxMapCB*		ParallaxMapCB = new COGLES2MaterialParallaxMapCB();
+	COGLES2MaterialParallaxMapCB*		ParallaxMapAddColorCB = new COGLES2MaterialParallaxMapCB();
+	COGLES2MaterialParallaxMapCB*		ParallaxMapVertexAlphaCB = new COGLES2MaterialParallaxMapCB();
+	COGLES2MaterialOneTextureBlendCB*	OneTextureBlendCB = new COGLES2MaterialOneTextureBlendCB();
 
-	char* vsNormalMapData = 0;
-	char* fsNormalMapData = 0;
-	
-    vsNormalMapData = (char*)FileManager::GetFileManager()->Get(NMVSPath, &Size, true);
-    fsNormalMapData = (char*)FileManager::GetFileManager()->Get(NMFSPath, &Size, true);
-	
-	addAndDropMaterialRenderer(new COGLES2NormalMapRenderer(vsNormalMapData, fsNormalMapData, EMT_NORMAL_MAP_SOLID, this));
-	addAndDropMaterialRenderer(new COGLES2NormalMapRenderer(vsNormalMapData, fsNormalMapData, EMT_NORMAL_MAP_TRANSPARENT_ADD_COLOR, this));
-	addAndDropMaterialRenderer(new COGLES2NormalMapRenderer(vsNormalMapData, fsNormalMapData, EMT_NORMAL_MAP_TRANSPARENT_VERTEX_ALPHA, this));
+	// Create built-in materials.
+	core::stringc irr_shader_path = "shaders/";
 
-	delete vsNormalMapData;
-	delete fsNormalMapData;
+	core::stringc VertexShader = irr_shader_path + "COGLES2Solid.vsh";
+	core::stringc FragmentShader = irr_shader_path + "COGLES2Solid.fsh";
 
+	addHighLevelShaderMaterialFromFiles(VertexShader, "main", EVST_VS_2_0, FragmentShader, "main", EPST_PS_2_0, "", "main",
+		EGST_GS_4_0, scene::EPT_TRIANGLES, scene::EPT_TRIANGLE_STRIP, 0, SolidCB, EMT_SOLID, 0, EGSL_DEFAULT);
 
-	// Parallax Mapping.
-    std::string PMVSPath = IRR_OGLES2_SHADER_PATH;
-	PMVSPath += "COGLES2ParallaxMap.vsh";
-    
-	std::string PMFSPath = IRR_OGLES2_SHADER_PATH;
-	PMFSPath += "COGLES2ParallaxMap.fsh";
+	VertexShader = irr_shader_path + "COGLES2Solid2.vsh";
+	FragmentShader = irr_shader_path + "COGLES2Solid2Layer.fsh";
 
-	char* vsParallaxMapData = 0;
-	char* fsParallaxMapData = 0;
-	
-    vsParallaxMapData = (char*)FileManager::GetFileManager()->Get(PMVSPath, &Size, true);
-    fsParallaxMapData = (char*)FileManager::GetFileManager()->Get(PMFSPath, &Size, true);
+	addHighLevelShaderMaterialFromFiles(VertexShader, "main", EVST_VS_2_0, FragmentShader, "main", EPST_PS_2_0, "", "main",
+		EGST_GS_4_0, scene::EPT_TRIANGLES, scene::EPT_TRIANGLE_STRIP, 0, Solid2LayerCB, EMT_SOLID, 0, EGSL_DEFAULT);
 
-	addAndDropMaterialRenderer(new COGLES2ParallaxMapRenderer(vsParallaxMapData, fsParallaxMapData, EMT_PARALLAX_MAP_SOLID, this));
-	addAndDropMaterialRenderer(new COGLES2ParallaxMapRenderer(vsParallaxMapData, fsParallaxMapData, EMT_PARALLAX_MAP_TRANSPARENT_ADD_COLOR, this));
-	addAndDropMaterialRenderer(new COGLES2ParallaxMapRenderer(vsParallaxMapData, fsParallaxMapData, EMT_PARALLAX_MAP_TRANSPARENT_VERTEX_ALPHA, this));
-	
-	delete vsParallaxMapData;
-	delete fsParallaxMapData;
-	
-	addAndDropMaterialRenderer(new COGLES2FixedPipelineRenderer(vsFixedPipelineData, fsFixedPipelineData, EMT_ONETEXTURE_BLEND, this));
-	
-	// now also remove the fixed pipeline data
-	delete vsFixedPipelineData;
-	delete fsFixedPipelineData;
+	VertexShader = irr_shader_path + "COGLES2Solid2.vsh";
+	FragmentShader = irr_shader_path + "COGLES2LightmapModulate.fsh";
 
+	addHighLevelShaderMaterialFromFiles(VertexShader, "main", EVST_VS_2_0, FragmentShader, "main", EPST_PS_2_0, "", "main",
+		EGST_GS_4_0, scene::EPT_TRIANGLES, scene::EPT_TRIANGLE_STRIP, 0, LightmapCB, EMT_SOLID, 0, EGSL_DEFAULT);
+
+	FragmentShader = irr_shader_path + "COGLES2LightmapAdd.fsh";
+
+	addHighLevelShaderMaterialFromFiles(VertexShader, "main", EVST_VS_2_0, FragmentShader, "main", EPST_PS_2_0, "", "main",
+		EGST_GS_4_0, scene::EPT_TRIANGLES, scene::EPT_TRIANGLE_STRIP, 0, LightmapAddCB, EMT_SOLID, 0, EGSL_DEFAULT);
+
+	FragmentShader = irr_shader_path + "COGLES2LightmapModulate.fsh";
+
+	addHighLevelShaderMaterialFromFiles(VertexShader, "main", EVST_VS_2_0, FragmentShader, "main", EPST_PS_2_0, "", "main",
+		EGST_GS_4_0, scene::EPT_TRIANGLES, scene::EPT_TRIANGLE_STRIP, 0, LightmapM2CB, EMT_SOLID, 0, EGSL_DEFAULT);
+
+	addHighLevelShaderMaterialFromFiles(VertexShader, "main", EVST_VS_2_0, FragmentShader, "main", EPST_PS_2_0, "", "main",
+		EGST_GS_4_0, scene::EPT_TRIANGLES, scene::EPT_TRIANGLE_STRIP, 0, LightmapM4CB, EMT_SOLID, 0, EGSL_DEFAULT);
+
+	addHighLevelShaderMaterialFromFiles(VertexShader, "main", EVST_VS_2_0, FragmentShader, "main", EPST_PS_2_0, "", "main",
+		EGST_GS_4_0, scene::EPT_TRIANGLES, scene::EPT_TRIANGLE_STRIP, 0, LightmapLightingCB, EMT_SOLID, 0, EGSL_DEFAULT);
+
+	addHighLevelShaderMaterialFromFiles(VertexShader, "main", EVST_VS_2_0, FragmentShader, "main", EPST_PS_2_0, "", "main",
+		EGST_GS_4_0, scene::EPT_TRIANGLES, scene::EPT_TRIANGLE_STRIP, 0, LightmapLightingM2CB, EMT_SOLID, 0, EGSL_DEFAULT);
+
+	addHighLevelShaderMaterialFromFiles(VertexShader, "main", EVST_VS_2_0, FragmentShader, "main", EPST_PS_2_0, "", "main",
+		EGST_GS_4_0, scene::EPT_TRIANGLES, scene::EPT_TRIANGLE_STRIP, 0, LightmapLightingM4CB, EMT_SOLID, 0, EGSL_DEFAULT);
+
+	VertexShader = irr_shader_path + "COGLES2Solid2.vsh";
+	FragmentShader = irr_shader_path + "COGLES2DetailMap.fsh";
+
+	addHighLevelShaderMaterialFromFiles(VertexShader, "main", EVST_VS_2_0, FragmentShader, "main", EPST_PS_2_0, "", "main",
+		EGST_GS_4_0, scene::EPT_TRIANGLES, scene::EPT_TRIANGLE_STRIP, 0, DetailMapCB, EMT_SOLID, 0, EGSL_DEFAULT);
+
+	VertexShader = irr_shader_path + "COGLES2SphereMap.vsh";
+	FragmentShader = irr_shader_path + "COGLES2SphereMap.fsh";
+
+	addHighLevelShaderMaterialFromFiles(VertexShader, "main", EVST_VS_2_0, FragmentShader, "main", EPST_PS_2_0, "", "main",
+		EGST_GS_4_0, scene::EPT_TRIANGLES, scene::EPT_TRIANGLE_STRIP, 0, SphereMapCB, EMT_SOLID, 0, EGSL_DEFAULT);
+
+	VertexShader = irr_shader_path + "COGLES2Reflection2Layer.vsh";
+	FragmentShader = irr_shader_path + "COGLES2Reflection2Layer.fsh";
+
+	addHighLevelShaderMaterialFromFiles(VertexShader, "main", EVST_VS_2_0, FragmentShader, "main", EPST_PS_2_0, "", "main",
+		EGST_GS_4_0, scene::EPT_TRIANGLES, scene::EPT_TRIANGLE_STRIP, 0, Reflection2LayerCB, EMT_SOLID, 0, EGSL_DEFAULT);
+
+	VertexShader = irr_shader_path + "COGLES2Solid.vsh";
+	FragmentShader = irr_shader_path + "COGLES2Solid.fsh";
+
+	addHighLevelShaderMaterialFromFiles(VertexShader, "main", EVST_VS_2_0, FragmentShader, "main", EPST_PS_2_0, "", "main",
+		EGST_GS_4_0, scene::EPT_TRIANGLES, scene::EPT_TRIANGLE_STRIP, 0, TransparentAddColorCB, EMT_TRANSPARENT_ADD_COLOR, 0, EGSL_DEFAULT);
+
+	addHighLevelShaderMaterialFromFiles(VertexShader, "main", EVST_VS_2_0, FragmentShader, "main", EPST_PS_2_0, "", "main",
+		EGST_GS_4_0, scene::EPT_TRIANGLES, scene::EPT_TRIANGLE_STRIP, 0, TransparentAlphaChannelCB, EMT_TRANSPARENT_ALPHA_CHANNEL, 0, EGSL_DEFAULT);
+
+	FragmentShader = irr_shader_path + "COGLES2TransparentAlphaChannelRef.fsh";
+
+	addHighLevelShaderMaterialFromFiles(VertexShader, "main", EVST_VS_2_0, FragmentShader, "main", EPST_PS_2_0, "", "main",
+		EGST_GS_4_0, scene::EPT_TRIANGLES, scene::EPT_TRIANGLE_STRIP, 0, TransparentAlphaChannelRefCB, EMT_SOLID, 0, EGSL_DEFAULT);
+
+	FragmentShader = irr_shader_path + "COGLES2TransparentVertexAlpha.fsh";
+
+	addHighLevelShaderMaterialFromFiles(VertexShader, "main", EVST_VS_2_0, FragmentShader, "main", EPST_PS_2_0, "", "main",
+		EGST_GS_4_0, scene::EPT_TRIANGLES, scene::EPT_TRIANGLE_STRIP, 0, TransparentVertexAlphaCB, EMT_TRANSPARENT_ALPHA_CHANNEL, 0, EGSL_DEFAULT);
+
+	VertexShader = irr_shader_path + "COGLES2Reflection2Layer.vsh";
+	FragmentShader = irr_shader_path + "COGLES2Reflection2Layer.fsh";
+
+	addHighLevelShaderMaterialFromFiles(VertexShader, "main", EVST_VS_2_0, FragmentShader, "main", EPST_PS_2_0, "", "main",
+		EGST_GS_4_0, scene::EPT_TRIANGLES, scene::EPT_TRIANGLE_STRIP, 0, TransparentReflection2LayerCB, EMT_TRANSPARENT_ALPHA_CHANNEL, 0, EGSL_DEFAULT);
+
+	VertexShader = irr_shader_path + "COGLES2NormalMap.vsh";
+	FragmentShader = irr_shader_path + "COGLES2NormalMap.fsh";
+
+	addHighLevelShaderMaterialFromFiles(VertexShader, "main", EVST_VS_2_0, FragmentShader, "main", EPST_PS_2_0, "", "main",
+		EGST_GS_4_0, scene::EPT_TRIANGLES, scene::EPT_TRIANGLE_STRIP, 0, NormalMapCB, EMT_SOLID, 0, EGSL_DEFAULT);
+
+	addHighLevelShaderMaterialFromFiles(VertexShader, "main", EVST_VS_2_0, FragmentShader, "main", EPST_PS_2_0, "", "main",
+		EGST_GS_4_0, scene::EPT_TRIANGLES, scene::EPT_TRIANGLE_STRIP, 0, NormalMapAddColorCB, EMT_TRANSPARENT_ADD_COLOR, 0, EGSL_DEFAULT);
+
+	addHighLevelShaderMaterialFromFiles(VertexShader, "main", EVST_VS_2_0, FragmentShader, "main", EPST_PS_2_0, "", "main",
+		EGST_GS_4_0, scene::EPT_TRIANGLES, scene::EPT_TRIANGLE_STRIP, 0, NormalMapVertexAlphaCB, EMT_TRANSPARENT_ALPHA_CHANNEL, 0, EGSL_DEFAULT);
+
+	VertexShader = irr_shader_path + "COGLES2ParallaxMap.vsh";
+	FragmentShader = irr_shader_path + "COGLES2ParallaxMap.fsh";
+
+	addHighLevelShaderMaterialFromFiles(VertexShader, "main", EVST_VS_2_0, FragmentShader, "main", EPST_PS_2_0, "", "main",
+		EGST_GS_4_0, scene::EPT_TRIANGLES, scene::EPT_TRIANGLE_STRIP, 0, ParallaxMapCB, EMT_SOLID, 0, EGSL_DEFAULT);
+
+	addHighLevelShaderMaterialFromFiles(VertexShader, "main", EVST_VS_2_0, FragmentShader, "main", EPST_PS_2_0, "", "main",
+		EGST_GS_4_0, scene::EPT_TRIANGLES, scene::EPT_TRIANGLE_STRIP, 0, ParallaxMapAddColorCB, EMT_TRANSPARENT_ADD_COLOR, 0, EGSL_DEFAULT);
+
+	addHighLevelShaderMaterialFromFiles(VertexShader, "main", EVST_VS_2_0, FragmentShader, "main", EPST_PS_2_0, "", "main",
+		EGST_GS_4_0, scene::EPT_TRIANGLES, scene::EPT_TRIANGLE_STRIP, 0, ParallaxMapVertexAlphaCB, EMT_TRANSPARENT_ALPHA_CHANNEL, 0, EGSL_DEFAULT);
+
+	VertexShader = irr_shader_path + "COGLES2Solid.vsh";
+	FragmentShader = irr_shader_path + "COGLES2OneTextureBlend.fsh";
+
+	addHighLevelShaderMaterialFromFiles(VertexShader, "main", EVST_VS_2_0, FragmentShader, "main", EPST_PS_2_0, "", "main",
+		EGST_GS_4_0, scene::EPT_TRIANGLES, scene::EPT_TRIANGLE_STRIP, 0, OneTextureBlendCB, EMT_ONETEXTURE_BLEND, 0, EGSL_DEFAULT);
+
+	// Drop callbacks.
+
+	SolidCB->drop();
+	Solid2LayerCB->drop();
+	LightmapCB->drop();
+	LightmapAddCB->drop();
+	LightmapM2CB->drop();
+	LightmapM4CB->drop();
+	LightmapLightingCB->drop();
+	LightmapLightingM2CB->drop();
+	LightmapLightingM4CB->drop();
+	DetailMapCB->drop();
+	SphereMapCB->drop();
+	Reflection2LayerCB->drop();
+	TransparentAddColorCB->drop();
+	TransparentAlphaChannelCB->drop();
+	TransparentAlphaChannelRefCB->drop();
+	TransparentVertexAlphaCB->drop();
+	TransparentReflection2LayerCB->drop();
+	NormalMapCB->drop();
+	NormalMapAddColorCB->drop();
+	NormalMapVertexAlphaCB->drop();
+	ParallaxMapCB->drop();
+	ParallaxMapAddColorCB->drop();
+	ParallaxMapVertexAlphaCB->drop();
+	OneTextureBlendCB->drop();
 
 	// Create 2D material renderer.
-    std::string R2DVSPath = IRR_OGLES2_SHADER_PATH;
-	R2DVSPath += "COGLES2Renderer2D.vsh";
-    
-	std::string R2DFSPath = IRR_OGLES2_SHADER_PATH;
-	R2DFSPath += "COGLES2Renderer2D.fsh";
-
-	char* vs2DData = 0;
-	char* fs2DData = 0;
-	    
-    vs2DData = (char*)FileManager::GetFileManager()->Get(R2DVSPath, &Size, true);
-    fs2DData = (char*)FileManager::GetFileManager()->Get(R2DFSPath, &Size, true);
-
+	int size;
+	c8* vs2DData = 0;
+	c8* fs2DData = 0;
+	
+	//loadShaderData(io::path("COGLES2Renderer2D.vsh"), io::path("COGLES2Renderer2D.fsh"), &vs2DData, &fs2DData);
+	core::stringc R2DVSPath = irr_shader_path + "COGLES2Renderer2D.vsh";
+	core::stringc R2DFSPath = irr_shader_path + "COGLES2Renderer2D.fsh";
+	
+	vs2DData = (char*)FileManager::GetFileManager()->Get(R2DVSPath.c_str(), &size, true);
+    fs2DData = (char*)FileManager::GetFileManager()->Get(R2DFSPath.c_str(), &size, true);
+	
 	MaterialRenderer2D = new COGLES2Renderer2D(vs2DData, fs2DData, this);
-	delete vs2DData;
-	delete fs2DData;
+	delete[] vs2DData;
+	delete[] fs2DData;
 }
 
 
@@ -3091,16 +3176,16 @@ COGLES2CallBridge::COGLES2CallBridge(COGLES2Driver* driver) : Driver(driver),
 	glDisable(GL_DEPTH_TEST);
 }
 
-/*void COGLES2CallBridge::setBlendFunc(GLenum source, GLenum destination)
+void COGLES2CallBridge::setBlendEquation(GLenum mode)
 {
-	if (BlendSource != source || BlendDestination != destination)
+	if (BlendEquation != mode)
 	{
-		glBlendFunc(source, destination);
+		glBlendEquation(mode);
 
-		BlendSource = source;
-		BlendDestination = destination;
+		BlendEquation = mode;
 	}
-}*/
+}
+
 void COGLES2CallBridge::setBlendFunc(GLenum source, GLenum destination)
 {
 	if (BlendSourceRGB != source || BlendDestinationRGB != destination ||
@@ -3112,29 +3197,6 @@ void COGLES2CallBridge::setBlendFunc(GLenum source, GLenum destination)
 		BlendDestinationRGB = destination;
 		BlendSourceAlpha = source;
 		BlendDestinationAlpha = destination;
-	}
-}
-
-void COGLES2CallBridge::setBlend(bool enable)
-{
-	if (Blend != enable)
-	{
-		if (enable)
-			glEnable(GL_BLEND);
-		else
-			glDisable(GL_BLEND);
-
-		Blend = enable;
-	}
-}
-
-void COGLES2CallBridge::setBlendEquation(GLenum mode)
-{
-	if (BlendEquation != mode)
-	{
-		glBlendEquation(mode);
-
-		BlendEquation = mode;
 	}
 }
 
@@ -3156,6 +3218,19 @@ void COGLES2CallBridge::setBlendFuncSeparate(GLenum sourceRGB, GLenum destinatio
 	else
 	{
 	    setBlendFunc(sourceRGB, destinationRGB);
+	}
+}
+
+void COGLES2CallBridge::setBlend(bool enable)
+{
+	if (Blend != enable)
+	{
+		if (enable)
+			glEnable(GL_BLEND);
+		else
+			glDisable(GL_BLEND);
+
+		Blend = enable;
 	}
 }
 

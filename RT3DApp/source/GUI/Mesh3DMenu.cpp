@@ -100,11 +100,12 @@ void Mesh3DInitScene()
 	mesh	= smgr->getMesh( memfile );
 	node	= smgr->addAnimatedMeshSceneNode( mesh );
 		
-	if( buff_extract )
+	//delete by drop
+	/*if( buff_extract )
 	{
 		delete buff_extract;
 		buff_extract = NULL;
-	}
+	}*/
 					
 	if( pfilesystem )
 	{
@@ -142,11 +143,12 @@ void Mesh3DInitScene()
     node->addAnimator(anim);
     anim->drop();
 
-	if( buff_extract )
+	//delete by drop
+	/*if( buff_extract )
 	{
 		delete buff_extract;
 		buff_extract = NULL;
-	}
+	}*/
 		
 	if( pfilesystem )
 	{

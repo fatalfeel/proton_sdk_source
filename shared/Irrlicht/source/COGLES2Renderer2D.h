@@ -23,10 +23,7 @@ namespace video
 class COGLES2Renderer2D : public COGLES2MaterialRenderer
 {
 public:
-	//! Constructor
 	COGLES2Renderer2D(const c8* vertexShaderProgram, const c8* pixelShaderProgram, COGLES2Driver* driver);
-
-	//! Destructor
 	~COGLES2Renderer2D();
 
 	virtual void OnSetMaterial(const SMaterial& material, const SMaterial& lastMaterial,
@@ -39,15 +36,8 @@ public:
 protected:
 	s32 TextureUsageID;
 
-	//core::dimension2d<u32> RenderTargetSize;
-	//core::matrix4 Matrix;
-
 	const ITexture* Texture;
-
-	//s32 MatrixID;
-	//s32 UseTextureID;
 };
-
 
 } // end namespace video
 } // end namespace irr

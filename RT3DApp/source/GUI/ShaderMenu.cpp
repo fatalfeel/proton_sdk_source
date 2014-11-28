@@ -147,8 +147,8 @@ void CShaderMenu::InitScene()
 	io::path vsFileName = (GetBaseAppPath() + "game/opengl.vert").c_str();
 	io::path psFileName = (GetBaseAppPath() + "game/opengl.frag").c_str();
 #else
-	io::path vsFileName = (GetBaseAppPath() + "game/ogles2.vert").c_str();
-	io::path psFileName = (GetBaseAppPath() + "game/ogles2.frag").c_str();
+	io::path vsFileName = "game/ogles2.vert";
+	io::path psFileName = "game/ogles2.frag";
 #endif
 		            
 	if (gpu)

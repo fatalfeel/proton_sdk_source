@@ -1,12 +1,10 @@
-#define MAX_LIGHTS 2
-
 precision mediump float;
 
 /* Uniforms */
 
-uniform float uFactor;
+uniform int uTextureUsage0;
 uniform sampler2D uTextureUnit0;
-uniform sampler2D uTextureUnit1;
+uniform int uBlendType;
 uniform int uFogEnable;
 uniform int uFogType;
 uniform vec4 uFogColor;
@@ -16,10 +14,8 @@ uniform float uFogDensity;
 
 /* Varyings */
 
-varying vec2 vTexCoord;
-varying vec3 vEyeVector;
-varying vec3 vLightVector[MAX_LIGHTS];
-varying vec4 vLightColor[MAX_LIGHTS];
+varying vec2 vTextureCoord0;
+varying vec4 vVertexColor;
 varying float vFogCoord;
 
 float computeFog()
@@ -48,27 +44,22 @@ float computeFog()
 
 void main()
 {
-	vec4 TempFetch = texture2D(uTextureUnit1, vTexCoord) *  2.0 - 1.0;
-	TempFetch *= uFactor;
+	vec4 Color0 = vVertexColor;
+	vec4 Color1 = vec4(1.0, 1.0, 1.0, 1.0);
 
-	vec3 EyeVector = normalize(vEyeVector);
-	vec2 TexCoord = EyeVector.xy * TempFetch.w + vTexCoord;
+	if (bool(uTextureUsage0))
+		Color1 = texture2D(uTextureUnit0, vTextureCoord0);
 
-	vec4 Color  = texture2D(uTextureUnit0, TexCoord);
-	vec3 Normal = texture2D(uTextureUnit1, TexCoord).xyz *  2.0 - 1.0;
+	vec4 FinalColor = Color0 * Color1;
 
-	vec4 FinalColor = vec4(0.0, 0.0, 0.0, 0.0);
-
-	for (int i = 0; i < int(MAX_LIGHTS); i++)
+	if (uBlendType == 1)
 	{
-		vec3 LightVector = normalize(vLightVector[i]);
-
-		float Lambert = max(dot(LightVector, Normal), 0.0);
-		FinalColor += vec4(Lambert) * vLightColor[i];
+		FinalColor.w = Color0.w;
 	}
-
-	FinalColor *= Color;
-	FinalColor.w = vLightColor[0].w;
+	else if (uBlendType == 2)
+	{
+		FinalColor.w = Color1.w;
+	}
 
 	if (bool(uFogEnable))
 	{
@@ -77,6 +68,6 @@ void main()
 		FogColor.a = 1.0;
 		FinalColor = mix(FogColor, FinalColor, FogFactor);
 	}
-	
+
 	gl_FragColor = FinalColor;
 }

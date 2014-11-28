@@ -32,12 +32,12 @@ namespace video
 
 //! Constructor
 COGLES2MaterialRenderer::COGLES2MaterialRenderer(COGLES2Driver* driver,
-		s32& outMaterialTypeNr,
-		const c8* vertexShaderProgram,
-		const c8* pixelShaderProgram,
-		IShaderConstantSetCallBack* callback,
-		E_MATERIAL_TYPE baseMaterial,
-		s32 userData)
+												s32&			outMaterialTypeNr,
+												const c8*		vertexShaderProgram,
+												const c8*		pixelShaderProgram,
+												IShaderConstantSetCallBack* callback,
+												E_MATERIAL_TYPE baseMaterial,
+												s32				userData)
 	: Driver(driver), CallBack(callback), Alpha(false), Blending(false), FixedBlending(false), Program(0), UserData(userData)
 {
 	#ifdef _DEBUG
@@ -236,8 +236,8 @@ void COGLES2MaterialRenderer::OnSetMaterial(const video::SMaterial& material,
 
 		bridgeCalls->setBlend(true);
 	}
-	else
-		bridgeCalls->setBlend(false);
+	//else
+	//	bridgeCalls->setBlend(false);
 
 	if (CallBack)
 		CallBack->OnSetMaterial(material);
@@ -255,6 +255,10 @@ bool COGLES2MaterialRenderer::isTransparent() const
 	return (Alpha || Blending || FixedBlending);
 }
 
+s32 COGLES2MaterialRenderer::getRenderCapability() const
+{
+	return 0;
+}
 
 bool COGLES2MaterialRenderer::createShader(GLenum shaderType, const char* shader)
 {
@@ -333,10 +337,7 @@ bool COGLES2MaterialRenderer::linkProgram()
 		glGetProgramiv(Program, GL_ACTIVE_UNIFORMS, &num);
 
 		if (num == 0)
-		{
-			// no uniforms
 			return true;
-		}
 
 		GLint maxlen = 0;
 

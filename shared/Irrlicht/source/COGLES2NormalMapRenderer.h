@@ -20,27 +20,40 @@ namespace video
 {
 
 //! Class for normal mapping in OpenGL ES 2.0
-class COGLES2NormalMapRenderer : public COGLES2MaterialRenderer
+class COGLES2MaterialNormalMapCB : public IShaderConstantSetCallBack
 {
 public:
-	//! Constructor
-	COGLES2NormalMapRenderer(const c8* vertexShaderProgram,
-		const c8* pixelShaderProgram, E_MATERIAL_TYPE baseMaterial,
-		COGLES2Driver* driver);
+	COGLES2MaterialNormalMapCB();
 
-	//! Destructor
-	~COGLES2NormalMapRenderer();
-
-	virtual void OnSetMaterial(const SMaterial& material, const SMaterial& lastMaterial,
-		bool resetAllRenderstates, IMaterialRendererServices* services);
-
-	virtual bool OnRender(IMaterialRendererServices* service, E_VERTEX_TYPE vtxtype);
+	virtual void OnSetMaterial(const SMaterial& material);
+	virtual void OnSetConstants(IMaterialRendererServices* services, s32 userData);
 
 protected:
+	bool FirstUpdate;
+	s32 WVPMatrixID;
+	s32 WVMatrixID;
+	s32 LightPositionID;
+	s32 LightColorID;
+	s32 TextureUnit0ID;
+	s32 TextureUnit1ID;
+	s32 FogEnableID;
+	s32 FogTypeID;
+	s32 FogColorID;
+	s32 FogStartID;
+	s32 FogEndID;
+	s32 FogDensityID;
 
-	COGLES2MaterialRenderer* SharedRenderer;
+	core::vector3df LightPosition[2];
+	SColorf LightColor[2];
+	s32 TextureUnit0;
+	s32 TextureUnit1;
+	s32 FogEnable;
+	s32 FogType;
+	SColorf FogColor;
+	f32 FogStart;
+	f32 FogEnd;
+	f32 FogDensity;
 };
-
 
 } // end namespace video
 } // end namespace irr

@@ -256,7 +256,7 @@ define out. */
         #define IRR_OGLES2_SHADER_PATH "../../media/shaders/"
     #endif
 #endif*/
-#define IRR_OGLES2_SHADER_PATH "shaders/"
+//#define IRR_OGLES2_SHADER_PATH "shaders/"
 
 //! Define _IRR_COMPILE_WITH_SOFTWARE_ to compile the Irrlicht engine with software driver
 /** If you do not need the software driver, or want to use Burning's Video instead,

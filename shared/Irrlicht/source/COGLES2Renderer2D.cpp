@@ -27,14 +27,12 @@ namespace video
 {
 
 //! Constructor
-COGLES2Renderer2D::COGLES2Renderer2D(const c8* vertexShaderProgram, const c8* pixelShaderProgram, COGLES2Driver* driver)
-//	:	COGLES2MaterialRenderer(driver, 0, EMT_SOLID), RenderTargetSize(core::dimension2d<u32>(0,0)),
-//		Matrix(core::matrix4::EM4CONST_NOTHING), Texture(0)
-: COGLES2MaterialRenderer(driver, 0, EMT_SOLID), Texture(0)
+COGLES2Renderer2D::COGLES2Renderer2D(const c8* vertexShaderProgram, const c8* pixelShaderProgram, COGLES2Driver* driver) :
+	COGLES2MaterialRenderer(driver, 0, EMT_SOLID), Texture(0)
 {
-	#ifdef _DEBUG
+#ifdef _DEBUG
 	setDebugName("COGLES2Renderer2D");
-	#endif
+#endif
 
 	int Temp = 0;
 
@@ -53,12 +51,9 @@ COGLES2Renderer2D::COGLES2Renderer2D(const c8* vertexShaderProgram, const c8* pi
 	Driver->getBridgeCalls()->setProgram(0);
 }
 
-
-//! Destructor
 COGLES2Renderer2D::~COGLES2Renderer2D()
 {
 }
-
 
 void COGLES2Renderer2D::OnSetMaterial(const video::SMaterial& material,
 				const video::SMaterial& lastMaterial,
@@ -66,29 +61,12 @@ void COGLES2Renderer2D::OnSetMaterial(const video::SMaterial& material,
 				video::IMaterialRendererServices* services)
 {
 	Driver->getBridgeCalls()->setProgram(Program);
-
 	Driver->setBasicRenderStates(material, lastMaterial, resetAllRenderstates);
 }
-
 
 bool COGLES2Renderer2D::OnRender(IMaterialRendererServices* service, E_VERTEX_TYPE vtxtype)
 {
 	Driver->setTextureRenderStates(Driver->getCurrentMaterial(), false);
-
-	/*const core::dimension2d<u32>& renderTargetSize = Driver->getCurrentRenderTargetSize();
-
-	if (RenderTargetSize != renderTargetSize)
-	{
-		Matrix.buildProjectionMatrixOrthoLH(f32(renderTargetSize.Width), f32(-(s32)(renderTargetSize.Height)), -1.0f, 1.0f);
-		Matrix.setTranslation(core::vector3df(-1,1,0));
-
-		setPixelShaderConstant(MatrixID, Matrix.pointer(), 16);
-
-		RenderTargetSize = renderTargetSize;
-	}
-
-	int UseTexture = Texture ? 1 : 0;
-	setPixelShaderConstant(UseTextureID, &UseTexture, 1);*/
 
 	s32 TextureUsage = Texture ? 1 : 0;
 	setPixelShaderConstant(TextureUsageID, &TextureUsage, 1);
@@ -96,12 +74,10 @@ bool COGLES2Renderer2D::OnRender(IMaterialRendererServices* service, E_VERTEX_TY
 	return true;
 }
 
-
 void COGLES2Renderer2D::setTexture(const ITexture* texture)
 {
 	Texture = texture;
 }
-
 
 } // end namespace video
 } // end namespace irr

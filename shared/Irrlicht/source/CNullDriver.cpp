@@ -15,6 +15,7 @@
 #include "CMeshManipulator.h"
 #include "CColorConverter.h"
 #include "IAttributeExchangingObject.h"
+#include "FileSystem/FileManager.h"
 
 
 namespace irr
@@ -2105,13 +2106,21 @@ s32 CNullDriver::addHighLevelShaderMaterialFromFiles(
 		E_MATERIAL_TYPE baseMaterial,
 		s32 userData, E_GPU_SHADING_LANGUAGE shadingLang)
 {
-	io::IReadFile* vsfile = 0;
-	io::IReadFile* psfile = 0;
-	io::IReadFile* gsfile = 0;
+	io::IReadFile*	vsfile = 0;
+	io::IReadFile*	psfile = 0;
+	io::IReadFile*	gsfile = 0;
 
+	int				size;
+	char*			vs_extract = 0;
+	char*			ps_extract = 0;
+	char*			gs_extract = 0;
+	
 	if (vertexShaderProgramFileName.size() )
 	{
-		vsfile = FileSystem->createAndOpenFile(vertexShaderProgramFileName);
+		//vsfile = FileSystem->createAndOpenFile(vertexShaderProgramFileName);
+		vs_extract	= (char*)FileManager::GetFileManager()->Get(vertexShaderProgramFileName.c_str(), &size, true);
+		vsfile		= FileSystem->createMemoryReadFile(vs_extract, size, vertexShaderProgramFileName, true);
+		    		
 		if (!vsfile)
 		{
 			os::Printer::log("Could not open vertex shader program file",
@@ -2121,7 +2130,10 @@ s32 CNullDriver::addHighLevelShaderMaterialFromFiles(
 
 	if (pixelShaderProgramFileName.size() )
 	{
-		psfile = FileSystem->createAndOpenFile(pixelShaderProgramFileName);
+		//psfile = FileSystem->createAndOpenFile(pixelShaderProgramFileName);
+		ps_extract	= (char*)FileManager::GetFileManager()->Get(pixelShaderProgramFileName.c_str(), &size, true);
+		psfile		= FileSystem->createMemoryReadFile(ps_extract, size, pixelShaderProgramFileName, true);
+
 		if (!psfile)
 		{
 			os::Printer::log("Could not open pixel shader program file",
@@ -2131,7 +2143,10 @@ s32 CNullDriver::addHighLevelShaderMaterialFromFiles(
 
 	if (geometryShaderProgramFileName.size() )
 	{
-		gsfile = FileSystem->createAndOpenFile(geometryShaderProgramFileName);
+		//gsfile = FileSystem->createAndOpenFile(geometryShaderProgramFileName);
+		gs_extract	= (char*)FileManager::GetFileManager()->Get(geometryShaderProgramFileName.c_str(), &size, true);
+		gsfile		= FileSystem->createMemoryReadFile(gs_extract, size, geometryShaderProgramFileName, true);
+
 		if (!gsfile)
 		{
 			os::Printer::log("Could not open geometry shader program file",
@@ -2145,15 +2160,24 @@ s32 CNullDriver::addHighLevelShaderMaterialFromFiles(
 		gsfile, geometryShaderEntryPointName, gsCompileTarget,
 		inType, outType, verticesOut,
 		callback, baseMaterial, userData, shadingLang);
-
-	if (psfile)
-		psfile->drop();
-
+	
 	if (vsfile)
+	{
 		vsfile->drop();
+		//delete vs_extract; //do by drop
+	}
+	
+	if (psfile)
+	{
+		psfile->drop();
+		//delete ps_extract;
+	}
 
 	if (gsfile)
+	{
 		gsfile->drop();
+		//delete gs_extract;
+	}
 
 	return result;
 }

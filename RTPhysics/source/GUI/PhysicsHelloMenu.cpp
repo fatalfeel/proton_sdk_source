@@ -82,8 +82,8 @@ void HelloMenuInitScene()
 	camera->setAspectRatio(fov);
 	camera->setFOV((120 * M_PI / 360.0f));
 	
-	device->getSceneManager()->addLightSceneNode(0, vector3df(20, 40, -50), SColorf(1.0f, 1.0f, 1.0f), 4000.0f);
-    device->getSceneManager()->addLightSceneNode(0, vector3df(-20, 40, -50), SColorf(1.0f, 1.0f, 1.0f), 4000.0f);
+	smgr->addLightSceneNode(0, vector3df(+20, 40, -50), SColorf(1.0f, 1.0f, 1.0f), 4000.0f);
+    smgr->addLightSceneNode(0, vector3df(-20, 40, -50), SColorf(1.0f, 1.0f, 1.0f), 4000.0f);
 
 	irrBulletWorld* world = IrrlichtManager::GetIrrlichtManager()->GetBulletWorld();
 	

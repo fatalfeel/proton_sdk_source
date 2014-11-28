@@ -1,11 +1,9 @@
-#define MAX_LIGHTS 2
-
 precision mediump float;
 
 /* Uniforms */
 
+uniform int uTextureUsage0;
 uniform sampler2D uTextureUnit0;
-uniform sampler2D uTextureUnit1;
 uniform int uFogEnable;
 uniform int uFogType;
 uniform vec4 uFogColor;
@@ -15,9 +13,8 @@ uniform float uFogDensity;
 
 /* Varyings */
 
-varying vec2 vTexCoord;
-varying vec3 vLightVector[MAX_LIGHTS];
-varying vec4 vLightColor[MAX_LIGHTS];
+varying vec2 vTextureCoord0;
+varying vec4 vVertexColor;
 varying float vFogCoord;
 
 float computeFog()
@@ -46,29 +43,18 @@ float computeFog()
 
 void main()
 {
-	vec4 Color  = texture2D(uTextureUnit0, vTexCoord);
-	vec3 Normal = texture2D(uTextureUnit1, vTexCoord).xyz *  2.0 - 1.0;
+	vec4 Color = vVertexColor;
 
-	vec4 FinalColor = vec4(0.0, 0.0, 0.0, 0.0);
-
-	for (int i = 0; i < int(MAX_LIGHTS); i++)
-	{
-		vec3 LightVector = normalize(vLightVector[i]);
-
-		float Lambert = max(dot(LightVector, Normal), 0.0);
-		FinalColor += vec4(Lambert) * vLightColor[i];
-	}
-
-	FinalColor *= Color;
-	FinalColor.w = vLightColor[0].w;
+	if (bool(uTextureUsage0))
+		Color *= texture2D(uTextureUnit0, vTextureCoord0);
 
 	if (bool(uFogEnable))
 	{
 		float FogFactor = computeFog();
 		vec4 FogColor = uFogColor;
 		FogColor.a = 1.0;
-		FinalColor = mix(FogColor, FinalColor, FogFactor);
+		Color = mix(FogColor, Color, FogFactor);
 	}
-	
-	gl_FragColor = FinalColor;
+
+	gl_FragColor = Color;
 }
