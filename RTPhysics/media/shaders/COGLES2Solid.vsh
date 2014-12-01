@@ -126,6 +126,9 @@ void main()
 
 	if (uLightCount > 0)
 	{
+		//VertexNormal(in camera space) = objNormal * (world-viewMatrix^-1)T
+        //NMatrixID = services->getVertexShaderConstantID("uNMatrix");
+        //services->setPixelShaderConstant(NMatrixID, Matrix.makeInverse().getTransposed().pointer(), 16);
 		vec3 Normal = normalize((uNMatrix * vec4(inVertexNormal, 0.0)).xyz);
 
 		vec4 Ambient = vec4(0.0, 0.0, 0.0, 0.0);
