@@ -40,21 +40,30 @@ void dirLight(in int index, in vec3 position, in vec3 normal, inout vec4 ambient
 	vec3 L = normalize(-(uNMatrix * vec4(uLightDirection[index], 0.0)).xyz);
 
 	ambient += uLightAmbient[index];
-
-	float NdotL = dot(normal, L);
-
-	if (NdotL > 0.0)
-	{
-		diffuse += uLightDiffuse[index] * NdotL;
-	}
     
+    /*float NdotL = dot(normal, L);
+     
+    if (NdotL > 0.0)
+    {
+        diffuse += uLightDiffuse[index] * NdotL;
+     
+        vec3 HalfVector = normalize(L + vec3(0.0, 0.0, 1.0));
+        float NdotH = max(0.0, dot(normal, HalfVector));
+     
+        float SpecularFactor = pow(NdotH, uMaterialShininess);
+        specular += uLightSpecular[index] * SpecularFactor;
+    }*/
+
+    float NdotL = max(0.0, dot(normal, L));
+	diffuse += NdotL * uLightDiffuse[index];
+	   
     vec3 HalfVector = normalize(L + vec3(0.0, 0.0, 1.0));
-    float NdotH = max(0.0, dot(normal, HalfVector));
+    float NdotH = dot(normal, HalfVector);
     
     if (NdotH > 0.0)
     {
         float SpecularFactor = pow(NdotH, uMaterialShininess);
-        specular += uLightSpecular[index] * SpecularFactor;
+        specular += SpecularFactor * uLightSpecular[index];
     }
 }
 
@@ -68,21 +77,30 @@ void pointLight(in int index, in vec3 position, in vec3 normal, inout vec4 ambie
 		uLightAttenuation[index].z * D * D);
 
 	ambient += uLightAmbient[index] * Attenuation;
+    
+    /*float NdotL = dot(normal, L);
+     
+    if (NdotL > 0.0)
+    {
+        diffuse += uLightDiffuse[index] * NdotL * Attenuation;
+     
+        vec3 HalfVector = normalize(L + vec3(0.0, 0.0, 1.0));
+        float NdotH = max(0.0, dot(normal, HalfVector));
+     
+        float SpecularFactor = pow(NdotH, uMaterialShininess);
+        specular += uLightSpecular[index] * SpecularFactor * Attenuation;
+    }*/
 
-	float NdotL = dot(normal, L);
-
-	if (NdotL > 0.0)
-	{
-		diffuse += uLightDiffuse[index] * NdotL * Attenuation;
-	}
+    float NdotL = max(0.0, dot(normal, L));
+	diffuse += NdotL * uLightDiffuse[index] * Attenuation;
     
     vec3 HalfVector = normalize(L + vec3(0.0, 0.0, 1.0));
-    float NdotH = max(0.0, dot(normal, HalfVector));
+    float NdotH = dot(normal, HalfVector);
     
     if (NdotH > 0.0)
     {
         float SpecularFactor = pow(NdotH, uMaterialShininess);
-        specular += uLightSpecular[index] * SpecularFactor * Attenuation;
+        specular += SpecularFactor * uLightSpecular[index] * Attenuation;
     }
 }
 
