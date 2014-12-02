@@ -144,8 +144,8 @@ void CShaderMenu::InitScene()
 	s32 newMaterialType2 = 0;
     
 #if defined(_IRR_COMPILE_WITH_WINDOWS_DEVICE_)
-	io::path vsFileName = (GetBaseAppPath() + "game/opengl.vert").c_str();
-	io::path psFileName = (GetBaseAppPath() + "game/opengl.frag").c_str();
+	io::path vsFileName = "game/opengl.vert";
+	io::path psFileName = "game/opengl.frag";
 #else
 	io::path vsFileName = "game/ogles2.vert";
 	io::path psFileName = "game/ogles2.frag";
