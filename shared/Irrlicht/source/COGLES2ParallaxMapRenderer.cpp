@@ -80,7 +80,7 @@ void COGLES2MaterialParallaxMapCB::OnSetConstants(IMaterialRendererServices* ser
 	const core::matrix4 V = driver->getTransform(ETS_VIEW);
 	const core::matrix4 P = driver->getTransform(ETS_PROJECTION);
 
-	core::matrix4 Matrix = P * V * W;
+	/*core::matrix4 Matrix = P * V * W;
 	services->setPixelShaderConstant(WVPMatrixID, Matrix.pointer(), 16);
 
 	Matrix = V * W;
@@ -93,8 +93,22 @@ void COGLES2MaterialParallaxMapCB::OnSetConstants(IMaterialRendererServices* ser
 	services->setPixelShaderConstant(EyePositionID, reinterpret_cast<f32*>(&EyePosition), 3);
 
 	Matrix = W;
-	Matrix.makeInverse();
-
+	Matrix.makeInverse();*/
+    
+    core::matrix4   Matrix_W      = W;
+    core::matrix4   Matrix_V_W    = V * W;
+    core::matrix4   Matrix_P_V_W  = P * Matrix_V_W;
+    core::vector3df EyePosition(0.0f, 0.0f, 0.0f);
+    
+    services->setPixelShaderConstant(WVPMatrixID, Matrix_P_V_W.pointer(), 16);
+    services->setPixelShaderConstant(WVMatrixID, Matrix_V_W.pointer(), 16);
+    
+    Matrix_V_W.makeInverse();
+	Matrix_V_W.transformVect(EyePosition);
+	services->setPixelShaderConstant(EyePositionID, reinterpret_cast<f32*>(&EyePosition), 3);
+    
+    Matrix_W.makeInverse();
+    
 	const u32 LightCount = driver->getDynamicLightCount();
 
 	for (u32 i = 0; i < 2; ++i)
@@ -111,7 +125,8 @@ void COGLES2MaterialParallaxMapCB::OnSetConstants(IMaterialRendererServices* ser
 
 		CurrentLight.DiffuseColor.a = 1.f / (CurrentLight.Radius*CurrentLight.Radius);
 
-		Matrix.transformVect(CurrentLight.Position);
+		//Matrix.transformVect(CurrentLight.Position);
+        Matrix_W.transformVect(CurrentLight.Position);
 
 		LightPosition[i] = CurrentLight.Position;
 		LightColor[i] = CurrentLight.DiffuseColor;

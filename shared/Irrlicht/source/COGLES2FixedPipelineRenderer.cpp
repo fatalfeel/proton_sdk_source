@@ -91,14 +91,24 @@ void COGLES2MaterialBaseCB::OnSetConstants(IMaterialRendererServices* services, 
 	const core::matrix4 V = driver->getTransform(ETS_VIEW);
 	const core::matrix4 P = driver->getTransform(ETS_PROJECTION);
 
-	core::matrix4 Matrix = P * V * W;
+	/*core::matrix4 Matrix = P * V * W;
 	services->setPixelShaderConstant(WVPMatrixID, Matrix.pointer(), 16);
 
 	Matrix = V * W;
 	services->setPixelShaderConstant(WVMatrixID, Matrix.pointer(), 16);
 
 	Matrix.makeInverse();
-	services->setPixelShaderConstant(NMatrixID, Matrix.getTransposed().pointer(), 16);
+	services->setPixelShaderConstant(NMatrixID, Matrix.getTransposed().pointer(), 16);*/
+    
+	core::matrix4 Matrix_V;
+    core::matrix4 Matrix_V_W    = V * W;
+    core::matrix4 Matrix_P_V_W  = P * Matrix_V_W;
+    
+    services->setPixelShaderConstant(WVPMatrixID, Matrix_P_V_W.pointer(), 16);
+    services->setPixelShaderConstant(WVMatrixID, Matrix_V_W.pointer(), 16);
+    
+	Matrix_V_W.makeInverse();
+	services->setPixelShaderConstant(NMatrixID, Matrix_V_W.getTransposed().pointer(), 16);
 
 	s32 LightCount = LightEnable ? driver->getDynamicLightCount() : 0;
 	services->setPixelShaderConstant(LightCountID, &LightCount, 1);
@@ -110,13 +120,15 @@ void COGLES2MaterialBaseCB::OnSetConstants(IMaterialRendererServices* services, 
 		services->setPixelShaderConstant(MaterialSpecularID, reinterpret_cast<f32*>(&MaterialSpecular), 4);
 		services->setPixelShaderConstant(MaterialShininessID, &MaterialShininess, 1);
 
-		Matrix = V;
+		//Matrix = V;
+        Matrix_V = V;
 
 		for (s32 i = 0; i < LightCount; ++i)
 		{
 			SLight CurrentLight = driver->getDynamicLight(i);
 
-			Matrix.transformVect(CurrentLight.Position);
+			//Matrix.transformVect(CurrentLight.Position);
+            Matrix_V.transformVect(CurrentLight.Position);
 
 			switch (CurrentLight.Type)
 			{
