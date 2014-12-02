@@ -31,17 +31,20 @@
 //(You should probably add it up as a preprocessor compiler define if you need it, instead of uncommenting it here)
 //#define RT_RUNS_IN_BACKGROUND
 
-bool g_winAllowFullscreenToggle = true;
+int		g_fpsLimit					= 0; //0 for no fps limit (default)  Use MESSAGE_SET_FPS_LIMIT to set
+int		g_winVideoScreenX			= 0;
+int		g_winVideoScreenY			= 0;
+bool	g_bIsFullScreen				= false;
+bool	g_bIsMinimized				= false;
+bool	g_winAllowFullscreenToggle	= true;
+bool	g_bMouseIsInsideArea		= true;
+bool	g_winAllowWindowResize		= true;
 
-#ifdef C_DONT_ALLOW_WINDOW_RESIZE
-bool g_winAllowWindowResize = false;
-#else
-bool g_winAllowWindowResize = true;
-#endif
-bool g_bMouseIsInsideArea = true;
-vector<VideoModeEntry> g_videoModes;
-void AddVideoMode(string name, int x, int y, ePlatformID platformID, eOrientationMode forceOrientation = ORIENTATION_DONT_CARE);
+vector<VideoModeEntry>	g_videoModes;
+static int				s_LastScreenSize = 0;
+
 void SetVideoModeByName(string name);
+void AddVideoMode(string name, int x, int y, ePlatformID platformID, eOrientationMode forceOrientation = ORIENTATION_DONT_CARE);
 
 void InitVideoSize()
 {
@@ -116,14 +119,6 @@ void InitVideoSize()
 }
 
 //***************************************************************************
-
-int		g_fpsLimit			= 0; //0 for no fps limit (default)  Use MESSAGE_SET_FPS_LIMIT to set
-int		g_winVideoScreenX	= 0;
-int		g_winVideoScreenY	= 0;
-bool	g_bIsFullScreen		= false;
-bool	g_bIsMinimized		= false;
-
-
 void AddVideoMode(string name, int x, int y, ePlatformID platformID, eOrientationMode forceOrientation)
 {
 	g_videoModes.push_back(VideoModeEntry(name, x, y, platformID, forceOrientation));
@@ -131,11 +126,13 @@ void AddVideoMode(string name, int x, int y, ePlatformID platformID, eOrientatio
 
 void SetVideoModeByName(string name)
 {
-	VideoModeEntry *v = NULL;
+	unsigned int	i;
+	VideoModeEntry*	v = NULL;
 
-	for (unsigned int i=0; i < g_videoModes.size(); i++)
+	for (i=0; i < g_videoModes.size(); i++)
 	{
 		v = &g_videoModes[i];
+		
 		if (v->name == name)
 		{
 			g_winVideoScreenX = v->x;
@@ -303,6 +300,8 @@ int VKeyToWMCharKey(int vKey)
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	int Width, Height;
+
 #ifdef _IRR_COMPILE_WITH_GUI_	
 	irr::SEvent	ev;
 #endif		
@@ -354,82 +353,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			g_bHasFocus = true;
 	#endif
 			break;
-
-		/*case WM_SIZING:
-			{
-				if ((GetForceAspectRatioWhenResizing() && !(GetKeyState(VK_SHIFT)& 0xfe))
-					||
-					(!GetForceAspectRatioWhenResizing() && (GetKeyState(VK_SHIFT)& 0xfe)))
-				{
-
-					float aspect_r=(float)GetPrimaryGLX()/(float)GetPrimaryGLY(); // aspect ratio
-
-					if (GetFakePrimaryScreenSizeX() != 0)
-					{
-						//more reliable way to get the aspect ratio
-						aspect_r=(float)GetFakePrimaryScreenSizeX()/(float)GetFakePrimaryScreenSizeY(); // aspect ratio
-					}
-					
-					// difference between window and client size
-					RECT rect, clientRect;
-
-					GetWindowRect(g_hWnd, &rect);
-					GetClientRect(g_hWnd, &clientRect);
-					
-					int add_x=(rect.right-rect.left)-clientRect.right; // bits we add like borders, title bar
-					int add_y=(rect.bottom-rect.top)-clientRect.bottom;
-
-					//LogMsg("Aspect ratio is %.2f. Border x:%d y:%d", aspect_r, add_x, add_y);
-
-					LPRECT r=LPRECT(lParam);
-					
-					switch(wParam)
-					{
-						case WMSZ_LEFT:
-						case WMSZ_BOTTOMLEFT:
-						case WMSZ_BOTTOMRIGHT:
-						case WMSZ_RIGHT:
-							r->bottom=r->top+(LONG)((float)(r->right-r->left-add_x)/aspect_r)+add_y;
-							break;
-						case WMSZ_TOPRIGHT:
-						case WMSZ_TOP:
-						case WMSZ_BOTTOM:
-							r->right=r->left+(LONG)((float)(r->bottom-r->top-add_y)*aspect_r)+add_x;
-							break;
-						case WMSZ_TOPLEFT:
-							r->left=r->right-(LONG)((float)(r->bottom-r->top)*aspect_r)+add_x;
-							break;
-					}
-					
-					return TRUE;
-				}
-			}
-			break;*/
 		
 		case WM_SIZE:
 			{
-				// Respond to the message:				
-				int Width	= LOWORD( lParam );
-				int Height	= HIWORD( lParam ); 
+				Width	= LOWORD( lParam );
+				Height	= HIWORD( lParam ); 
 						
-				if (Width != GetPrimaryGLX() || Height != GetPrimaryGLY())
+				//if (Width != GetPrimaryGLX() || Height != GetPrimaryGLY())
+				if( Width * Height != s_LastScreenSize )
 				{
-					BaseApp::GetBaseApp()->KillOSMessagesByType(OSMessage::MESSAGE_SET_VIDEO_MODE);
+					s_LastScreenSize = Width * Height;
+
+					IrrlichtManager::GetIrrlichtManager()->SetReSize(core::dimension2d<u32>(Width,Height));
+					
+					//BaseApp::GetBaseApp()->KillOSMessagesByType(OSMessage::MESSAGE_SET_VIDEO_MODE);
 					BaseApp::GetBaseApp()->SetVideoMode(Width, Height, false, 0);
-				
-					/*if (GetFakePrimaryScreenSizeX() != 0)
-					{
-						RECT rect;
-						if (GetUpdateRect(g_hWnd, &rect, FALSE))
-						{
-							PAINTSTRUCT paint;
-							BeginPaint(g_hWnd, &paint);
-#ifdef C_GL_MODE
-							SwapBuffers(g_hDC);
-#endif
-							EndPaint(g_hWnd, &paint);
-						}
-					}*/
 				}
 			}
 			break;
@@ -837,9 +775,11 @@ bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
 	bool	bCenterWindow	= false;
 	DWORD	ex_style		= 0;
 	
-	g_winVideoScreenY	= height;
 	g_winVideoScreenX	= width;
+	g_winVideoScreenY	= height;
 	g_bIsFullScreen		= bFullscreen;
+
+	s_LastScreenSize	= width * height;
 
 	// EGL variables
 #ifndef C_GL_MODE
@@ -1195,7 +1135,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 	int				ret;
 	static float	fpsTimer=0;
 
-	core::dimension2d<u32> size;
+	//core::dimension2d<u32> size;
 	
 #ifdef WIN32
 	//I don't *think* we need this...
@@ -1343,35 +1283,24 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 					break;
 				
 				case OSMessage::MESSAGE_SET_VIDEO_MODE:
-					/*SwapBuffers(g_hDC);
-					BaseApp::GetBaseApp()->Draw();
-
-					g_bHasFocus = true;
-					
-					if (g_bIsMinimized) 
-						goto skipRender*/
-
-					size.Width	= (unsigned int)osm.m_x;
-					size.Height = (unsigned int)osm.m_y;
-
-					IrrlichtManager::GetIrrlichtManager()->SetReSize(size);
+					//size.Width	= (unsigned int)osm.m_x;
+					//size.Height = (unsigned int)osm.m_y;
+					//IrrlichtManager::GetIrrlichtManager()->SetReSize(size);
 					
 					//test reload, no remove for debug
-					//BaseApp::GetBaseApp()->OnEnterBackground();
-					//BaseApp::GetBaseApp()->m_sig_unloadSurfaces();
+					/*BaseApp::GetBaseApp()->OnEnterBackground();
+					BaseApp::GetBaseApp()->m_sig_unloadSurfaces();
 
-					/*DestroyVideo(false);
+					DestroyVideo(false);
 					if (!InitVideo(int(osm.m_x), int(osm.m_y), osm.m_fullscreen, osm.m_fontSize))
 					{
 						MessageBox(NULL, "Error changing video mode", "Error", NULL);
 						goto cleanup;
-					}*/
+					}
 										
 					//test reload, no remove for debug
-					//BaseApp::GetBaseApp()->m_sig_loadSurfaces();
-					//BaseApp::GetBaseApp()->OnEnterForeground();
-					
-					//goto skipRender;
+					BaseApp::GetBaseApp()->m_sig_loadSurfaces();
+					BaseApp::GetBaseApp()->OnEnterForeground();*/
 					break;
 			}
 		}// end while (!BaseApp::GetBaseApp()->GetOSMessages()->empty())
