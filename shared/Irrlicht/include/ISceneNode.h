@@ -107,11 +107,20 @@ namespace scene
 		\param timeMs Current time in milliseconds. */
 		virtual void OnAnimate(u32 timeMs)
 		{
+			//by stone, for safe and watch iterator size
+			unsigned int						i;
+			unsigned int						k;
+			unsigned int						animator_size;
+			unsigned int						childern_size;
+			ISceneNodeAnimatorList::Iterator	ait;
+			ISceneNodeList::Iterator			cit;
+			ISceneNodeAnimator*					node_animator;
+
 			if (IsVisible)
 			{
 				// animate this node with all animators
 
-				ISceneNodeAnimatorList::Iterator ait = Animators.begin();
+				/*ISceneNodeAnimatorList::Iterator ait = Animators.begin();
 				while (ait != Animators.end())
 					{
 					// continue to the next node before calling animateNode()
@@ -120,6 +129,15 @@ namespace scene
 					ISceneNodeAnimator* anim = *ait;
 					++ait;
 					anim->animateNode(this, timeMs);
+				}*/
+
+				ait				= Animators.begin();
+				animator_size	= Animators.size();
+				for( i=0; i<animator_size; i++ )
+				{
+					node_animator = *ait;
+					node_animator->animateNode(this, timeMs);
+					ait++;
 				}
 
 				// update absolute position
@@ -127,9 +145,17 @@ namespace scene
 
 				// perform the post render process on all children
 
-				ISceneNodeList::Iterator it = Children.begin();
+				/*ISceneNodeList::Iterator it = Children.begin();
 				for (; it != Children.end(); ++it)
-					(*it)->OnAnimate(timeMs);
+					(*it)->OnAnimate(timeMs);*/
+
+				cit				= Children.begin();
+				childern_size	= Children.size();
+				for( k=0; k<childern_size; k++ )
+				{
+					(*cit)->OnAnimate(timeMs);
+					cit++;
+				}
 			}
 		}
 

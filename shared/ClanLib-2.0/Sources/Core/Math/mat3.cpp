@@ -129,7 +129,7 @@ CL_Mat3<int> CL_Mat3<int>::rotate(const CL_Angle &angle, int x, int y, int z, bo
 		int len2 = x*x+y*y+z*z;
 		if (len2 != (int)1)
 		{	
-			int length = sqrt( (float) len2);
+			int length = (int)sqrt((float)len2);
 			if (length > 0)
 			{
 				x /= length;

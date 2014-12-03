@@ -218,10 +218,10 @@ IImage* CImageLoaderRGB::loadImage(io::IReadFile* file) const
 
 			Complete Alpha blending computation
 			The actual resulting merged color is computed this way:
-			(image color ◊ alpha) + (background color ◊ (100% - alpha)).
+			(image color * alpha) + (background color * (100% - alpha)).
 
 			Using precomputed blending
-			(image color) + (background color ◊ (100% - alpha)).
+			(image color) + (background color * (100% - alpha)).
 
 			Alternatively, the RGB files could use another blending technique entirely
 */
