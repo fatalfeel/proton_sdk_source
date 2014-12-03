@@ -794,15 +794,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\shared\win\powerVR\OGLES\Include\GLES\egl.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\shared\Entity\EntityUtils.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\shared\win\powerVR\OGLES\Include\GLES\gl.h"
 					>
 				</File>
 				<File
