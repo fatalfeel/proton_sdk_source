@@ -40,8 +40,8 @@ bool	g_winAllowFullscreenToggle	= true;
 bool	g_bMouseIsInsideArea		= true;
 bool	g_winAllowWindowResize		= true;
 
-vector<VideoModeEntry>	g_videoModes;
-static int				s_LastScreenSize = 0;
+std::vector<VideoModeEntry>	g_videoModes;
+static int					s_LastScreenSize;
 
 void SetVideoModeByName(string name);
 void AddVideoMode(string name, int x, int y, ePlatformID platformID, eOrientationMode forceOrientation = ORIENTATION_DONT_CARE);
