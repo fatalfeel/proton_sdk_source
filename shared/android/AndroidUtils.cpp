@@ -153,7 +153,7 @@ char* GetAndroidMainClassName()
 		package = std::string(GetBundlePrefix())+std::string(GetBundleName())+"/Main";
 		StringReplace(".", "/", package);
 		
-		//sprintf(name, package.c_str()); /fixed bug to build
+		//sprintf(name, package.c_str()); //fixed bug to build
 		strcpy(s_ClassName, package.c_str());
 	}
 
