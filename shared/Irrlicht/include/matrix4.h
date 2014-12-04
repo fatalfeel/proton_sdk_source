@@ -8,7 +8,9 @@
 #if defined TARGET_OS_IPHONE
     #include <Accelerate/Accelerate.h>
 
-//in the future, #elif defined ANDROID_NDK
+#elif defined ANDROID_NDK
+	#include <arm_neon.h>
+
 #endif
 
 #include "irrMath.h"
@@ -664,9 +666,50 @@ namespace core
 #if defined TARGET_OS_IPHONE
         vDSP_mmul( m2, 1, m1, 1, M, 1, 4, 4, 4 );
 
-//in the future, #elif defined ANDROID_NDK
-#else
+#elif defined ANDROID_NDK
+		float32x4_t	x0,x1,x2,x3;
+		float32x4_t	y0,y1,y2,y3;
+		
+		x0	= vld1q_f32(&m1[0]);
+		x1	= vld1q_f32(&m1[4]);
+		x2	= vld1q_f32(&m1[8]);
+		x3	= vld1q_f32(&m1[12]);
+		
+		y0	= vld1q_f32(&m2[0]);
+		y1	= vld1q_f32(&m2[4]);
+		y2	= vld1q_f32(&m2[8]);
+		y3	= vld1q_f32(&m2[12]);
+				
+		const float32x4_t	A0	= vmulq_f32(x0, vdupq_n_f32(vgetq_lane_f32(y0,0)));
+		const float32x4_t	B0	= vmulq_f32(x1, vdupq_n_f32(vgetq_lane_f32(y0,1)));
+		const float32x4_t	C0	= vmulq_f32(x2, vdupq_n_f32(vgetq_lane_f32(y0,2)));
+		const float32x4_t	D0	= vmulq_f32(x3, vdupq_n_f32(vgetq_lane_f32(y0,3)));
+		const float32x4_t	_R0 = vaddq_f32( vaddq_f32(A0 , B0), vaddq_f32(C0, D0) );
+		
+		const float32x4_t	A1	= vmulq_f32(x0, vdupq_n_f32(vgetq_lane_f32(y1,0)));
+		const float32x4_t	B1	= vmulq_f32(x1, vdupq_n_f32(vgetq_lane_f32(y1,1)));
+		const float32x4_t	C1	= vmulq_f32(x2, vdupq_n_f32(vgetq_lane_f32(y1,2)));
+		const float32x4_t	D1	= vmulq_f32(x3, vdupq_n_f32(vgetq_lane_f32(y1,3)));
+		const float32x4_t	_R1 = vaddq_f32( vaddq_f32(A1 , B1), vaddq_f32(C1 , D1) );
+		
+		const float32x4_t	A2	= vmulq_f32(x0, vdupq_n_f32(vgetq_lane_f32(y2,0)));
+		const float32x4_t	B2	= vmulq_f32(x1, vdupq_n_f32(vgetq_lane_f32(y2,1)));
+		const float32x4_t	C2	= vmulq_f32(x2, vdupq_n_f32(vgetq_lane_f32(y2,2)));
+		const float32x4_t	D2	= vmulq_f32(x3, vdupq_n_f32(vgetq_lane_f32(y2,3)));
+		const float32x4_t	_R2 = vaddq_f32( vaddq_f32(A2 , B2), vaddq_f32(C2 , D2) );
+		
+		const float32x4_t	A3	= vmulq_f32(x0, vdupq_n_f32(vgetq_lane_f32(y3,0)));
+		const float32x4_t	B3	= vmulq_f32(x1, vdupq_n_f32(vgetq_lane_f32(y3,1)));
+		const float32x4_t	C3	= vmulq_f32(x2, vdupq_n_f32(vgetq_lane_f32(y3,2)));
+		const float32x4_t	D3	= vmulq_f32(x3, vdupq_n_f32(vgetq_lane_f32(y3,3)));
+		const float32x4_t	_R3	= vaddq_f32( vaddq_f32(A3 , B3), vaddq_f32(C3, D3) );
+		
+		vst1q_f32(&M[0],	_R0);
+		vst1q_f32(&M[4],	_R1);
+		vst1q_f32(&M[8],	_R2);
+		vst1q_f32(&M[12],	_R3);
 
+#else
 		M[0] = m1[0]*m2[0] + m1[4]*m2[1] + m1[8]*m2[2] + m1[12]*m2[3];
 		M[1] = m1[1]*m2[0] + m1[5]*m2[1] + m1[9]*m2[2] + m1[13]*m2[3];
 		M[2] = m1[2]*m2[0] + m1[6]*m2[1] + m1[10]*m2[2] + m1[14]*m2[3];
@@ -733,9 +776,51 @@ namespace core
 #if defined TARGET_OS_IPHONE
         vDSP_mmul( m2.M, 1, m1, 1, m3.M, 1, 4, 4, 4 );
         
-//in the future, #elif defined ANDROID_NDK
+#elif defined ANDROID_NDK
+		float32x4_t	x0,x1,x2,x3;
+		float32x4_t	y0,y1,y2,y3;
+		
+		x0	= vld1q_f32(&m1[0]);
+		x1	= vld1q_f32(&m1[4]);
+		x2	= vld1q_f32(&m1[8]);
+		x3	= vld1q_f32(&m1[12]);
+		
+		y0	= vld1q_f32(&m2.M[0]);
+		y1	= vld1q_f32(&m2.M[4]);
+		y2	= vld1q_f32(&m2.M[8]);
+		y3	= vld1q_f32(&m2.M[12]);
+				
+		const float32x4_t	A0	= vmulq_f32(x0, vdupq_n_f32(vgetq_lane_f32(y0,0)));
+		const float32x4_t	B0	= vmulq_f32(x1, vdupq_n_f32(vgetq_lane_f32(y0,1)));
+		const float32x4_t	C0	= vmulq_f32(x2, vdupq_n_f32(vgetq_lane_f32(y0,2)));
+		const float32x4_t	D0	= vmulq_f32(x3, vdupq_n_f32(vgetq_lane_f32(y0,3)));
+		const float32x4_t	_R0 = vaddq_f32( vaddq_f32(A0 , B0), vaddq_f32(C0, D0) );
+		
+		const float32x4_t	A1	= vmulq_f32(x0, vdupq_n_f32(vgetq_lane_f32(y1,0)));
+		const float32x4_t	B1	= vmulq_f32(x1, vdupq_n_f32(vgetq_lane_f32(y1,1)));
+		const float32x4_t	C1	= vmulq_f32(x2, vdupq_n_f32(vgetq_lane_f32(y1,2)));
+		const float32x4_t	D1	= vmulq_f32(x3, vdupq_n_f32(vgetq_lane_f32(y1,3)));
+		const float32x4_t	_R1 = vaddq_f32( vaddq_f32(A1 , B1), vaddq_f32(C1 , D1) );
+		
+		const float32x4_t	A2	= vmulq_f32(x0, vdupq_n_f32(vgetq_lane_f32(y2,0)));
+		const float32x4_t	B2	= vmulq_f32(x1, vdupq_n_f32(vgetq_lane_f32(y2,1)));
+		const float32x4_t	C2	= vmulq_f32(x2, vdupq_n_f32(vgetq_lane_f32(y2,2)));
+		const float32x4_t	D2	= vmulq_f32(x3, vdupq_n_f32(vgetq_lane_f32(y2,3)));
+		const float32x4_t	_R2 = vaddq_f32( vaddq_f32(A2 , B2), vaddq_f32(C2 , D2) );
+		
+		const float32x4_t	A3	= vmulq_f32(x0, vdupq_n_f32(vgetq_lane_f32(y3,0)));
+		const float32x4_t	B3	= vmulq_f32(x1, vdupq_n_f32(vgetq_lane_f32(y3,1)));
+		const float32x4_t	C3	= vmulq_f32(x2, vdupq_n_f32(vgetq_lane_f32(y3,2)));
+		const float32x4_t	D3	= vmulq_f32(x3, vdupq_n_f32(vgetq_lane_f32(y3,3)));
+		const float32x4_t	_R3	= vaddq_f32( vaddq_f32(A3 , B3), vaddq_f32(C3, D3) );
+		
+		vst1q_f32(&m3.M[0],	_R0);
+		vst1q_f32(&m3.M[4],	_R1);
+		vst1q_f32(&m3.M[8],	_R2);
+		vst1q_f32(&m3.M[12],_R3);
+
 #else
-        m3[0] = m1[0]*m2[0] + m1[4]*m2[1] + m1[8]*m2[2] + m1[12]*m2[3];
+		m3[0] = m1[0]*m2[0] + m1[4]*m2[1] + m1[8]*m2[2] + m1[12]*m2[3];
 		m3[1] = m1[1]*m2[0] + m1[5]*m2[1] + m1[9]*m2[2] + m1[13]*m2[3];
 		m3[2] = m1[2]*m2[0] + m1[6]*m2[1] + m1[10]*m2[2] + m1[14]*m2[3];
 		m3[3] = m1[3]*m2[0] + m1[7]*m2[1] + m1[11]*m2[2] + m1[15]*m2[3];
