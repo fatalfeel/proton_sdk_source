@@ -486,6 +486,7 @@
 		B78C6C7B181505EC00FEC242 /* CImageLoaderTGA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B78C6C73181505EC00FEC242 /* CImageLoaderTGA.cpp */; };
 		B7D2ECB718188AC100D3702B /* EventControlComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B7D2ECB518188AC100D3702B /* EventControlComponent.cpp */; };
 		B7DC4AE818310C9E00319BE0 /* shaders in Resources */ = {isa = PBXBuildFile; fileRef = B7DC4AE718310C9E00319BE0 /* shaders */; };
+		B7E23D1B1A30512000DFA8A0 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7E23D1A1A30512000DFA8A0 /* Accelerate.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -1647,6 +1648,7 @@
 		B7D2ECB518188AC100D3702B /* EventControlComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EventControlComponent.cpp; path = source/Component/EventControlComponent.cpp; sourceTree = "<group>"; };
 		B7D2ECB618188AC100D3702B /* EventControlComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EventControlComponent.h; path = source/Component/EventControlComponent.h; sourceTree = "<group>"; };
 		B7DC4AE718310C9E00319BE0 /* shaders */ = {isa = PBXFileReference; lastKnownFileType = folder; name = shaders; path = bin/shaders; sourceTree = "<group>"; };
+		B7E23D1A1A30512000DFA8A0 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1654,15 +1656,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5D7B10E40F245B88003A3396 /* libz.dylib in Frameworks */,
+				B7E23D1B1A30512000DFA8A0 /* Accelerate.framework in Frameworks */,
+				5DA1FCF70F01EEFD001E9C1B /* AudioToolbox.framework in Frameworks */,
+				5D82C8B50FF4C0BF0082EBE7 /* AVFoundation.framework in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
 				28FD15000DC6FC520079059D /* OpenGLES.framework in Frameworks */,
 				28FD15080DC6FC5B0079059D /* QuartzCore.framework in Frameworks */,
 				5DADFF4C0EA2F561007ADD60 /* CoreGraphics.framework in Frameworks */,
-				5DA1FCF70F01EEFD001E9C1B /* AudioToolbox.framework in Frameworks */,
-				5D7B10E40F245B88003A3396 /* libz.dylib in Frameworks */,
 				5D82C8B00FF4C02B0082EBE7 /* CFNetwork.framework in Frameworks */,
-				5D82C8B50FF4C0BF0082EBE7 /* AVFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1723,6 +1726,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B7E23D1A1A30512000DFA8A0 /* Accelerate.framework */,
 				5D7B10E30F245B88003A3396 /* libz.dylib */,
 				5D82C8B40FF4C0BF0082EBE7 /* AVFoundation.framework */,
 				5D82C8AF0FF4C02B0082EBE7 /* CFNetwork.framework */,
@@ -3821,7 +3825,7 @@
 		1D6058940D05DD3E006BFB54 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -3833,9 +3837,9 @@
 					../shared/Bullet,
 				);
 				INFOPLIST_FILE = Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = RTPhysics;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "f4334dc6-bf3b-4aa2-96fc-13c95b138a02";
 			};
 			name = Debug;
 		};
@@ -3885,6 +3889,7 @@
 		5D8733750FA9A0BC001DB559 /* AdHoc */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_OPTIMIZATION_LEVEL = 3;
@@ -3903,8 +3908,9 @@
 					../shared/Bullet,
 				);
 				INFOPLIST_FILE = Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = RTPhysics;
+				PROVISIONING_PROFILE = "f4334dc6-bf3b-4aa2-96fc-13c95b138a02";
 			};
 			name = AdHoc;
 		};

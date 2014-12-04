@@ -3,16 +3,19 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "MainMenuCreate(Entity*):MainMenu.cpp">
+      </ContextState>
+      <ContextState
          contextName = "-[EAGLView touchesBegan:withEvent:]:EAGLView.mm">
          <PersistentStrings>
             <PersistentString
                value = "ev.MouseInput.X">
             </PersistentString>
             <PersistentString
-               value = "touchPoint.x">
+               value = "ev.MouseInput.Y">
             </PersistentString>
             <PersistentString
-               value = "ev.MouseInput.Y">
+               value = "touchPoint.x">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -46,6 +49,14 @@
          <PersistentStrings>
             <PersistentString
                value = "stTemp">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "irr::core::CMatrix4&lt;float&gt;::operator*(irr::core::CMatrix4&lt;float&gt; const&amp;) const:matrix4.h">
+         <PersistentStrings>
+            <PersistentString
+               value = "m3[0]">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

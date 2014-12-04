@@ -5,6 +5,11 @@
 #ifndef __IRR_MATRIX_H_INCLUDED__
 #define __IRR_MATRIX_H_INCLUDED__
 
+#if defined TARGET_OS_IPHONE
+    #include <Accelerate/Accelerate.h>
+//in the future, #elif defined ANDROID_NDK
+#endif
+
 #include "irrMath.h"
 #include "vector3d.h"
 #include "vector2d.h"
@@ -654,6 +659,12 @@ namespace core
 	{
 		const T *m1 = other_a.M;
 		const T *m2 = other_b.M;
+        
+#if defined TARGET_OS_IPHONE
+        vDSP_mmul( m2, 1, m1, 1, M, 1, 4, 4, 4 );
+
+//in the future, #elif defined ANDROID_NDK
+#else
 
 		M[0] = m1[0]*m2[0] + m1[4]*m2[1] + m1[8]*m2[2] + m1[12]*m2[3];
 		M[1] = m1[1]*m2[0] + m1[5]*m2[1] + m1[9]*m2[2] + m1[13]*m2[3];
@@ -674,6 +685,8 @@ namespace core
 		M[13] = m1[1]*m2[12] + m1[5]*m2[13] + m1[9]*m2[14] + m1[13]*m2[15];
 		M[14] = m1[2]*m2[12] + m1[6]*m2[13] + m1[10]*m2[14] + m1[14]*m2[15];
 		M[15] = m1[3]*m2[12] + m1[7]*m2[13] + m1[11]*m2[14] + m1[15]*m2[15];
+#endif
+        
 #if defined ( USE_MATRIX_TEST )
 		definitelyIdentityMatrix=false;
 #endif
@@ -714,13 +727,18 @@ namespace core
 
 		CMatrix4<T> m3 ( EM4CONST_NOTHING );
 
-		const T *m1 = M;
-
-		m3[0] = m1[0]*m2[0] + m1[4]*m2[1] + m1[8]*m2[2] + m1[12]*m2[3];
+		const T* m1 = M;
+        
+#if defined TARGET_OS_IPHONE
+        vDSP_mmul( m2.M, 1, m1, 1, m3.M, 1, 4, 4, 4 );
+        
+//in the future, #elif defined ANDROID_NDK
+#else
+        m3[0] = m1[0]*m2[0] + m1[4]*m2[1] + m1[8]*m2[2] + m1[12]*m2[3];
 		m3[1] = m1[1]*m2[0] + m1[5]*m2[1] + m1[9]*m2[2] + m1[13]*m2[3];
 		m3[2] = m1[2]*m2[0] + m1[6]*m2[1] + m1[10]*m2[2] + m1[14]*m2[3];
 		m3[3] = m1[3]*m2[0] + m1[7]*m2[1] + m1[11]*m2[2] + m1[15]*m2[3];
-
+        
 		m3[4] = m1[0]*m2[4] + m1[4]*m2[5] + m1[8]*m2[6] + m1[12]*m2[7];
 		m3[5] = m1[1]*m2[4] + m1[5]*m2[5] + m1[9]*m2[6] + m1[13]*m2[7];
 		m3[6] = m1[2]*m2[4] + m1[6]*m2[5] + m1[10]*m2[6] + m1[14]*m2[7];
@@ -730,11 +748,13 @@ namespace core
 		m3[9] = m1[1]*m2[8] + m1[5]*m2[9] + m1[9]*m2[10] + m1[13]*m2[11];
 		m3[10] = m1[2]*m2[8] + m1[6]*m2[9] + m1[10]*m2[10] + m1[14]*m2[11];
 		m3[11] = m1[3]*m2[8] + m1[7]*m2[9] + m1[11]*m2[10] + m1[15]*m2[11];
-
+        
 		m3[12] = m1[0]*m2[12] + m1[4]*m2[13] + m1[8]*m2[14] + m1[12]*m2[15];
 		m3[13] = m1[1]*m2[12] + m1[5]*m2[13] + m1[9]*m2[14] + m1[13]*m2[15];
 		m3[14] = m1[2]*m2[12] + m1[6]*m2[13] + m1[10]*m2[14] + m1[14]*m2[15];
 		m3[15] = m1[3]*m2[12] + m1[7]*m2[13] + m1[11]*m2[14] + m1[15]*m2[15];
+#endif
+
 		return m3;
 	}
 
