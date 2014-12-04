@@ -32,6 +32,8 @@ std::string	g_musicToPlay;
 
 static bool	s_preferSDCardForUserStorage	= false;
 //static bool	s_bSurfacesUnloaded				= false;
+static bool s_bFirstTime		= true;
+static char s_ClassName[128]	= {0};
 
 //this delay fixes a problem with restoring surfaces before android 1.6 devices are ready for it resulting
 //in white textures -  update: unneeded
@@ -143,20 +145,20 @@ JNIEnv * GetJavaEnv()
 
 char* GetAndroidMainClassName()
 {
-	static char name[128]="";
-	static bool bFirstTime = true;
-	if (bFirstTime)
+	std::string package;
+
+	if (s_bFirstTime)
 	{
-		bFirstTime = false;
-		std::string package = std::string(GetBundlePrefix())+std::string(GetBundleName())+"/Main";
+		s_bFirstTime = false;
+		package = std::string(GetBundlePrefix())+std::string(GetBundleName())+"/Main";
 		StringReplace(".", "/", package);
-		sprintf(name, package.c_str());
+		
+		//sprintf(name, package.c_str()); /fixed bug to build
+		strcpy(s_ClassName, package.c_str());
 	}
 
-	return name;
-
+	return s_ClassName;
 }
-
 
 std::string GetSavePathBasic()
 {
