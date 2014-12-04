@@ -7,6 +7,7 @@
 
 #if defined TARGET_OS_IPHONE
     #include <Accelerate/Accelerate.h>
+
 //in the future, #elif defined ANDROID_NDK
 #endif
 
