@@ -161,18 +161,20 @@ void RotateGLIfNeeded(CL_Mat4f &mat)
 //by jesse stone
 void GenerateSetPerspectiveFOV(float fovy, float aspect, float zNear, float zFar)
 {
+	float		xmin, xmax, ymin, ymax;
+	CL_Mat4f	mat;
+	
 	PrepareForGL();
 
-	glMatrixMode(GL_PROJECTION);
+	//glMatrixMode(GL_PROJECTION);
 	
 	//we use Clanlib to setup our matrix manually because if we do it in HW we can't always extract it again as android gl doesn't support that
-	glLoadIdentity();
-	CL_Mat4f mat = CL_Mat4f::identity();
+	//glLoadIdentity();
+	
+	mat = CL_Mat4f::identity();
 
 	RotateGLIfNeeded(mat);
-	
-	float xmin, xmax, ymin, ymax;
-
+		
 	ymax = zNear * float(tan(fovy * M_PI / 360.0f));
 	ymin = -ymax;
 	xmin = ymin * aspect;
@@ -181,12 +183,10 @@ void GenerateSetPerspectiveFOV(float fovy, float aspect, float zNear, float zFar
 	mat.multiply( CL_Mat4f::frustum(xmin, xmax, ymin, ymax, zNear, zFar));
 	BaseApp::GetBaseApp()->SetProjectionMatrix(mat);
 	
-	//glFrustumf(xmin, xmax, ymin, ymax, zNear, zFar);
-	glLoadMatrixf((GLfloat*)mat);
+	//glLoadMatrixf((GLfloat*)mat);
 
-	glMatrixMode(GL_MODELVIEW);
+	//glMatrixMode(GL_MODELVIEW);
 }
-
 
 void DrawFilledSquare( float x, float y, float size/*=10*/, uint32 color /*= MAKE_RGBA(255,255,255,255)*/, bool bCentered )
 {
