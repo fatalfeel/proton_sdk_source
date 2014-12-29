@@ -20,7 +20,6 @@ android:installLocation="internalOnly" of AndroidManifest.xml
 
 4.
 Switch OGLES1 -> OGLES2
-
 (a.) find App.cpp
 irr::video::E_DRIVER_TYPE AppGetOGLESType()
 return irr::video::EDT_OGLES1; -> return irr::video::EDT_OGLES2;
