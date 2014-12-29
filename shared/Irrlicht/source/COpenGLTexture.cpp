@@ -923,7 +923,7 @@ void COpenGLTexture::Reload()
 				buffer		= FileManager::GetFileManager()->Get(gamepath.c_str(), &fsize, false, false);
 				origImage	= Driver->createImageFromData(video::ECF_R8G8B8, lmapsize, buffer, false, true );
 	
-				//Because CImage execute memcpy(Data, data, Size.Height * Pitch);
+				//because memcpy(Data, data, Size.Height * Pitch) in CImage::CImage
 				delete buffer;
 			}
 			else
