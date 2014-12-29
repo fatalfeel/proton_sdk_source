@@ -943,6 +943,12 @@ void COpenGLTexture::Reload()
 			}
 		}
 
+		/*if (!origImage)
+		{
+			LogMsg("Unable to reload tex %s", getName().getPath().c_str());
+			return;
+		}*/
+
 		if( origImage )
 		{
 			LogMsg("reloading %s into %d", getName().getPath().c_str(), TextureName);
