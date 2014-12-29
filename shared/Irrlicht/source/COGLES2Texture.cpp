@@ -23,10 +23,10 @@
 #include "os.h"
 #include "CImage.h"
 #include "CColorConverter.h"
-#include "BuiltInFont.h"
-
 #include "irrTypes.h"
 #include "irrString.h"
+#include "BuiltInFont.h"
+#include "FileSystem/FileManager.h"
 
 /*#if !defined(_IRR_COMPILE_WITH_IPHONE_DEVICE_)
 #include <GLES2/gl2.h>
@@ -818,8 +818,13 @@ void COGLES2Texture::Unload()
 //SETH
 void COGLES2Texture::Reload()
 {
-    IImage*	origImage 	= NULL;
-    bool 	bIsFont 	= false;
+	int						fsize;
+	core::dimension2d<u32>	lmapsize(128,128);
+	byte*					buffer;
+	
+	IImage*					origImage 	= NULL;
+    bool 					bIsFont 	= false;
+	std::string				gamepath;
 	    
     if (m_bRequestReload)
     {
@@ -842,12 +847,25 @@ void COGLES2Texture::Reload()
 		}
 		else
 		{
-			origImage = Driver->createImageFromFile(getName());
+			if( getName().getPath().find(".lightmap") > 0 )
+			{
+				gamepath	= std::string(getName().getPath().c_str());
+				buffer		= FileManager::GetFileManager()->Get(gamepath.c_str(), &fsize, false, false);
+				origImage	= Driver->createImageFromData(video::ECF_R8G8B8, lmapsize, buffer, false, true );
+	
+				//Because CImage execute memcpy(Data, data, Size.Height * Pitch);
+				delete buffer;
+			}
+			else
+			{
+				origImage = Driver->createImageFromFile(getName());
+			}
 		}
         
 		if (!origImage)
 		{
-			origImage = Driver->createImageFromFile(io::SNamedPath((std::string("game/")+std::string(getName().getPath().c_str())).c_str()));
+			gamepath	= std::string("game/") + std::string(getName().getPath().c_str());
+			origImage	= Driver->createImageFromFile( io::SNamedPath(gamepath.c_str()) );
 
 			if (origImage)
 			{

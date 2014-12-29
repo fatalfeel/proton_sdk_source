@@ -12,10 +12,11 @@
 #include "os.h"
 #include "CColorConverter.h"
 #include "irrString.h"
+#include "BuiltInFont.h"
+#include "FileSystem/FileManager.h"
 
 //SETH
 #include "PlatformSetup.h"
-#include "BuiltInFont.h"
 
 namespace irr
 {
@@ -887,8 +888,13 @@ void COpenGLTexture::Unload()
 //by jesse stone
 void COpenGLTexture::Reload()
 {
-	IImage*	origImage 	= NULL;
-    bool 	bIsFont 	= false;
+	int						fsize;
+	core::dimension2d<u32>	lmapsize(128,128);
+	byte*					buffer;
+	
+	IImage*					origImage 	= NULL;
+    bool 					bIsFont 	= false;
+	std::string				gamepath;
 	
 	if( m_bRequestReload )
 	{
@@ -911,13 +917,26 @@ void COpenGLTexture::Reload()
 		}
 		else
 		{
-			origImage = Driver->createImageFromFile(getName());
+			if( getName().getPath().find(".lightmap") > 0 )
+			{
+				gamepath	= std::string(getName().getPath().c_str());
+				buffer		= FileManager::GetFileManager()->Get(gamepath.c_str(), &fsize, false, false);
+				origImage	= Driver->createImageFromData(video::ECF_R8G8B8, lmapsize, buffer, false, true );
+	
+				//Because CImage execute memcpy(Data, data, Size.Height * Pitch);
+				delete buffer;
+			}
+			else
+			{
+				origImage = Driver->createImageFromFile(getName());
+			}
 		}
 	    
 		if (!origImage)
 		{
-			origImage = Driver->createImageFromFile(io::SNamedPath((std::string("game/")+std::string(getName().getPath().c_str())).c_str()));
-
+			gamepath	= std::string("game/") + std::string(getName().getPath().c_str());
+			origImage	= Driver->createImageFromFile( io::SNamedPath(gamepath.c_str()) );
+			
 			if (origImage)
 			{
 				LogMsg("Did trick for reloading .xml font");

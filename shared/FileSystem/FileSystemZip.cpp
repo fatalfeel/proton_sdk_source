@@ -23,7 +23,7 @@ FileSystemZip::~FileSystemZip()
 		unzClose(m_unzf);
 }
 
-bool FileSystemZip::Init_unz(string zipFileName)
+bool FileSystemZip::Init_unz(std::string zipFileName)
 {
 	assert(!m_unzf && "We don't handle calling this twice yet");
 
@@ -42,7 +42,7 @@ bool FileSystemZip::Init_unz(string zipFileName)
 }
 
 //by stone
-bool FileSystemZip::Init_zMemory(string NameInZip, unsigned char* buf, int size, int append)
+bool FileSystemZip::Init_zMemory(std::string NameInZip, unsigned char* buf, int size, int append)
 {
 	unzFile			zf;
 	zip_fileinfo	zi;
@@ -171,9 +171,9 @@ void FileSystemZip::CacheIndex()
 	LogMsg("Cache has %d files.", m_cache.size());
 }
 
-vector<string> FileSystemZip::GetContents()
+std::vector<std::string> FileSystemZip::GetContents()
 {
-	vector<string> m_contents;
+	std::vector<std::string> m_contents;
 
 	uLong i;
 	unz_global_info gi;
@@ -200,7 +200,7 @@ vector<string> FileSystemZip::GetContents()
 			LogError("error %d with zipfile in unzGetCurrentFileInfo\n",err);
 			break;
 		}
-		m_contents.push_back(string(filename_inzip));
+		m_contents.push_back(std::string(filename_inzip));
 
 		if ((i+1)<gi.number_entry)
 		{
@@ -226,7 +226,7 @@ byte* FileSystemZip::Get_z( int* pSizeOut )
 	return m_compress_buf;
 }
 
-byte* FileSystemZip::Get_unz( string fileName, int *pSizeOut )
+byte* FileSystemZip::Get_unz( std::string fileName, int *pSizeOut )
 {
 	zipCacheMap::iterator itor = m_cache.find(m_rootDir+fileName);
 
@@ -310,12 +310,17 @@ byte* FileSystemZip::Get_unz( string fileName, int *pSizeOut )
 	return pBytes;
 }
 
-void FileSystemZip::SetRootDirectory( string rootDir )
+void FileSystemZip::SetRootDirectory( std::string rootDir )
 {
 	m_rootDir = rootDir+"/";
 }
 
-StreamingInstance * FileSystemZip::GetStreaming( string fileName, int *pSizeOut )
+/*std::string FileSystemZip::GetRootDirectory()
+{
+	return m_rootDir;
+}*/
+
+StreamingInstance* FileSystemZip::GetStreaming( std::string fileName, int *pSizeOut )
 {
 	zipCacheMap::iterator itor = m_cache.find(m_rootDir+fileName);
 
@@ -324,19 +329,7 @@ StreamingInstance * FileSystemZip::GetStreaming( string fileName, int *pSizeOut 
 		return NULL; //not found in this zip
 	}
 
-	
-	//ok, we now now that it exists.  Let's create a streaming zip reader and return it.
-	//To be able to properly handle multiple file access on the same zip, we have to create a new object that tracks the
-	//zip itself.
-
-
-//	int err = UNZ_OK;
-
-//	err = unzGoToFilePos(m_unzf, &itor->second.m_unzfilepos);
-
-	
-
-	StreamingInstanceZip *pStream = new StreamingInstanceZip;
+	StreamingInstanceZip* pStream = new StreamingInstanceZip;
 
 	if (!pStream->Init(m_zipFileName))
 	{
@@ -349,6 +342,7 @@ StreamingInstance * FileSystemZip::GetStreaming( string fileName, int *pSizeOut 
 	{
 		pStream->SetRootDirectory(m_rootDir.substr(0, m_rootDir.length()-1));
 	}
+
 	if (!pStream->OpenWithCacheEntry(&itor->second))
 	{
 		LogMsg("Error opening the file %s from the zip %s.", fileName.c_str(), m_zipFileName.c_str());
@@ -359,7 +353,7 @@ StreamingInstance * FileSystemZip::GetStreaming( string fileName, int *pSizeOut 
 	return pStream;
 }
 
-bool FileSystemZip::FileExists( string fileName )
+bool FileSystemZip::FileExists( std::string fileName )
 {
 	
 	zipCacheMap::iterator itor = m_cache.find(m_rootDir+fileName);
@@ -371,7 +365,7 @@ bool FileSystemZip::FileExists( string fileName )
 	return true;
 }
 
-int FileSystemZip::GetFileSize( string fileName )
+int FileSystemZip::GetFileSize( std::string fileName )
 {
 	
 	zipCacheMap::iterator itor = m_cache.find(m_rootDir+fileName);
