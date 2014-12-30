@@ -734,11 +734,9 @@ void COGLES1Texture::Reload()
 {
 	int						fsize;
 	core::dimension2d<u32>	lmapsize(128,128);
-	byte*					buffer;
-	
+	byte*					pbuffer 	= NULL;
 	IImage*					origImage 	= NULL;
     bool 					bIsFont 	= false;
-	std::string				gamepath;
 		    
     if (m_bRequestReload)
     {
@@ -759,27 +757,20 @@ void COGLES1Texture::Reload()
 			assert(!"You have a font?  You may need _IRR_COMPILE_WITH_GUI_ defined.  Confused.");
 #endif
 		}
+		else if(getName().getPath().find(".lightmap.") != -1)
+		{
+			pbuffer		= FileManager::GetFileManager()->Get(getName().getPath().c_str(), &fsize, false, false);
+			origImage	= Driver->createImageFromData(video::ECF_R8G8B8, lmapsize, pbuffer, false, true );
+			delete pbuffer; //because memcpy(Data, data, Size.Height * Pitch) in CImage::CImage
+		}			
 		else
 		{
-			if( getName().getPath().find(".lightmap") > 0 )
-			{
-				gamepath	= std::string(getName().getPath().c_str());
-				buffer		= FileManager::GetFileManager()->Get(gamepath.c_str(), &fsize, false, false);
-				origImage	= Driver->createImageFromData(video::ECF_R8G8B8, lmapsize, buffer, false, true );
-	
-				//because memcpy(Data, data, Size.Height * Pitch) in CImage::CImage
-				delete buffer;
-			}
-			else
-			{
-				origImage = Driver->createImageFromFile(getName());
-			}
+			origImage = Driver->createImageFromFile(getName());
 		}
-        
+	    
 		if (!origImage)
 		{
-			gamepath	= std::string("game/") + std::string(getName().getPath().c_str());
-			origImage	= Driver->createImageFromFile( io::SNamedPath(gamepath.c_str()) );
+			origImage	= Driver->createImageFromFile( io::path("game/")+getName() );
 			
 			if (origImage)
 			{

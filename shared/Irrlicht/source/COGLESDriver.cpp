@@ -2299,14 +2299,13 @@ void COGLES1Driver::setBasicRenderStates(const SMaterial& material, const SMater
 		}
 	}
 
-	// zwrite
-//	if (resetAllRenderStates || lastmaterial.ZWriteEnable != material.ZWriteEnable)
+	// Zwrite
+	//if (resetAllRenderStates || lastmaterial.ZWriteEnable != material.ZWriteEnable)
 	{
-		if (material.ZWriteEnable && (AllowZWriteOnTransparent || (material.BlendOperation == EBO_NONE &&
-					!MaterialRenderers[material.MaterialType].Renderer->isTransparent())))
-		{
+		if ( material.ZWriteEnable 
+			 && 
+			 (AllowZWriteOnTransparent || (material.BlendOperation == EBO_NONE && !MaterialRenderers[material.MaterialType].Renderer->isTransparent())))
 			glDepthMask(GL_TRUE);
-		}
 		else
 			glDepthMask(GL_FALSE);
 	}
