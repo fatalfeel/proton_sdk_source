@@ -663,10 +663,10 @@ namespace core
 		const T *m1 = other_a.M;
 		const T *m2 = other_b.M;
         
-#if defined TARGET_OS_IPHONE
+#if defined(TARGET_OS_IPHONE)
         vDSP_mmul( m2, 1, m1, 1, M, 1, 4, 4, 4 );
 
-#elif defined ANDROID_NDK
+#elif defined(ANDROID_NDK)
 		float32x4_t	x0,x1,x2,x3;
 		float32x4_t	y0,y1,y2,y3;
 		
