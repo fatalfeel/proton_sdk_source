@@ -138,7 +138,7 @@ Entity* MainMenuCreate(Entity* pParentEnt)
             pBG = QuakeMenuCreate(pParentEnt);
             break;
             
-        case QUAKESHADER:
+        case QUAKESHADER:	//plz enable irr::video::EDT_OGLES2
             pBG = QuakeShaderMenuCreate(pParentEnt);
             break;
             
@@ -146,7 +146,7 @@ Entity* MainMenuCreate(Entity* pParentEnt)
             pBG = HouseMenuCreate(pParentEnt);
             break;
             
-        case HIGHSHADER:
+        case HIGHSHADER:	//plz enable irr::video::EDT_OGLES2
             pBG = ShaderMenuCreate(pParentEnt);
             break;
 
