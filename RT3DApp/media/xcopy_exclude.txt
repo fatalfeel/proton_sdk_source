@@ -6,7 +6,6 @@
 .obj
 .svn
 .psd
-.png
 .fbx
 .tmp
 .fnt

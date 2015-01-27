@@ -266,10 +266,16 @@ void CGUIButton::draw()
 			pos.Y -= ImageRect.getHeight() / 2;
 
 			driver->draw2DImage(Image,
-					ScaleImage? AbsoluteRect :
-						core::recti(pos, ImageRect.getSize()),
-					ImageRect, &AbsoluteClippingRect,
-					0, UseAlphaChannel);
+								ScaleImage? AbsoluteRect :
+								core::recti(pos, ImageRect.getSize()),
+								ImageRect,
+#ifdef __APPLE__
+                                NULL, //by stone, avoid ios run glEnable(GL_SCISSOR_TEST) bug
+#else
+								&AbsoluteClippingRect,
+#endif
+								0, 
+								UseAlphaChannel);
 		}
 	}
 	else
@@ -288,11 +294,18 @@ void CGUIButton::draw()
 				pos.X += skin->getSize(EGDS_BUTTON_PRESSED_IMAGE_OFFSET_X);
 				pos.Y += skin->getSize(EGDS_BUTTON_PRESSED_IMAGE_OFFSET_Y);
 			}
+			
 			driver->draw2DImage(PressedImage,
-					ScaleImage? AbsoluteRect :
-						core::recti(pos, PressedImageRect.getSize()),
-					PressedImageRect, &AbsoluteClippingRect,
-					0, UseAlphaChannel);
+								ScaleImage? AbsoluteRect :
+								core::recti(pos, PressedImageRect.getSize()),
+								PressedImageRect, 
+#ifdef __APPLE__
+                                NULL, //by stone, avoid ios run glEnable(GL_SCISSOR_TEST) bug
+#else
+								&AbsoluteClippingRect,
+#endif
+								0, 
+								UseAlphaChannel);
 		}
 	}
 
