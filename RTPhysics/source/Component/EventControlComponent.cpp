@@ -95,48 +95,48 @@ void EventControlComponent::AddGuiButton()
         btn->setUseAlphaChannel(true);
         btn->setDrawBorder(false);
         
-	image	= driver->getTexture((GetBaseAppPath()+"game/ar_dn.png").c_str());
-	btn		= gui->addButton(core::rect<int>(85,screen.Height-100,155,screen.Height-30),  NULL, GUI_ID_BUTTON_DIR_BACK);
-	btn->setImage(image);
-	btn->setUseAlphaChannel(true);
-	btn->setDrawBorder(false);
+		image	= driver->getTexture((GetBaseAppPath()+"game/ar_dn.png").c_str());
+		btn		= gui->addButton(core::rect<int>(85,screen.Height-100,155,screen.Height-30),  NULL, GUI_ID_BUTTON_DIR_BACK);
+		btn->setImage(image);
+		btn->setUseAlphaChannel(true);
+		btn->setDrawBorder(false);
 
-	image	= driver->getTexture((GetBaseAppPath()+"game/ar_lt.png").c_str());
-	btn		= gui->addButton(core::rect<int>(05,screen.Height-200,75,screen.Height-130), NULL, GUI_ID_BUTTON_DIR_LEFT);
-	btn->setImage(image);
-	btn->setUseAlphaChannel(true);
-	btn->setDrawBorder(false);
+		image	= driver->getTexture((GetBaseAppPath()+"game/ar_lt.png").c_str());
+		btn		= gui->addButton(core::rect<int>(05,screen.Height-200,75,screen.Height-130), NULL, GUI_ID_BUTTON_DIR_LEFT);
+		btn->setImage(image);
+		btn->setUseAlphaChannel(true);
+		btn->setDrawBorder(false);
 
-	image	= driver->getTexture((GetBaseAppPath()+"game/ar_rt.png").c_str());
-	btn		= gui->addButton(core::rect<int>(85,screen.Height-200,155,screen.Height-130), NULL, GUI_ID_BUTTON_DIR_RIGHT);
-	btn->setImage(image);
-	btn->setUseAlphaChannel(true);
-	btn->setDrawBorder(false);
+		image	= driver->getTexture((GetBaseAppPath()+"game/ar_rt.png").c_str());
+		btn		= gui->addButton(core::rect<int>(85,screen.Height-200,155,screen.Height-130), NULL, GUI_ID_BUTTON_DIR_RIGHT);
+		btn->setImage(image);
+		btn->setUseAlphaChannel(true);
+		btn->setDrawBorder(false);
 
-	////////
-	image	= driver->getTexture((GetBaseAppPath()+"game/ar_up.png").c_str());
-	btn		= gui->addButton(core::rect<int>(screen.Width-155,screen.Height-300,screen.Width-85,screen.Height-230), NULL, GUI_ID_BUTTON_ROLL_UP);
-	btn->setImage(image);
-	btn->setUseAlphaChannel(true);
-	btn->setDrawBorder(false);
+		////////
+		image	= driver->getTexture((GetBaseAppPath()+"game/ar_up.png").c_str());
+		btn		= gui->addButton(core::rect<int>(screen.Width-155,screen.Height-300,screen.Width-85,screen.Height-230), NULL, GUI_ID_BUTTON_ROLL_UP);
+		btn->setImage(image);
+		btn->setUseAlphaChannel(true);
+		btn->setDrawBorder(false);
 
-	image	= driver->getTexture((GetBaseAppPath()+"game/ar_dn.png").c_str());
-	btn		= gui->addButton(core::rect<int>(screen.Width-155,screen.Height-100,screen.Width-85,screen.Height-30), NULL, GUI_ID_BUTTON_ROLL_DOWN);
-	btn->setImage(image);
-	btn->setUseAlphaChannel(true);
-	btn->setDrawBorder(false);
+		image	= driver->getTexture((GetBaseAppPath()+"game/ar_dn.png").c_str());
+		btn		= gui->addButton(core::rect<int>(screen.Width-155,screen.Height-100,screen.Width-85,screen.Height-30), NULL, GUI_ID_BUTTON_ROLL_DOWN);
+		btn->setImage(image);
+		btn->setUseAlphaChannel(true);
+		btn->setDrawBorder(false);
 
-	image	= driver->getTexture((GetBaseAppPath()+"game/ar_lt.png").c_str());
-	btn		= gui->addButton(core::rect<int>(screen.Width-155,screen.Height-200,screen.Width-85,screen.Height-130), NULL, GUI_ID_BUTTON_ROLL_LEFT);
-	btn->setImage(image);
-	btn->setUseAlphaChannel(true);
-	btn->setDrawBorder(false);
+		image	= driver->getTexture((GetBaseAppPath()+"game/ar_lt.png").c_str());
+		btn		= gui->addButton(core::rect<int>(screen.Width-155,screen.Height-200,screen.Width-85,screen.Height-130), NULL, GUI_ID_BUTTON_ROLL_LEFT);
+		btn->setImage(image);
+		btn->setUseAlphaChannel(true);
+		btn->setDrawBorder(false);
 
-	image	= driver->getTexture((GetBaseAppPath()+"game/ar_rt.png").c_str());
-	btn		= gui->addButton(core::rect<int>(screen.Width-75,screen.Height-200,screen.Width-5,screen.Height-130), NULL, GUI_ID_BUTTON_ROLL_RIGHT);
-	btn->setImage(image);
-	btn->setUseAlphaChannel(true);
-	btn->setDrawBorder(false);
+		image	= driver->getTexture((GetBaseAppPath()+"game/ar_rt.png").c_str());
+		btn		= gui->addButton(core::rect<int>(screen.Width-75,screen.Height-200,screen.Width-5,screen.Height-130), NULL, GUI_ID_BUTTON_ROLL_RIGHT);
+		btn->setImage(image);
+		btn->setUseAlphaChannel(true);
+		btn->setDrawBorder(false);
 
         /////    
         image	= driver->getTexture((GetBaseAppPath()+"game/fire.png").c_str());
