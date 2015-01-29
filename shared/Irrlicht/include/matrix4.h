@@ -5,10 +5,10 @@
 #ifndef __IRR_MATRIX_H_INCLUDED__
 #define __IRR_MATRIX_H_INCLUDED__
 
-#if defined TARGET_OS_IPHONE
+#if (TARGET_OS_IPHONE == 1)
     #include <Accelerate/Accelerate.h>
 
-#elif defined ANDROID_NDK
+#elif defined(ANDROID_NDK)
 	#include <arm_neon.h>
 
 #endif
@@ -663,7 +663,7 @@ namespace core
 		const T *m1 = other_a.M;
 		const T *m2 = other_b.M;
         
-#if defined(TARGET_OS_IPHONE)
+#if (TARGET_OS_IPHONE == 1)
         vDSP_mmul( m2, 1, m1, 1, M, 1, 4, 4, 4 );
 
 #elif defined(ANDROID_NDK)
@@ -773,10 +773,10 @@ namespace core
 
 		const T* m1 = M;
         
-#if defined TARGET_OS_IPHONE
+#if (TARGET_OS_IPHONE == 1)
         vDSP_mmul( m2.M, 1, m1, 1, m3.M, 1, 4, 4, 4 );
         
-#elif defined ANDROID_NDK
+#elif defined(ANDROID_NDK)
 		float32x4_t	x0,x1,x2,x3;
 		float32x4_t	y0,y1,y2,y3;
 		

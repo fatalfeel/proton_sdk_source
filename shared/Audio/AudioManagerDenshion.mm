@@ -4,7 +4,7 @@
 #include "CocosDenshion/SimpleAudioEngine.h"
 
 #import "CocosDenshion/CDAudioManager.h"
-#if TARGET_OS_IPHONE == 1
+#if (TARGET_OS_IPHONE == 1)
 #include <AVFoundation/AVFoundation.h>
 #endif
 
@@ -65,7 +65,7 @@ bool AudioManagerDenshion::Init()
 	return true; //success
 }
 
-#if TARGET_OS_IPHONE == 1
+#if (TARGET_OS_IPHONE == 1)
 
 bool CheckIfOtherAudioIsPlaying()
 {
@@ -103,7 +103,7 @@ return false;
 
 void AudioManagerDenshion::Vibrate(int duration)
 {
-#if TARGET_OS_IPHONE == 1
+#if (TARGET_OS_IPHONE == 1)
 
 	if (!m_bVibrationDisabled)
 	{

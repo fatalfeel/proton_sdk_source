@@ -18,7 +18,7 @@ irr::video::E_DRIVER_TYPE AppGetOGLESType()
 
 ///////////////////////////////////////
 #ifdef __MACH__
-    #if TARGET_OS_IPHONE == 1
+    #if (TARGET_OS_IPHONE == 1)
         //it's an iPhone or iPad
         #include "Audio/AudioManagerOS.h"
         AudioManagerOS*		g_audioManager = NULL;
@@ -44,7 +44,7 @@ irr::video::E_DRIVER_TYPE AppGetOGLESType()
 AudioManager* GetAudioManager()
 {
 #if defined __APPLE__
-    #if TARGET_OS_IPHONE == 1
+    #if (TARGET_OS_IPHONE == 1)
         g_audioManager = AudioManagerOS::GetAudioManager();
     #else
         g_audioManager = AudioManagerDenshion::GetAudioManager();
@@ -63,7 +63,7 @@ AudioManager* GetAudioManager()
 void FreeAudioManager()
 {
 #if defined __APPLE__
-    #if TARGET_OS_IPHONE == 1
+    #if (TARGET_OS_IPHONE == 1)
         AudioManagerOS::Free();
     #else
         AudioManagerDenshion::Free();

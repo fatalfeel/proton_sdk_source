@@ -14,7 +14,7 @@
 
 #include "TargetConditionals.h"
 
-	#if TARGET_OS_IPHONE == 1
+	#if (TARGET_OS_IPHONE == 1)
 		#include "iOS/PlatformSetupIOS.h"
 	#else
 		#include "OSX/PlatformSetupOSX.h"
