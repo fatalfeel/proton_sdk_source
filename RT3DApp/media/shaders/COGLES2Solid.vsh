@@ -64,7 +64,7 @@ void dirLight(in int index, in vec3 position, in vec3 normal, inout vec4 ambient
         if (NdotH > 0.0)
         {
             float SpecularFactor = pow(NdotH, uMaterialShininess);
-            specular += SpecularFactor * uLightSpecular[index];
+            specular += uLightSpecular[index] * SpecularFactor;
         }
     }
 }
@@ -103,7 +103,7 @@ void pointLight(in int index, in vec3 position, in vec3 normal, inout vec4 ambie
         if (NdotH > 0.0)
         {
             float SpecularFactor = pow(NdotH, uMaterialShininess);
-            specular += SpecularFactor * uLightSpecular[index] * Attenuation;
+            specular += uLightSpecular[index] * (SpecularFactor * Attenuation);
         }
     }
 }
@@ -126,7 +126,7 @@ void main()
 
 	if (uLightCount > 0)
 	{
-		//VertexNormal(in camera space) = objNormal * (world-viewMatrix^-1)T
+		//VertexNormal(in camera space) = objNormal * (world-view Matrix^-1)T
         //NMatrixID = getVertexShaderConstantID("uNMatrix");
         //setPixelShaderConstant(NMatrixID, Matrix.makeInverse().getTransposed().pointer(), 16);
 		vec3 Normal = normalize((uNMatrix * vec4(inVertexNormal, 0.0)).xyz);

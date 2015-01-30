@@ -66,7 +66,7 @@ void dirLight(in int index, in vec3 position, in vec3 normal, inout vec4 ambient
         if (NdotH > 0.0)
         {
             float SpecularFactor = pow(NdotH, uMaterialShininess);
-            specular += SpecularFactor * uLightSpecular[index];
+            specular += uLightSpecular[index] * SpecularFactor;
         }
     }
 }
@@ -105,7 +105,7 @@ void pointLight(in int index, in vec3 position, in vec3 normal, inout vec4 ambie
         if (NdotH > 0.0)
         {
             float SpecularFactor = pow(NdotH, uMaterialShininess);
-            specular += SpecularFactor * uLightSpecular[index] * Attenuation;
+            specular += uLightSpecular[index] * (SpecularFactor * Attenuation);
         }
     }
 }
