@@ -3411,7 +3411,7 @@ void COpenGLDriver::setTextureRenderStates(const SMaterial& material, bool reset
 			if (i>0 && !MultiTextureExtension)
 				break;
 
-			if (!CurrentTexture[i])
+			/*if (!CurrentTexture[i])
 			{
 				BridgeCalls->setTexture(i, fixedPipeline);
 
@@ -3422,7 +3422,14 @@ void COpenGLDriver::setTextureRenderStates(const SMaterial& material, bool reset
 				BridgeCalls->setTexture(i, fixedPipeline);
 
 				setTransform ((E_TRANSFORMATION_STATE) (ETS_TEXTURE_0 + i), material.getTextureMatrix(i));
-			}
+			}*/
+
+			BridgeCalls->setTexture(i, fixedPipeline);
+
+			if (!CurrentTexture[i])
+				continue;
+			else
+				setTransform((E_TRANSFORMATION_STATE) (ETS_TEXTURE_0 + i), material.getTextureMatrix(i));
 		}
 		else
 		{

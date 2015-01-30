@@ -328,7 +328,8 @@ namespace quake3
 				break;
 			case 14:
 				// alphafunc ge128
-				blendfunc.type = video::EMT_TRANSPARENT_ALPHA_CHANNEL;
+				//blendfunc.type = video::EMT_TRANSPARENT_ALPHA_CHANNEL;
+				blendfunc.type = video::EMT_TRANSPARENT_ALPHA_CHANNEL_REF; //by stone
 				blendfunc.param0 = 0.5f;
 				blendfunc.isTransparent = 1;
 				resolved = 1;

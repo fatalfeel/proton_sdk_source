@@ -506,7 +506,7 @@ namespace video
 
 		class STextureStageCache
 		{
-			const ITexture* CurrentTexture[MATERIAL_MAX_TEXTURES];
+			//const ITexture* CurrentTexture[MATERIAL_MAX_TEXTURES];
 		public:
 			STextureStageCache()
 			{
@@ -566,6 +566,9 @@ namespace video
 					}
 				}
 			}
+
+		private:
+			const ITexture* CurrentTexture[MATERIAL_MAX_TEXTURES];
 		};
 		STextureStageCache CurrentTexture;
 
