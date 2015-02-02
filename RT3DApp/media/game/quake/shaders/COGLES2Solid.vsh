@@ -46,7 +46,7 @@ void dirLight(in int index, in vec3 position, in vec3 normal, inout vec4 ambient
          
     if (NdotL > 0.0)
     {
-        diffuse += NdotL * uLightDiffuse[index];
+        diffuse += uLightDiffuse[index] * NdotL;
         
         //vec3 HalfVector = normalize(L + vec3(0.0, 0.0, 1.0));
 		vec3 E = normalize(-position); 
