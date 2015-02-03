@@ -2,7 +2,6 @@ Cross Platform 3D engine with OpenGL ES1 ES2 on Proton
 =================
 1.
 Proton 3d engine impelement Irrlicht and Bullet with OpenGL ES1.0 ES2.0
-
 You can build on Win32, MacOS, Android, Ios
 
 2.
@@ -22,8 +21,10 @@ android:installLocation="internalOnly" of AndroidManifest.xml
 Switch OGLES1 -> OGLES2
 (a.) find App.cpp
 irr::video::E_DRIVER_TYPE AppGetOGLESType()
-return irr::video::EDT_OGLES1; -> return irr::video::EDT_OGLES2;
+return irr::video::EDT_OGLES1; 
+-> return irr::video::EDT_OGLES2;
 
 (b.) find SharedActivity.java
 public AppGLSurfaceView(Context context, SharedActivity _app)
-//setEGLContextClientVersion(2); -> setEGLContextClientVersion(2);
+//setEGLContextClientVersion(2); 
+-> setEGLContextClientVersion(2);
