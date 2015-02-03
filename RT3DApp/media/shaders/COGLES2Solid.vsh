@@ -74,13 +74,14 @@ void pointLight(in int index, in vec3 position, in vec3 normal, inout vec4 ambie
     
     float NdotL = dot(normal, L);
         
-    if( NdotL > 0.0 )
+    if (NdotL > 0.0)
     {
         diffuse += uLightDiffuse[index] * (NdotL * Attenuation);
         
         //vec3 HalfVector = normalize(L + vec3(0.0, 0.0, 1.0));
-		vec3 E = normalize(-position); 
-		vec3 HalfVector = normalize(L + E);
+        //Blinn shading, in camera space which the camera position is (0,0,0)
+        vec3 E = normalize(-position); 
+        vec3 HalfVector = normalize(L + E);
         float NdotH = dot(normal, HalfVector);
         
         if (NdotH > 0.0)
@@ -109,9 +110,9 @@ void main()
 
 	if (uLightCount > 0)
 	{
-		//VertexNormal(in camera space) = objNormal * (world-view Matrix^-1)T
-        //NMatrixID = getVertexShaderConstantID("uNMatrix");
-        //setPixelShaderConstant(NMatrixID, Matrix.makeInverse().getTransposed().pointer(), 16);
+		//VertexNormal(in camera space) = ObjVertexNormal * (worldview Matrix^-1)T
+		//NMatrixID = getVertexShaderConstantID("uNMatrix");
+		//setPixelShaderConstant(NMatrixID, Matrix.makeInverse().getTransposed().pointer(), 16);
 		vec3 Normal = normalize((uNMatrix * vec4(inVertexNormal, 0.0)).xyz);
 
 		vec4 Ambient = vec4(0.0, 0.0, 0.0, 0.0);
