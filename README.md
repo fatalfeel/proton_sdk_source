@@ -1,7 +1,7 @@
-Cross Platform 3D engine with OpenGL OGLES1 OGLES2 on Proton
+Cross Platform 3D engine with OpenGL ES1 ES2 on Proton
 =================
 1.
-Proton 3d engine impelement irrlicht 1.9.0 with OGLES1.0, OGLES2.0 and OpenGL
+Proton 3d engine impelement Irrlicht and Bullet with OpenGL ES1.0 ES2.0
 You can build on Win32, MacOS, Android, Ios
 
 2.
@@ -11,7 +11,6 @@ xxxxxx/media/update_media.bat
 
 On MacOs --->
 chmod 777 xxxxxx/media/update_media.sh
-
 xxxxxx/media/update_media.sh
 
 3.
