@@ -162,7 +162,11 @@ bool App::Init()
 
 	//preload audio
 	if( GetAudioManager() )
+	{
 		GetAudioManager()->Preload("audio/click.wav");
+		//GetAudioManager()->Play("audio/real.mp3",1,1); //ios 128bps mp3
+		//GetAudioManager()->Play("audio/real.ogg",1,1); //android play ogg
+	}
 		
 	if (!IrrlichtManager::GetIrrlichtManager()->Init(0)) 
 		return false;

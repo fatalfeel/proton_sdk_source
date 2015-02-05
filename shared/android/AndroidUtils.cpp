@@ -811,9 +811,8 @@ void AppUpdate(JNIEnv*  env)
 		//signal to IrrlichtManager::OnLoadSurfaces()
 		BaseApp::GetBaseApp()->m_sig_loadSurfaces();
 		
-		//BaseApp::GetBaseApp()->OnEnterBackground(); //by stone
-		GetAudioManager()->Kill();
-		//return;
+		//BaseApp::GetBaseApp()->OnEnterBackground();
+		//GetAudioManager()->Kill(); //already done in AppPause
 	}
 	else
 	{
@@ -822,12 +821,14 @@ void AppUpdate(JNIEnv*  env)
 #ifdef _DEBUG
 			LogMsg("Resuming at %u (timer was %u)", GetSystemTimeTick(), g_callAppResumeASAPTimer);
 #endif
+
 			g_callAppResumeASAPTimer = 0;
 
-			BaseApp::GetBaseApp()->OnEnterForeground();
+			//BaseApp::GetBaseApp()->OnEnterForeground(); //replay in !g_musicToPlay.empty()
 
-			GetAudioManager()->Init();
+			GetAudioManager()->Init(); //nothing to do
 
+			//replay music after AppPause
 			if (!g_musicToPlay.empty())
 			{
 				GetAudioManager()->Play(g_musicToPlay, GetAudioManager()->GetLastMusicLooping(), true, false, true);
@@ -894,15 +895,14 @@ void AppPause(JNIEnv*  env)
 	}
 	
 	BaseApp::GetBaseApp()->m_sig_pre_enterbackground(NULL); //I needed this to kill audio in a custom way, but we still
-	//shouldn't do anything else or we risk android conflicts
 
-	GetAudioManager()->Kill();
-
+	GetAudioManager()->Kill(); //StopMusic() of AudioManagerAndroid::Kill()
 }
 
 void AppResume(JNIEnv*  env)
 {
 	g_callAppResumeASAPTimer = GetSystemTimeTick() + C_DELAY_BEFORE_RESTORING_SURFACES_MS;
+
 #ifdef _DEBUG
 	LogMsg("Queuing resume: %u (now is %u)", g_callAppResumeASAPTimer, GetTick(TIMER_SYSTEM));
 #endif
