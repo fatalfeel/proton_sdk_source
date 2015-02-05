@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="RTPhysics" default="help">
 
+  <property name="PACKAGE_NAME" value="com.rtsoft.rtphysics" />
+  <property name="SMALL_PACKAGE_NAME" value="rtphysics" />
+  <property name="PACKAGE_NAME_WITH_UNDERSCORES" value="com_rtsoft_rtphysics" />
+
+
     <!-- The local.properties file is created and updated by the 'android' tool.
          It contains the path to the SDK. It should *NOT* be checked into
          Version Control Systems. -->
@@ -124,7 +129,7 @@ Here is where Seth setups a customized packaging so we can tell it to not compre
                     classpath="${extensible.classpath}"
                     classpathref="project.libraries.jars">
                 <src path="${source.absolute.dir}" />
-                <src path="../../shared/android/src" />
+        <!--  <src path="../../shared/android/src" /> -->
      					  <src path="${gen.absolute.dir}" />
                 <classpath>
                     <fileset dir="${extensible.libs.classpath}" includes="*.jar" />

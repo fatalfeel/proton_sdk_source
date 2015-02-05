@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="rt3dapp" default="help">
+<project name="RT3DApp" default="help">
 
   <property name="PACKAGE_NAME" value="com.rtsoft.rt3dapp" />
   <property name="SMALL_PACKAGE_NAME" value="rt3dapp" />
