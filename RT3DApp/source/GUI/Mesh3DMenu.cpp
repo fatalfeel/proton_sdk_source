@@ -99,14 +99,10 @@ void Mesh3DInitScene()
 	//new buffer copy on file->read(Buffer, size) of CXMeshFileLoader::readFileIntoMemory
 	mesh	= smgr->getMesh( memfile );
 	node	= smgr->addAnimatedMeshSceneNode( mesh );
-		
-	//delete by drop
-	/*if( buff_extract )
-	{
-		delete buff_extract;
-		buff_extract = NULL;
-	}*/
-					
+
+	//delete buff_extract in memfile->drop() of CMemoryReadFile
+	memfile->drop();
+						
 	if( pfilesystem )
 	{
 		delete pfilesystem;
@@ -114,47 +110,12 @@ void Mesh3DInitScene()
 	}
 
 //////////////////////////////texture/////////////////////////////////////////////////
-	load_zip	= (GetBaseAppPath() + "game/squirrel_skin.zip").c_str();
-	load_data	= "squirrel_skin.jpg";
-	reload_path	= (GetBaseAppPath() + "game/squirrel_skin.jpg").c_str();
-	
-#ifdef ANDROID_NDK
-	apk_buffer	= FileManager::GetFileManager()->Get(load_zip.c_str(), &apk_size, false, false);
-	
-	if( apk_buffer )
-	{
-		pfilesystem	= new FileSystemZip();
-		pfilesystem->Init_unzMemory(apk_buffer, apk_size);
-		buff_extract = pfilesystem->Get_unz(load_data, &size);
-
-		delete apk_buffer;
-		apk_buffer = NULL;
-	}
-#else
-	pfilesystem = new FileSystemZip();
-	pfilesystem->Init_unz(load_zip.c_str());
-	buff_extract = pfilesystem->Get_unz(load_data.c_str(), &size);
-#endif
-		
-	memfile = device->getFileSystem()->createMemoryReadFile(buff_extract, size, reload_path.c_str(), true);
-	node->setMaterialTexture( 0, IrrlichtManager::GetIrrlichtManager()->GetDriver()->getTexture( memfile ));
+	node->setMaterialTexture( 0, driver->getTexture((GetBaseAppPath()+"game/squirrel_skin.jpg").c_str()) );
     node->setMaterialFlag(EMF_LIGHTING, true);
     anim = smgr->createRotationAnimator(core::vector3df(0,0.3f,0));
     node->addAnimator(anim);
     anim->drop();
-
-	//delete by drop
-	/*if( buff_extract )
-	{
-		delete buff_extract;
-		buff_extract = NULL;
-	}*/
-		
-	if( pfilesystem )
-	{
-		delete pfilesystem;
-		pfilesystem = NULL;
-	}
+	
 
 //////////////////////////////////cam/////////////////////////////////////////////    
    	ICameraSceneNode* camera = smgr->addCameraSceneNodeFPS(0, 100.0f, .02f, 0, 0, 0, true, 1.0f);

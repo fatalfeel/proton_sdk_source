@@ -194,7 +194,7 @@ IReadFile* CProtonReader::createAndOpenFile(const io::path& filename)
 			pDataBytes = pDecompresse;
 		}
 						
-		//release in file->drop() of CNullDriver::createImageFromFile
+		//release in file->drop() of CNullDriver
 		iread = io::createMemoryReadFile(pDataBytes, size, filename, true);
 	} 
 
