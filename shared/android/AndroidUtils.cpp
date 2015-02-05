@@ -877,6 +877,7 @@ void AppPause(JNIEnv*  env)
 		LogMsg("Got android AppPause, ignoring as we've already triggered it");
 		return;
 	}
+
 #ifdef _DEBUG
 	LogMsg("Got android AppPause");
 #endif
