@@ -57,20 +57,9 @@ void Mesh3DInitScene()
 	
 	IrrlichtManager::GetIrrlichtManager()->GetDevice()->getTimer()->setTime(0);
 		
-    device->getSceneManager()->addLightSceneNode(0, vector3df(-5,5,0), SColorf(1.0f,1.0f,1.0f), 1000.0f);
-	device->getSceneManager()->addLightSceneNode(0, vector3df(5,5,0), SColorf(1.0f,1.0f,1.0f), 1000.0f);
-	    
-    //mesh = smgr->getMesh( (GetBaseAppPath() + "game/sydney.md2").c_str());
-    //mesh = smgr->getMesh( (GetBaseAppPath() + "game/dwarf.x").c_str());
-    /*mesh = smgr->getMesh( (GetBaseAppPath() + "game/squirrel.x").c_str());
-	node = smgr->addAnimatedMeshSceneNode( mesh );
-	node->setMaterialTexture(0, driver->getTexture((GetBaseAppPath()+"game/squirrel_skin.png").c_str()));
-	node->setMaterialFlag(EMF_LIGHTING, true);
-    
-	anim = smgr->createRotationAnimator(core::vector3df(0,0.3f,0));
-    node->addAnimator(anim);
-    anim->drop();*/
-
+    smgr->addLightSceneNode(0, core::vector3df(-100,10,0), video::SColorf(1.0f, 1.0f, 1.0f, 1.0f), 200.0f);
+    smgr->addLightSceneNode(0, core::vector3df(+100,10,0), video::SColorf(1.0f, 1.0f, 1.0f, 1.0f), 200.0f);
+	
 		
 //////////////////////////////mesh/////////////////////////////////////////////////
 	load_zip	= (GetBaseAppPath() + "game/squirrel.zip").c_str();
@@ -112,6 +101,7 @@ void Mesh3DInitScene()
 //////////////////////////////texture/////////////////////////////////////////////////
 	node->setMaterialTexture( 0, driver->getTexture((GetBaseAppPath()+"game/squirrel_skin.jpg").c_str()) );
     node->setMaterialFlag(EMF_LIGHTING, true);
+    node->setMaterialFlag(EMF_NORMALIZE_NORMALS, true);
     anim = smgr->createRotationAnimator(core::vector3df(0,0.3f,0));
     node->addAnimator(anim);
     anim->drop();
