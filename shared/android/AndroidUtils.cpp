@@ -894,8 +894,6 @@ void AppPause(JNIEnv*  env)
 		g_musicPos = 0;
 
 	}
-	
-	//BaseApp::GetBaseApp()->m_sig_pre_enterbackground(NULL); //non use
 
 	GetAudioManager()->Kill(); //StopMusic() of AudioManagerAndroid::Kill()
 }
