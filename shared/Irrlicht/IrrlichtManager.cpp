@@ -336,7 +336,6 @@ void IrrlichtManager::OnUnloadSurfaces()
 	if (m_pScene && m_pDriver)
 	{
 		LogMsg("Irrlicht unloading surfaces..");
-		//m_pDriver->OnSuspend();
 	}
 }
 
@@ -345,7 +344,6 @@ void IrrlichtManager::OnReLoadSurfaces()
 	if (m_pScene && m_pDriver)
 	{
 		LogMsg("Irrlicht loading surfaces..");
-		//m_pDriver->OnResume();
 
 		m_againInit = 1;
 	}
