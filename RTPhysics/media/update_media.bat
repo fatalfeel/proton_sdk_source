@@ -1,18 +1,18 @@
 cls
 set ZIP_EXE=..\..\shared\win\utils\7za.exe
 
-cd game
-for /r %%i in (*.x *.b3d *.bmp *.png *.jpg *.tga) do ..\%ZIP_EXE% a %%~pni.zip %%i
-cd ..
-
-cd interface
-for /r %%i in (*.x *.b3d *.bmp *.png *.jpg *.tga) do ..\%ZIP_EXE% a %%~pni.zip %%i
-cd ..
-
 rmdir ..\bin\game /S /Q
 rmdir ..\bin\interface /S /Q
 rmdir ..\bin\audio /S /Q
 rmdir ..\bin\shaders /S /Q
+
+cd game
+for /r %%i in (*.x *.b3d *.bsp *.obj) do ..\%ZIP_EXE% a %%~pni.zip %%i
+cd ..
+
+cd interface
+for /r %%i in (*.x *.b3d *.bsp *.obj) do ..\%ZIP_EXE% a %%~pni.zip %%i
+cd ..
 
 mkdir ..\bin\game
 xcopy game ..\bin\game /E /F /Y /EXCLUDE:xcopy_exclude.txt

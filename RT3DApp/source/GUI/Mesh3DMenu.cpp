@@ -100,7 +100,7 @@ void Mesh3DInitScene()
 	mesh	= smgr->getMesh( memfile );
 	node	= smgr->addAnimatedMeshSceneNode( mesh );
 
-	//delete buff_extract in memfile->drop() of CMemoryReadFile
+	//delete buff_extract in drop() then goto ~CMemoryReadFile
 	memfile->drop();
 						
 	if( pfilesystem )

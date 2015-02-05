@@ -1,9 +1,6 @@
-.x
-.b3d
 .txt
 .bak
 .max
-.obj
 .svn
 .psd
 .fbx

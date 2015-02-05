@@ -1,23 +1,21 @@
 cls
 set ZIP_EXE=..\..\shared\win\utils\7za.exe
 
-cd game
-for /r %%i in (*.x *.b3d *.bmp *.png *.jpg *.tga) do ..\%ZIP_EXE% a %%~pni.zip %%i
-cd ..
-
-cd interface
-for /r %%i in (*.x *.b3d *.bmp *.png *.jpg *.tga) do ..\%ZIP_EXE% a %%~pni.zip %%i
-cd ..
-
 rmdir ..\bin\game /S /Q
 rmdir ..\bin\interface /S /Q
 rmdir ..\bin\audio /S /Q
 rmdir ..\bin\shaders /S /Q
 
+cd game
+for /r %%i in (*.x *.b3d *.bsp *.obj) do ..\%ZIP_EXE% a %%~pni.zip %%i
+cd ..
+
+cd interface
+for /r %%i in (*.x *.b3d *.bsp *.obj) do ..\%ZIP_EXE% a %%~pni.zip %%i
+cd ..
+
 mkdir ..\bin\game
 xcopy game ..\bin\game /E /F /Y /EXCLUDE:xcopy_exclude.txt
-xcopy game\quake ..\bin\game\quake /E /F /Y
-xcopy game\house_scene ..\bin\game\house_scene /E /F /Y
 
 mkdir ..\bin\interface
 xcopy interface ..\bin\interface /E /F /Y /EXCLUDE:xcopy_exclude.txt
@@ -52,8 +50,9 @@ cd ..
 
 cd ..\bin\game\quake
 for /r %%i in (*.zip) do del %%i
+cd..
 
-cd ..\house_scene
+cd house_scene
 for /r %%i in (*.zip) do del %%i
 cd ..\..\..\media
 

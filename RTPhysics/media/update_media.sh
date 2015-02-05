@@ -4,7 +4,7 @@ echo Process our images and textures and copy them into the bin directory
 
 process_directory_images()
 {
-    for IMG in `find . -depth \( -name '*.x' -o -name '*.b3d' -o -name '*.bmp' -o -name '*.jpg' -o -name '*.png' -o -name '*.tga' \) -print`;
+    for IMG in `find . -depth \( -name '*.x' -o -name '*.b3d' -o -name '*.bsp' -o -name '*.obj' \) -print`;
     do
     {
         ZIPFILE=`echo $IMG | sed -e 's/\.[^.]*$//'`
