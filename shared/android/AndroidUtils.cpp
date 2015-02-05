@@ -812,6 +812,7 @@ void AppUpdate(JNIEnv*  env)
 		BaseApp::GetBaseApp()->m_sig_loadSurfaces();
 		
 		//BaseApp::GetBaseApp()->OnEnterBackground();
+
 		//GetAudioManager()->Kill(); //already done in AppPause
 	}
 	else
@@ -826,7 +827,7 @@ void AppUpdate(JNIEnv*  env)
 
 			//BaseApp::GetBaseApp()->OnEnterForeground(); //replay in !g_musicToPlay.empty()
 
-			GetAudioManager()->Init(); //nothing to do
+			GetAudioManager()->Init(); //nothing do inside
 
 			//replay music after AppPause
 			if (!g_musicToPlay.empty())
@@ -884,8 +885,8 @@ void AppPause(JNIEnv*  env)
 
 	if (GetAudioManager()->IsPlaying(GetAudioManager()->GetLastMusicID()))
 	{
-		g_musicToPlay = GetAudioManager()->GetLastMusicFileName();
-		g_musicPos = GetAudioManager()->GetPos(GetAudioManager()->GetLastMusicID());
+		g_musicToPlay	= GetAudioManager()->GetLastMusicFileName();
+		g_musicPos 		= GetAudioManager()->GetPos(GetAudioManager()->GetLastMusicID());
 	} 
 	else
 	{
@@ -894,7 +895,7 @@ void AppPause(JNIEnv*  env)
 
 	}
 	
-	BaseApp::GetBaseApp()->m_sig_pre_enterbackground(NULL); //I needed this to kill audio in a custom way, but we still
+	//BaseApp::GetBaseApp()->m_sig_pre_enterbackground(NULL); //non use
 
 	GetAudioManager()->Kill(); //StopMusic() of AudioManagerAndroid::Kill()
 }

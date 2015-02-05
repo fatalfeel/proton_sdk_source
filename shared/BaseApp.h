@@ -299,7 +299,7 @@ public:
 	 * Early signal that we are about to enter background.
 	 * Don't mess with video here. Useful for shutting down audio on android.
 	 */
-	boost::signal<void (VariantList*)> m_sig_pre_enterbackground;
+	//boost::signal<void (VariantList*)> m_sig_pre_enterbackground;
 	boost::signal<void (VariantList*)> m_sig_enterbackground; ///< Game lost focus
 	boost::signal<void (VariantList*)> m_sig_enterforeground; ///< Game restored focus
 	boost::signal<void (VariantList*)> m_sig_accel; ///< Accelerometer data from iphone
