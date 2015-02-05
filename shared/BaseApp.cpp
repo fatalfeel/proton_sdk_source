@@ -561,23 +561,11 @@ void BaseApp::OnEnterBackground()
 {
 	if (!m_bIsInBackground)
 	{
-		m_bIsInBackground = true;
 #ifdef _DEBUG	
 		LogMsg("Entering background");
 #endif
-	 
-#ifndef ANDROID_NDK
-		if (GetEmulatedPlatformID() == PLATFORM_ID_ANDROID)
-			m_sig_unloadSurfaces();
-#endif
-		
-		/*if (GetPlatformID() != PLATFORM_ID_ANDROID)
-		{
-			//android will do it elsewhere, but for other platforms we fake this message here
-			m_sig_pre_enterbackground(NULL); 
-		}*/
 
-		//m_sig_enterbackground(NULL);
+		m_bIsInBackground = true;
 	}
 
 	if (GetAudioManager())
@@ -593,19 +581,11 @@ void BaseApp::OnEnterForeground()
 
 	if (m_bIsInBackground)
 	{
-		m_bIsInBackground = false;
 #ifdef _DEBUG
 		LogMsg("Entering foreground");
 #endif
-	
-	#ifndef PLATFORM_ANDROID
-		if (GetEmulatedPlatformID() == PLATFORM_ID_ANDROID)
-		{
-			BaseApp::GetBaseApp()->m_sig_loadSurfaces(); //for anyone who cares
-		}
-	#endif
 
-		//m_sig_enterforeground(NULL);
+		m_bIsInBackground = false;
 	}
 }
 

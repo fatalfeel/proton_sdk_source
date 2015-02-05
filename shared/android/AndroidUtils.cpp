@@ -823,7 +823,9 @@ void AppUpdate(JNIEnv*  env)
 			LogMsg("Resuming at %u (timer was %u)", GetSystemTimeTick(), g_callAppResumeASAPTimer);
 #endif
 			g_callAppResumeASAPTimer = 0;
+
 			BaseApp::GetBaseApp()->OnEnterForeground();
+
 			GetAudioManager()->Init();
 
 			if (!g_musicToPlay.empty())
