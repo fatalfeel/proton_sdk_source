@@ -649,7 +649,7 @@ COpenGLDriver::~COpenGLDriver()
 	// I get a blue screen on my laptop, when I do not delete the
 	// textures manually before releasing the dc. Oh how I love this.
 	deleteAllTextures();
-	removeAllOcclusionQueries();
+	//removeAllOcclusionQueries(); //no add no need remove
 	removeAllHardwareBuffers();
 
 //#ifdef _IRR_COMPILE_WITH_WINDOWS_DEVICE_

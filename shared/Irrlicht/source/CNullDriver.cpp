@@ -2592,9 +2592,8 @@ bool CNullDriver::OnAgainDriverInit() //by stone
 {
 	// delete material renderers
 	deleteMaterialRenders();
-	
-	//! Remove all occlusion queries.
-	removeAllOcclusionQueries();
+		
+	//removeAllOcclusionQueries(); //no add no need remove
 
 	// delete hardware mesh buffers
 	removeAllHardwareBuffers();
