@@ -2,35 +2,38 @@ Proton cross platform 3D engine open source
 =================
 1.
 
+(a.)
 Proton 3d engine impelement Irrlicht and Bullet Physics with OpenGL ES1.0 ES2.0
 
+(b.)
+Full open source
+
+(c.)
 You can build on Win32, MacOS, Android, Ios
 
-All platform play music and sound easily
+(d.)
+All platform can play music and sound easily
+
+(e.)
+GLSL shader language full control
 
 2.
 
-There is no OGLES1 OGLES2 texture loss problem on Android resume screen
+There is no OGLES1 OGLES2 texture loss problem after resume screen on Android
 
 3.
 
-First run need
+First run need to do
 
-On Win32, Android --->
+On Win32 or Android --->
 
 xxxxxx/media/update_media.bat
 
-On MacOs, Ios --->
+On MacOs or Ios --->
 
 chmod 777 xxxxxx/media/update_media.sh
 
 xxxxxx/media/update_media.sh
-
-3.
-
-When debug NDK c++ on Android, please set
-
-android:installLocation="internalOnly" of AndroidManifest.xml
 
 4.
 
@@ -47,3 +50,9 @@ return irr::video::EDT_OGLES1;
 //setEGLContextClientVersion(2); 
 
 -> setEGLContextClientVersion(2);
+
+5.
+
+When debug NDK c++ on Android, please set
+
+android:installLocation="internalOnly" of AndroidManifest.xml
