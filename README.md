@@ -15,7 +15,7 @@ You can build on Win32, MacOS, Android, Ios
 All platform can play music and sound easily
 
 (e.)
-GLSL shader language full control
+GLSL shading language full control
 
 2.
 
