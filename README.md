@@ -3,7 +3,7 @@ Proton cross platform 3D engine open source
 1.
 
 (a.)
-Proton 3d engine impelement Irrlicht and Bullet Physics with OpenGL ES1.0 ES2.0
+Proton 3d engine implement Irrlicht and Bullet Physics with OpenGL ES1.0 ES2.0
 
 (b.)
 Full open source
