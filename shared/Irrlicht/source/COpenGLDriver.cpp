@@ -637,20 +637,23 @@ COpenGLDriver::~COpenGLDriver()
 	if (CgContext)
 		cgDestroyContext(CgContext);
 	#endif
-
-	if (BridgeCalls)
-		delete BridgeCalls;
-
+	
 	RequestedLights.clear();
 
 	deleteMaterialRenders();
 
 	CurrentTexture.clear();
+	
 	// I get a blue screen on my laptop, when I do not delete the
 	// textures manually before releasing the dc. Oh how I love this.
 	deleteAllTextures();
-	//removeAllOcclusionQueries(); //no add no need remove
-	removeAllHardwareBuffers();
+	
+	//by CNullDriver::~CNullDriver()
+	//removeAllOcclusionQueries();
+	//removeAllHardwareBuffers();
+
+	if (BridgeCalls)
+		delete BridgeCalls;
 
 //#ifdef _IRR_COMPILE_WITH_WINDOWS_DEVICE_
 #ifdef _WIN32 //by stone

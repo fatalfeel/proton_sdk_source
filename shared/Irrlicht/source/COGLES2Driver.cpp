@@ -302,7 +302,12 @@ COGLES2Driver::~COGLES2Driver()
 	delete MaterialRenderer2D;
 	deleteAllTextures();
 
-	delete BridgeCalls;
+	//by CNullDriver::~CNullDriver()
+	//removeAllOcclusionQueries();
+	//removeAllHardwareBuffers();
+
+	if (BridgeCalls)
+		delete BridgeCalls;
 
 /*
 #if defined(EGL_VERSION_1_0)

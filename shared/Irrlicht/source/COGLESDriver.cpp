@@ -274,7 +274,13 @@ COGLES1Driver::~COGLES1Driver()
 	deleteMaterialRenders();
 	deleteAllTextures();
 
-    //by stone
+	//by CNullDriver::~CNullDriver()
+	//removeAllOcclusionQueries();
+	//removeAllHardwareBuffers();
+
+	if (BridgeCalls)
+		delete BridgeCalls;
+
 /*
 #if defined(EGL_VERSION_1_0)
 	eglMakeCurrent(EglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);

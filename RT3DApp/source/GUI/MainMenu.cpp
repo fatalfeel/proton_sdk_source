@@ -138,7 +138,7 @@ Entity* MainMenuCreate(Entity* pParentEnt)
             pBG = QuakeMenuCreate(pParentEnt);
             break;
             
-        case QUAKESHADER:	//plz enable irr::video::EDT_OGLES2
+        case QUAKESHADER:
             pBG = QuakeShaderMenuCreate(pParentEnt);
             break;
             
@@ -150,7 +150,7 @@ Entity* MainMenuCreate(Entity* pParentEnt)
             pBG = ShaderMenuCreate(pParentEnt);
             break;
 
-		case STENCIL:
+        case STENCIL:		//plz enable irr::video::EDT_OGLES2
             pBG = StencilMenuCreate(pParentEnt);
             break;
     }
