@@ -19,7 +19,7 @@ GLSL shading language full control
 
 2.
 
-There is no OGLES1 OGLES2 texture loss problem after resume screen on Android
+There is no OpenGLES1、2 texture loss problem after resume process on Android
 
 3.
 
