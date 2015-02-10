@@ -59,7 +59,8 @@ void COGLES2MaterialBaseCB::OnSetMaterial(const SMaterial& material)
 
 void COGLES2MaterialBaseCB::OnSetConstants(IMaterialRendererServices* services, s32 userData)
 {
-	IVideoDriver* driver = services->getVideoDriver();
+	int				MAX_SHADER_LIGHTS;
+	IVideoDriver*	driver = services->getVideoDriver();
 
 	if (FirstUpdateBase)
 	{
@@ -154,13 +155,14 @@ void COGLES2MaterialBaseCB::OnSetConstants(IMaterialRendererServices* services, 
 			LightSpecular[i] = CurrentLight.SpecularColor;
 		}
 
-		services->setPixelShaderConstant(LightTypeID, reinterpret_cast<f32*>(LightType), 24);
-		services->setPixelShaderConstant(LightPositionID, reinterpret_cast<f32*>(LightPosition), 24);
-		services->setPixelShaderConstant(LightDirectionID, reinterpret_cast<f32*>(LightDirection), 24);
-		services->setPixelShaderConstant(LightAttenuationID, reinterpret_cast<f32*>(LightAttenuation), 24);
-		services->setPixelShaderConstant(LightAmbientID, reinterpret_cast<f32*>(LightAmbient), 32);
-		services->setPixelShaderConstant(LightDiffuseID, reinterpret_cast<f32*>(LightDiffuse), 32);
-		services->setPixelShaderConstant(LightSpecularID, reinterpret_cast<f32*>(LightSpecular), 32);
+		MAX_SHADER_LIGHTS = 8;
+		services->setPixelShaderConstant(LightTypeID,		reinterpret_cast<s32*>(LightType),			MAX_SHADER_LIGHTS);
+		services->setPixelShaderConstant(LightPositionID,	reinterpret_cast<f32*>(LightPosition),		3*MAX_SHADER_LIGHTS);
+		services->setPixelShaderConstant(LightDirectionID,	reinterpret_cast<f32*>(LightDirection),		3*MAX_SHADER_LIGHTS);
+		services->setPixelShaderConstant(LightAttenuationID,reinterpret_cast<f32*>(LightAttenuation),	3*MAX_SHADER_LIGHTS);
+		services->setPixelShaderConstant(LightAmbientID,	reinterpret_cast<f32*>(LightAmbient),		4*MAX_SHADER_LIGHTS);
+		services->setPixelShaderConstant(LightDiffuseID,	reinterpret_cast<f32*>(LightDiffuse),		4*MAX_SHADER_LIGHTS);
+		services->setPixelShaderConstant(LightSpecularID,	reinterpret_cast<f32*>(LightSpecular),		4*MAX_SHADER_LIGHTS);
 	}
 
 	services->setPixelShaderConstant(FogEnableID, &FogEnable, 1);
