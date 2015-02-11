@@ -220,7 +220,7 @@ core::vector3df COGLES2MaterialBaseCB::ViweDirTrasform(core::matrix4 matrix, cor
     
     vec4_dir.z = matrix[0*4+2]*vec4_dir.x + matrix[1*4+2]*vec4_dir.y + matrix[2*4+2]*vec4_dir.z; // + matrix[3*4+2]*vec4_dir.w;
     
-    //vec4_dir.w = matrix[0*4+3]*dir.x + matrix[1*4+3]*dir.y + matrix[2*4+3]*dir.z + matrix[3*4+3]*dir.w; //no need return
+    //vec4_dir.w = matrix[0*4+3]*vec4_dir.x + matrix[1*4+3]*vec4_dir.y + matrix[2*4+3]*vec4_dir.z + matrix[3*4+3]*vec4_dir.w; //no need return
     
     return core::vector3df(vec4_dir.x, vec4_dir.y, vec4_dir.z);
 }
