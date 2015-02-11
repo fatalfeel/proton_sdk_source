@@ -27,6 +27,9 @@ public:
 
 	virtual void OnSetMaterial(const SMaterial& material);
 	virtual void OnSetConstants(IMaterialRendererServices* services, s32 userData);
+    
+    //by stone
+    core::vector3df ViweDirTrasform(core::matrix4 matrix, core::vector3df vec3_dir);
 
 protected:
 	bool FirstUpdateBase;
@@ -56,6 +59,8 @@ protected:
 	s32 FogStartID;
 	s32 FogEndID;
 	s32 FogDensityID;
+    s32 LightOuterConeID;
+    s32 LightFallOffID;
 
 	bool LightEnable;
 	SColorf MaterialAmbient;
@@ -71,7 +76,9 @@ protected:
 	SColorf LightAmbient[8];
 	SColorf LightDiffuse[8];
 	SColorf LightSpecular[8];
-
+    f32     LightOuterCone[8];
+    f32     LightFallOff[8];
+    
 	s32 FogEnable;
 	s32 FogType;
 	SColorf FogColor;

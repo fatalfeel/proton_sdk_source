@@ -181,7 +181,7 @@ void CLightSceneNode::doLightRecalc()
 {
 	if ((LightData.Type == video::ELT_SPOT) || (LightData.Type == video::ELT_DIRECTIONAL))
 	{
-		LightData.Direction = core::vector3df(.0f,.0f,1.0f);
+		//LightData.Direction = core::vector3df(.0f,.0f,1.0f); //by stone
 		getAbsoluteTransformation().rotateVect(LightData.Direction);
 		LightData.Direction.normalize();
 	}

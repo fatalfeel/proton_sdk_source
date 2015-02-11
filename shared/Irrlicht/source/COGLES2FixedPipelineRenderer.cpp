@@ -28,9 +28,11 @@ namespace video
 
 //! Constructor
 COGLES2MaterialBaseCB::COGLES2MaterialBaseCB() :
-	FirstUpdateBase(true), WVPMatrixID(-1), WVMatrixID(-1), NMatrixID(-1), MaterialAmbientID(-1), MaterialDiffuseID(-1), MaterialEmissiveID(-1), MaterialSpecularID(-1), MaterialShininessID(-1), LightCountID(-1), LightTypeID(-1),
+	FirstUpdateBase(true), WVPMatrixID(-1), WVMatrixID(-1), NMatrixID(-1), 
+	MaterialAmbientID(-1), MaterialDiffuseID(-1), MaterialEmissiveID(-1), MaterialSpecularID(-1), MaterialShininessID(-1), LightCountID(-1), LightTypeID(-1),
 	LightPositionID(-1), LightDirectionID(-1), LightAttenuationID(-1), LightAmbientID(-1), LightDiffuseID(-1), LightSpecularID(-1), FogEnableID(-1), FogTypeID(-1), FogColorID(-1), FogStartID(-1),
-	FogEndID(-1), FogDensityID(-1), LightEnable(false), MaterialAmbient(SColorf(0.f, 0.f, 0.f)), MaterialDiffuse(SColorf(0.f, 0.f, 0.f)), MaterialEmissive(SColorf(0.f, 0.f, 0.f)), MaterialSpecular(SColorf(0.f, 0.f, 0.f)),
+	FogEndID(-1), FogDensityID(-1), LightOuterConeID(-1), LightFallOffID(-1),
+	LightEnable(false), MaterialAmbient(SColorf(0.f, 0.f, 0.f)), MaterialDiffuse(SColorf(0.f, 0.f, 0.f)), MaterialEmissive(SColorf(0.f, 0.f, 0.f)), MaterialSpecular(SColorf(0.f, 0.f, 0.f)),
 	MaterialShininess(0.f), FogEnable(0), FogType(1), FogColor(SColorf(0.f, 0.f, 0.f, 1.f)), FogStart(0.f), FogEnd(0.f), FogDensity(0.f)
 {
 	for (u32 i = 0; i < 8; ++i)
@@ -42,6 +44,8 @@ COGLES2MaterialBaseCB::COGLES2MaterialBaseCB() :
 		LightAmbient[i] = SColorf(0.f, 0.f, 0.f);
 		LightDiffuse[i] = SColorf(0.f, 0.f, 0.f);
 		LightSpecular[i] = SColorf(0.f, 0.f, 0.f);
+        LightOuterCone[i]   = 180.0f;
+        LightFallOff[i]     = 0.0f;
 	}
 }
 
@@ -86,6 +90,8 @@ void COGLES2MaterialBaseCB::OnSetConstants(IMaterialRendererServices* services, 
 		FogStartID = services->getVertexShaderConstantID("uFogStart");
 		FogEndID = services->getVertexShaderConstantID("uFogEnd");
 		FogDensityID = services->getVertexShaderConstantID("uFogDensity");
+        LightOuterConeID = services->getVertexShaderConstantID("uLightOuterCone");
+        LightFallOffID = services->getVertexShaderConstantID("uLightFallOff");
 
 		FirstUpdateBase = false;
 	}
@@ -103,7 +109,7 @@ void COGLES2MaterialBaseCB::OnSetConstants(IMaterialRendererServices* services, 
 	Matrix.makeInverse();
 	services->setPixelShaderConstant(NMatrixID, Matrix.getTransposed().pointer(), 16);*/
     
-	core::matrix4 Matrix_V;
+    core::matrix4 Matrix_V;
     core::matrix4 Matrix_V_W    = V * W;
     core::matrix4 Matrix_P_V_W  = P * Matrix_V_W;
     
@@ -133,26 +139,32 @@ void COGLES2MaterialBaseCB::OnSetConstants(IMaterialRendererServices* services, 
 
 			//Matrix.transformVect(CurrentLight.Position);
             Matrix_V.transformVect(CurrentLight.Position);
-
+            
 			switch (CurrentLight.Type)
 			{
 			case ELT_DIRECTIONAL:
 				LightType[i] = 2;
+                //for same as opengl and oges1 use
+                //CurrentLight.Direction = ViweDirTrasform(Matrix_V, CurrentLight.Direction)
+                CurrentLight.Position = -ViweDirTrasform(Matrix_V, CurrentLight.Direction);
 				break;
 			case ELT_SPOT:
 				LightType[i] = 1;
+                CurrentLight.Direction = ViweDirTrasform(Matrix_V, CurrentLight.Direction);
 				break;
 			default: // ELT_POINT
 				LightType[i] = 0;
 				break;
 			}
 
-			LightPosition[i] = CurrentLight.Position;
-			LightDirection[i] = CurrentLight.Direction;
+			LightPosition[i]    = CurrentLight.Position;
+			LightDirection[i]   = CurrentLight.Direction;
 			LightAttenuation[i] = CurrentLight.Attenuation;
-			LightAmbient[i] = CurrentLight.AmbientColor;
-			LightDiffuse[i] = CurrentLight.DiffuseColor;
-			LightSpecular[i] = CurrentLight.SpecularColor;
+			LightAmbient[i]     = CurrentLight.AmbientColor;
+			LightDiffuse[i]     = CurrentLight.DiffuseColor;
+			LightSpecular[i]    = CurrentLight.SpecularColor;
+            LightOuterCone[i]   = CurrentLight.OuterCone;
+            LightFallOff[i]     = CurrentLight.Falloff;
 		}
 
 		MAX_SHADER_LIGHTS = 8;
@@ -163,6 +175,8 @@ void COGLES2MaterialBaseCB::OnSetConstants(IMaterialRendererServices* services, 
 		services->setPixelShaderConstant(LightAmbientID,	reinterpret_cast<f32*>(LightAmbient),		4*MAX_SHADER_LIGHTS);
 		services->setPixelShaderConstant(LightDiffuseID,	reinterpret_cast<f32*>(LightDiffuse),		4*MAX_SHADER_LIGHTS);
 		services->setPixelShaderConstant(LightSpecularID,	reinterpret_cast<f32*>(LightSpecular),		4*MAX_SHADER_LIGHTS);
+        services->setPixelShaderConstant(LightOuterConeID,	reinterpret_cast<f32*>(LightOuterCone),     MAX_SHADER_LIGHTS);
+        services->setPixelShaderConstant(LightFallOffID,    reinterpret_cast<f32*>(LightFallOff),       MAX_SHADER_LIGHTS);
 	}
 
 	services->setPixelShaderConstant(FogEnableID, &FogEnable, 1);
@@ -187,8 +201,31 @@ void COGLES2MaterialBaseCB::OnSetConstants(IMaterialRendererServices* services, 
 	}
 }
 
-// EMT_SOLID + EMT_TRANSPARENT_ADD_COLOR + EMT_TRANSPARENT_ALPHA_CHANNEL + EMT_TRANSPARENT_VERTEX_ALPHA
-
+core::vector3df COGLES2MaterialBaseCB::ViweDirTrasform(core::matrix4 matrix, core::vector3df vec3_dir)
+{
+    struct _Vec4_T
+    {
+        f32 x,y,z,w;
+    };
+    struct _Vec4_T vec4_dir;
+    
+    vec4_dir.x = vec3_dir.X;
+    vec4_dir.y = vec3_dir.Y;
+    vec4_dir.z = vec3_dir.Z;
+    vec4_dir.w = 0.0;
+    
+    vec4_dir.x = matrix[0*4+0]*vec4_dir.x + matrix[1*4+0]*vec4_dir.y + matrix[2*4+0]*vec4_dir.z; // + matrix[3*4+0]*vec4_dir.w;
+    
+    vec4_dir.y = matrix[0*4+1]*vec4_dir.x + matrix[1*4+1]*vec4_dir.y + matrix[2*4+1]*vec4_dir.z; // + matrix[3*4+1]*vec4_dir.w;
+    
+    vec4_dir.z = matrix[0*4+2]*vec4_dir.x + matrix[1*4+2]*vec4_dir.y + matrix[2*4+2]*vec4_dir.z; // + matrix[3*4+2]*vec4_dir.w;
+    
+    //vec4_dir.w = matrix[0*4+3]*dir.x + matrix[1*4+3]*dir.y + matrix[2*4+3]*dir.z + matrix[3*4+3]*dir.w; //no need return
+    
+    return core::vector3df(vec4_dir.x, vec4_dir.y, vec4_dir.z);
+}
+    
+// EMT_SOLID + EMT_TRANSPARENT_ADD_COLOR + EMT_TRANSPARENT_ALPHA_CHANNEL + MT_TRANSPARENT_VERTEX_ALPHA
 COGLES2MaterialSolidCB::COGLES2MaterialSolidCB() :
 	FirstUpdate(true), TMatrix0ID(-1), AlphaRefID(-1), TextureUsage0ID(-1), TextureUnit0ID(-1), AlphaRef(0.5f), TextureUsage0(0), TextureUnit0(0)
 {
