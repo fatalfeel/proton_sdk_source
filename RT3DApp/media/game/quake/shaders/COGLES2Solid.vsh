@@ -41,7 +41,7 @@ varying float vFogCoord;
 void dirLight(in int index, in vec3 position, in vec3 normal, inout vec4 ambient, inout vec4 diffuse, inout vec4 specular)
 {
     //vec3 L = normalize(-uLightDirection[index]);
-    vec3 L = normalize(uLightPosition[index]); //direction same as opengl and oges1 use
+    vec3 L = normalize(uLightPosition[index]); //direction same as assignHardwareLight(u32 lightIndex)
     
 	ambient += uLightAmbient[index];
     
@@ -51,7 +51,7 @@ void dirLight(in int index, in vec3 position, in vec3 normal, inout vec4 ambient
     {
         diffuse += uLightDiffuse[index] * NdotL;
         
-        //vec3 HalfVector = normalize(L + vec3(0.0, 0.0, 1.0));
+        //Blinn shading, in camera space which the camera position is (0,0,0)
 		vec3 E = normalize(-position); 
 		vec3 HalfVector = normalize(L + E);
         float NdotH = dot(normal, HalfVector);
@@ -75,13 +75,13 @@ void pointLight(in int index, in vec3 position, in vec3 normal, inout vec4 ambie
 
 	ambient += uLightAmbient[index] * Attenuation;
     
-    float NdotL = dot(normal, L);
+    //dot(objnormal and lightvector) = cos(theta)
+	float NdotL = dot(normal, L);
         
     if (NdotL > 0.0)
     {
         diffuse += uLightDiffuse[index] * (NdotL * Attenuation);
         
-        //vec3 HalfVector = normalize(L + vec3(0.0, 0.0, 1.0));
         //Blinn shading, in camera space which the camera position is (0,0,0)
         vec3 E = normalize(-position); 
         vec3 HalfVector = normalize(L + E);
@@ -101,14 +101,13 @@ void spotLight(in int index, in vec3 position, in vec3 normal, inout vec4 ambien
     float D = length(L);
     L = normalize(L);
         
-    //must do outside or become flashlight follow camera
-    //vec3 NSpotDir  = (uViewMatrix * vec4(uLightDirection[index],0)).xyz;
+    //LDirection must do view transform in OnSetConstants or spotlight follow camera
     vec3 NSpotDir = normalize(uLightDirection[index]);
     
-    //dot(NSpotDir and lightvector) = cos(angle)
+    //dot(NSpotDir and lightvector) = cos(theta)
     float spotEffect = dot(NSpotDir, -L);
     
-    if (spotEffect >= cos(radians(uLightOuterCone[index])))
+    if (spotEffect >= uLightOuterCone[index])
     {
         float Attenuation = 1.0 / (uLightAttenuation[index].x + uLightAttenuation[index].y * D +
                                    uLightAttenuation[index].z * D * D);
@@ -149,9 +148,7 @@ void main()
 
 	if (uLightCount > 0)
 	{
-		//VertexNormal(in camera space) = ObjVertexNormal * (worldview Matrix^-1)T
-		//NMatrixID = getVertexShaderConstantID("uNMatrix");
-		//setPixelShaderConstant(NMatrixID, Matrix.makeInverse().getTransposed().pointer(), 16);
+		//setPixelShaderConstant(NMatrixID, WVMatrix.makeInverse().getTransposed(), 16);
 		vec3 Normal = normalize((uNMatrix * vec4(inVertexNormal, 0.0)).xyz);
 
 		vec4 Ambient = vec4(0.0, 0.0, 0.0, 0.0);

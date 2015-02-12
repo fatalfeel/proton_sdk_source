@@ -104,7 +104,7 @@ void spotLight(in int index, in vec3 position, in vec3 normal, inout vec4 ambien
     
     float spotEffect = dot(NSpotDir, -L);
     
-    if (spotEffect >= cos(radians(uLightOuterCone[index])))
+    if (spotEffect >= uLightOuterCone[index])
     {
         float Attenuation = 1.0 / (uLightAttenuation[index].x + uLightAttenuation[index].y * D +
                                    uLightAttenuation[index].z * D * D);

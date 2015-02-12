@@ -82,7 +82,15 @@ void CLightSceneNode::render()
 //! sets the light data
 void CLightSceneNode::setLightData(const video::SLight& light)
 {
-	LightData = light;
+    video::IVideoDriver* driver = SceneManager->getVideoDriver();
+    
+    LightData = light;
+    
+    if( driver->getDriverType() == video::EDT_OGLES2 )
+    {
+        LightData.OuterCone = (float)cos(light.OuterCone * 3.141615926 / 180.0f);
+        LightData.InnerCone = (float)cos(light.InnerCone * 3.141615926 / 180.0f);
+    }
 }
 
 

@@ -28,9 +28,6 @@ public:
 	virtual void OnSetMaterial(const SMaterial& material);
 	virtual void OnSetConstants(IMaterialRendererServices* services, s32 userData);
     
-    //by stone
-    core::vector3df LightDirInView(core::matrix4 matrix, core::vector3df vec3_dir);
-
 protected:
 	bool FirstUpdateBase;
 

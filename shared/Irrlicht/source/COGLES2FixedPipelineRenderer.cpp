@@ -138,23 +138,25 @@ void COGLES2MaterialBaseCB::OnSetConstants(IMaterialRendererServices* services, 
 			SLight CurrentLight = driver->getDynamicLight(i);
 
 			//Matrix.transformVect(CurrentLight.Position);
-            Matrix_V.transformVect(CurrentLight.Position);
             
+            //Matrix_V.transformVect-> vec3(Vmatrix*vec4(Position, 1))
+			//Matrix_V.rotateVect	-> vec3(Vmatrix*vec4(Direction,0))
 			switch (CurrentLight.Type)
 			{
 			case ELT_DIRECTIONAL:
 				LightType[i] = 2;
-                //for same as opengl and oges1 use
-                //CurrentLight.Direction = LightDirInView(Matrix_V, CurrentLight.Direction)
-                CurrentLight.Position = -LightDirInView(Matrix_V, CurrentLight.Direction);
-				break;
+                //put on Position, same as assignHardwareLight(u32 lightIndex)
+                Matrix_V.rotateVect(CurrentLight.Position, -CurrentLight.Direction);
+                break;
 			case ELT_SPOT:
 				LightType[i] = 1;
-                CurrentLight.Direction = LightDirInView(Matrix_V, CurrentLight.Direction);
+                Matrix_V.transformVect(CurrentLight.Position);
+                Matrix_V.rotateVect(CurrentLight.Direction);
 				break;
 			default: // ELT_POINT
 				LightType[i] = 0;
-				break;
+                Matrix_V.transformVect(CurrentLight.Position);
+                break;
 			}
 
 			LightPosition[i]    = CurrentLight.Position;
@@ -199,30 +201,6 @@ void COGLES2MaterialBaseCB::OnSetConstants(IMaterialRendererServices* services, 
 		services->setPixelShaderConstant(FogEndID, &FogEnd, 1);
 		services->setPixelShaderConstant(FogDensityID, &FogDensity, 1);
 	}
-}
-
-core::vector3df COGLES2MaterialBaseCB::LightDirInView(core::matrix4 matrix, core::vector3df vec3_dir)
-{
-    struct _Vec4_T
-    {
-        f32 x,y,z,w;
-    };
-    struct _Vec4_T vec4_dir;
-    
-    vec4_dir.x = vec3_dir.X;
-    vec4_dir.y = vec3_dir.Y;
-    vec4_dir.z = vec3_dir.Z;
-    vec4_dir.w = 0.0;
-    
-    vec4_dir.x = matrix[0*4+0]*vec4_dir.x + matrix[1*4+0]*vec4_dir.y + matrix[2*4+0]*vec4_dir.z; // + matrix[3*4+0]*vec4_dir.w;
-    
-    vec4_dir.y = matrix[0*4+1]*vec4_dir.x + matrix[1*4+1]*vec4_dir.y + matrix[2*4+1]*vec4_dir.z; // + matrix[3*4+1]*vec4_dir.w;
-    
-    vec4_dir.z = matrix[0*4+2]*vec4_dir.x + matrix[1*4+2]*vec4_dir.y + matrix[2*4+2]*vec4_dir.z; // + matrix[3*4+2]*vec4_dir.w;
-    
-    //vec4_dir.w = matrix[0*4+3]*vec4_dir.x + matrix[1*4+3]*vec4_dir.y + matrix[2*4+3]*vec4_dir.z + matrix[3*4+3]*vec4_dir.w; //no need return
-    
-    return core::vector3df(vec4_dir.x, vec4_dir.y, vec4_dir.z);
 }
     
 // EMT_SOLID + EMT_TRANSPARENT_ADD_COLOR + EMT_TRANSPARENT_ALPHA_CHANNEL + MT_TRANSPARENT_VERTEX_ALPHA
