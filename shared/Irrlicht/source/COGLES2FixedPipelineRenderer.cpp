@@ -136,11 +136,10 @@ void COGLES2MaterialBaseCB::OnSetConstants(IMaterialRendererServices* services, 
 		for (s32 i = 0; i < LightCount; ++i)
 		{
 			SLight CurrentLight = driver->getDynamicLight(i);
-
 			//Matrix.transformVect(CurrentLight.Position);
             
-            //Matrix_V.transformVect-> vec3(Vmatrix*vec4(Position, 1))
-			//Matrix_V.rotateVect	-> vec3(Vmatrix*vec4(Direction,0))
+			//.transformVect-> vec3(Vmatrix*vec4(Position, 1))
+			//.rotateVect	-> vec3(Vmatrix*vec4(Direction,0))
 			switch (CurrentLight.Type)
 			{
 			case ELT_DIRECTIONAL:
