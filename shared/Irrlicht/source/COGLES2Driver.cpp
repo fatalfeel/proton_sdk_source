@@ -620,7 +620,7 @@ void COGLES2Driver::createMaterialRenderers()
 		EGST_GS_4_0, scene::EPT_TRIANGLES, scene::EPT_TRIANGLE_STRIP, 0, TransparentAlphaChannelCB, EMT_TRANSPARENT_ALPHA_CHANNEL, 0, EGSL_DEFAULT);
 
 	FragmentShader = irr_shader_path + "COGLES2TransparentAlphaChannelRef.fsh";
-
+	//EMT_SOLID here is no enable alpha blending to mix color, only writing or not
 	addHighLevelShaderMaterialFromFiles(VertexShader, "main", EVST_VS_2_0, FragmentShader, "main", EPST_PS_2_0, "", "main",
 		EGST_GS_4_0, scene::EPT_TRIANGLES, scene::EPT_TRIANGLE_STRIP, 0, TransparentAlphaChannelRefCB, EMT_SOLID, 0, EGSL_DEFAULT);
 
