@@ -145,12 +145,12 @@ void COGLES2MaterialBaseCB::OnSetConstants(IMaterialRendererServices* services, 
 			case ELT_DIRECTIONAL:
 				LightType[i] = 2;
                 //for same as opengl and oges1 use
-                //CurrentLight.Direction = ViweDirTrasform(Matrix_V, CurrentLight.Direction)
-                CurrentLight.Position = -ViweDirTrasform(Matrix_V, CurrentLight.Direction);
+                //CurrentLight.Direction = LightDirInView(Matrix_V, CurrentLight.Direction)
+                CurrentLight.Position = -LightDirInView(Matrix_V, CurrentLight.Direction);
 				break;
 			case ELT_SPOT:
 				LightType[i] = 1;
-                CurrentLight.Direction = ViweDirTrasform(Matrix_V, CurrentLight.Direction);
+                CurrentLight.Direction = LightDirInView(Matrix_V, CurrentLight.Direction);
 				break;
 			default: // ELT_POINT
 				LightType[i] = 0;
@@ -201,7 +201,7 @@ void COGLES2MaterialBaseCB::OnSetConstants(IMaterialRendererServices* services, 
 	}
 }
 
-core::vector3df COGLES2MaterialBaseCB::ViweDirTrasform(core::matrix4 matrix, core::vector3df vec3_dir)
+core::vector3df COGLES2MaterialBaseCB::LightDirInView(core::matrix4 matrix, core::vector3df vec3_dir)
 {
     struct _Vec4_T
     {
