@@ -90,13 +90,16 @@ public:
 	//! Check whether this light casts shadows.
 	/** \return True if light would cast shadows, else false. */
 	virtual bool getCastShadow() const;
-private:
+    
+	virtual void setRotation(const core::vector3df& rotation);
 
-	video::SLight LightData;
-	core::aabbox3d<f32> BBox;
-	s32 DriverLightIndex;
-	bool LightIsOn;
+private:
 	void doLightRecalc();
+
+	video::SLight		LightData;
+	core::aabbox3d<f32> BBox;
+	s32					DriverLightIndex;
+	bool				LightIsOn;
 };
 
 

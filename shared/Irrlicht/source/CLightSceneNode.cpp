@@ -85,17 +85,19 @@ void CLightSceneNode::setLightData(const video::SLight& light)
     LightData = light;
     
     switch(SceneManager->getVideoDriver()->getDriverType())
-	{
-		//radians
-		case video::EDT_OGLES2:
-			LightData.OuterCone = (float)cos(light.OuterCone * 3.141615926 / 180.0f);
-			LightData.InnerCone = (float)cos(light.InnerCone * 3.141615926 / 180.0f);
-			break;
-			
-		//degrees
-		default:
-			break;
-	}
+    {
+        //radians
+        case video::EDT_OGLES2:
+            LightData.OuterCone = (float)cos(light.OuterCone * 3.141615926 / 180.0f);
+            LightData.InnerCone = (float)cos(light.InnerCone * 3.141615926 / 180.0f);
+            break;
+                
+        //degrees
+        default:
+            break;
+    }
+
+	LightData.Direction.normalize();
 }
 
 
@@ -189,15 +191,27 @@ bool CLightSceneNode::getCastShadow() const
 	return LightData.CastShadows;
 }
 
+//dir fixed
+void CLightSceneNode::setRotation(const core::vector3df& rotation)
+{
+    ISceneNode::RelativeRotation = rotation;
+    updateAbsolutePosition(); //rotation need update AbsoluteTransformation
+    
+    getAbsoluteTransformation().rotateVect(LightData.Direction);
+	LightData.Direction.normalize();
+}
+
 
 void CLightSceneNode::doLightRecalc()
 {
-	if ((LightData.Type == video::ELT_SPOT) || (LightData.Type == video::ELT_DIRECTIONAL))
+	//by stone
+	/*if ((LightData.Type == video::ELT_SPOT) || (LightData.Type == video::ELT_DIRECTIONAL))
 	{
-		//LightData.Direction = core::vector3df(.0f,.0f,1.0f); //by stone
-		getAbsoluteTransformation().rotateVect(LightData.Direction);
+		//LightData.Direction = core::vector3df(.0f,.0f,1.0f); //dir fixed
+		//getAbsoluteTransformation().rotateVect(LightData.Direction); //dir fixed
 		LightData.Direction.normalize();
-	}
+	}*/
+
 	if ((LightData.Type == video::ELT_SPOT) || (LightData.Type == video::ELT_POINT))
 	{
 		const f32 r = LightData.Radius * LightData.Radius * 0.5f;
