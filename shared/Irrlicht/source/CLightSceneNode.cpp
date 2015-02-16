@@ -84,20 +84,20 @@ void CLightSceneNode::setLightData(const video::SLight& light)
 {
     LightData = light;
     
+    LightData.Direction.normalize();
+    
     switch(SceneManager->getVideoDriver()->getDriverType())
     {
         //radians
         case video::EDT_OGLES2:
-            LightData.OuterCone = (float)cos(light.OuterCone * 3.141615926 / 180.0f);
-            LightData.InnerCone = (float)cos(light.InnerCone * 3.141615926 / 180.0f);
+            LightData.OuterCone = (float)cos(LightData.OuterCone*3.141615926f/180.0f);
+            LightData.InnerCone = (float)cos(LightData.InnerCone*3.141615926f/180.0f);
             break;
                 
         //degrees
         default:
             break;
     }
-
-	LightData.Direction.normalize();
 }
 
 
