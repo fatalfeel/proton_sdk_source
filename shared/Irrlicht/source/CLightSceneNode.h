@@ -91,7 +91,7 @@ public:
 	/** \return True if light would cast shadows, else false. */
 	virtual bool getCastShadow() const;
     
-	virtual void setRotation(const core::vector3df& rotation);
+	virtual void setRotation(const core::vector3df& rotation); //by stone
 
 private:
 	void doLightRecalc();

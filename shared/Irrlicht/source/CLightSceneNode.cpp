@@ -191,7 +191,7 @@ bool CLightSceneNode::getCastShadow() const
 	return LightData.CastShadows;
 }
 
-//dir fixed
+//dir fixed by stone
 void CLightSceneNode::setRotation(const core::vector3df& rotation)
 {
     ISceneNode::RelativeRotation = rotation;
