@@ -67,10 +67,10 @@ Demo screenshots
 7.
 Demo Videos
 
-(a)Proton 3d demos on Android by Seth
+(a)Proton 3D demos on Android by Seth
 
 https://www.youtube.com/watch?v=nP40CUnBohY
 
-(a)Irrlicht 3d + Cocos 2D on IOS by Mun
+(a)Irrlicht 3D + Cocos2D on IOS by Mun
 
 https://www.youtube.com/watch?v=BIEafKA2IBM
