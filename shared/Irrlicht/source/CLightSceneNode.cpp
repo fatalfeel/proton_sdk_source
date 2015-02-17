@@ -84,8 +84,6 @@ void CLightSceneNode::setLightData(const video::SLight& light)
 {
     LightData = light;
     
-    LightData.Direction.normalize();
-    
     switch(SceneManager->getVideoDriver()->getDriverType())
     {
         //radians
@@ -98,6 +96,8 @@ void CLightSceneNode::setLightData(const video::SLight& light)
         default:
             break;
     }
+
+    LightData.Direction.normalize();
 }
 
 
