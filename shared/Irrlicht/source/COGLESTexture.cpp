@@ -4,6 +4,16 @@
 
 #include "IrrCompileConfig.h"
 
+#define GL_GLEXT_PROTOTYPES
+
+#ifdef __APPLE__
+    #include "OpenGLES/ES1/gl.h"
+    #include "OpenGLES/ES1/glext.h"
+#else
+    #include "GLES/gl.h"
+    #include "GLES/glext.h"
+#endif
+
 #ifdef _IRR_COMPILE_WITH_OGLES1_
 
 #include "irrTypes.h"

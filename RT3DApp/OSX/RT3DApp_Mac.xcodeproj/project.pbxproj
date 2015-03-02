@@ -683,8 +683,6 @@
 		B7E83264183FEA15004AC9E0 /* triangle3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = triangle3d.h; sourceTree = "<group>"; };
 		B7E83265183FEA15004AC9E0 /* vector2d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vector2d.h; sourceTree = "<group>"; };
 		B7E83266183FEA15004AC9E0 /* vector3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vector3d.h; sourceTree = "<group>"; };
-		B7E83268183FEAD1004AC9E0 /* gl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gl.h; sourceTree = "<group>"; };
-		B7E8326A183FEAD1004AC9E0 /* glext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glext.h; sourceTree = "<group>"; };
 		B7E8326B183FEAFB004AC9E0 /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zip.h; path = ../../shared/util/unzip/zip.h; sourceTree = "<group>"; };
 		B7E8326C183FEAFB004AC9E0 /* ioapi_mem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ioapi_mem.c; path = ../../shared/util/unzip/ioapi_mem.c; sourceTree = "<group>"; };
 		B7E8326D183FEAFB004AC9E0 /* zip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip.c; path = ../../shared/util/unzip/zip.c; sourceTree = "<group>"; };
@@ -1367,16 +1365,6 @@
 			name = Math;
 			sourceTree = "<group>";
 		};
-		5D70B75812B606DC00A1AB17 /* Render */ = {
-			isa = PBXGroup;
-			children = (
-				B7E83267183FEAD1004AC9E0 /* GL */,
-				B7E83269183FEAD1004AC9E0 /* GLES */,
-			);
-			name = Render;
-			path = ..;
-			sourceTree = SOURCE_ROOT;
-		};
 		5D70B77A12B606DC00A1AB17 /* util */ = {
 			isa = PBXGroup;
 			children = (
@@ -1930,7 +1918,6 @@
 				5D93018514D0E578004E2E36 /* Irrlicht */,
 				5D70B75512B606DC00A1AB17 /* Math */,
 				5D70B6BE12B606DC00A1AB17 /* Managers */,
-				5D70B75812B606DC00A1AB17 /* Render */,
 				5D70B6C912B606DC00A1AB17 /* Network */,
 				5D70B77A12B606DC00A1AB17 /* util */,
 				5D70B79B12B606DC00A1AB17 /* PlatformSetup.h */,
@@ -1969,24 +1956,6 @@
 			);
 			name = CocosDenshionExtras;
 			path = ../../shared/Audio/CocosDenshionExtras;
-			sourceTree = "<group>";
-		};
-		B7E83267183FEAD1004AC9E0 /* GL */ = {
-			isa = PBXGroup;
-			children = (
-				B7E83268183FEAD1004AC9E0 /* gl.h */,
-			);
-			name = GL;
-			path = ../shared/Renderer/GL;
-			sourceTree = "<group>";
-		};
-		B7E83269183FEAD1004AC9E0 /* GLES */ = {
-			isa = PBXGroup;
-			children = (
-				B7E8326A183FEAD1004AC9E0 /* glext.h */,
-			);
-			name = GLES;
-			path = ../shared/Renderer/GLES;
 			sourceTree = "<group>";
 		};
 		B7E83270183FEBB5004AC9E0 /* Gui */ = {

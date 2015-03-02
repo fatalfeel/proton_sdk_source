@@ -27,9 +27,6 @@
 		#endif
 	#endif*/
 
-//Seth
-#include "PlatformSetup.h"
-
 #include "os.h"
 #include "EDriverFeatures.h"
 

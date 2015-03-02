@@ -1039,8 +1039,6 @@
 		B7322179183CC17800DB39B1 /* CGUITreeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CGUITreeView.h; path = ../shared/Irrlicht/source/CGUITreeView.h; sourceTree = "<group>"; };
 		B732217A183CC17800DB39B1 /* CGUIWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CGUIWindow.cpp; path = ../shared/Irrlicht/source/CGUIWindow.cpp; sourceTree = "<group>"; };
 		B732217B183CC17800DB39B1 /* CGUIWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CGUIWindow.h; path = ../shared/Irrlicht/source/CGUIWindow.h; sourceTree = "<group>"; };
-		B7322199183CC1A900DB39B1 /* gl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gl.h; sourceTree = "<group>"; };
-		B732219B183CC1A900DB39B1 /* glext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glext.h; sourceTree = "<group>"; };
 		B75647FC1823B29A00B42188 /* BuiltInFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BuiltInFont.h; path = ../shared/Irrlicht/source/BuiltInFont.h; sourceTree = "<group>"; };
 		B75647FD1823B29A00B42188 /* BuiltInFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BuiltInFont.cpp; path = ../shared/Irrlicht/source/BuiltInFont.cpp; sourceTree = "<group>"; };
 		B75647FE1823B29A00B42188 /* CAnimatedMeshHalfLife.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAnimatedMeshHalfLife.h; path = ../shared/Irrlicht/source/CAnimatedMeshHalfLife.h; sourceTree = "<group>"; };
@@ -1738,16 +1736,6 @@
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		5D0CC94A0F79E162004D9AE9 /* Renderer */ = {
-			isa = PBXGroup;
-			children = (
-				B7322198183CC1A900DB39B1 /* GL */,
-				B732219A183CC1A900DB39B1 /* GLES */,
-			);
-			name = Renderer;
-			path = ../RTPhysics;
 			sourceTree = "<group>";
 		};
 		5D3063690FD890CF009DE600 /* Audio */ = {
@@ -2895,7 +2883,6 @@
 				5D9831DA0F7B625000D94D9B /* Math */,
 				5DA556E90E9B3D3F00D16247 /* Managers */,
 				5D82C8840FF4BB180082EBE7 /* Network */,
-				5D0CC94A0F79E162004D9AE9 /* Renderer */,
 				5DA556EA0E9B3D5C00D16247 /* util */,
 				5DD9544D0E960962004E403D /* PlatformSetup.h */,
 				5D7C8042119112B3007F9604 /* PlatformSetup.cpp */,
@@ -2989,24 +2976,6 @@
 				B732217B183CC17800DB39B1 /* CGUIWindow.h */,
 			);
 			name = Gui;
-			sourceTree = "<group>";
-		};
-		B7322198183CC1A900DB39B1 /* GL */ = {
-			isa = PBXGroup;
-			children = (
-				B7322199183CC1A900DB39B1 /* gl.h */,
-			);
-			name = GL;
-			path = ../shared/Renderer/GL;
-			sourceTree = "<group>";
-		};
-		B732219A183CC1A900DB39B1 /* GLES */ = {
-			isa = PBXGroup;
-			children = (
-				B732219B183CC1A900DB39B1 /* glext.h */,
-			);
-			name = GLES;
-			path = ../shared/Renderer/GLES;
 			sourceTree = "<group>";
 		};
 		B75F6FD519D115BB00F1F7B7 /* detail */ = {

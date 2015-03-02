@@ -1092,26 +1092,6 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="Renderer"
-				>
-				<Filter
-					Name="GL"
-					>
-					<File
-						RelativePath="..\..\shared\Renderer\GL\gl.h"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="GLES"
-					>
-					<File
-						RelativePath="..\..\shared\Renderer\GLES\glext.h"
-						>
-					</File>
-				</Filter>
-			</Filter>
-			<Filter
 				Name="Entity"
 				>
 				<File
