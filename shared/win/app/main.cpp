@@ -995,7 +995,7 @@ bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
 	*/
 #endif
 	
-	BaseApp::GetBaseApp()->InitializeGLDefaults();
+	//BaseApp::GetBaseApp()->InitializeGLDefaults();
 
 	if (!bFullscreen && bCenterWindow)
 	{

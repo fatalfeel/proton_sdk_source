@@ -365,7 +365,7 @@ public:
 	void SetAllowScreenDimming(bool bAllowDimming); //respected by iOS only for now
     void PrintGLString(const char *name, GLenum s);
 	bool IsInitted() {return m_bInitted;}
-	virtual void InitializeGLDefaults();
+	//virtual void InitializeGLDefaults();
 	
 	//by jesse stone
 	CL_Mat4f* GetProjectionMatrix() 

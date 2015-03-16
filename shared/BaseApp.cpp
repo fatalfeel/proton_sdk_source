@@ -90,7 +90,7 @@ void BaseApp::PrintGLString(const char *name, GLenum s)
 	LogMsg("GL %s = %s\n", name, v);
 }
 
-void BaseApp::InitializeGLDefaults()
+/*void BaseApp::InitializeGLDefaults()
 {
 	glMatrixMode(GL_MODELVIEW);
 	glDepthMask(GL_TRUE);
@@ -109,12 +109,12 @@ void BaseApp::InitializeGLDefaults()
 	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 	glColor4x(1 << 16, 1 << 16, 1 << 16, 1 << 16);
 	glClearColor(0,0,0,255);
-}
+}*/
 
 //by jesse stone
 bool BaseApp::Init()
 {
-    GLint depthbits;
+    //GLint depthbits;
 	
     m_gameTimer.Reset();
 	Entity::GetEntityManager()->SetName("root");
@@ -133,12 +133,12 @@ bool BaseApp::Init()
 	PrintGLString("Extensions", GL_EXTENSIONS);
 
 	//by stone
-    //InitializeGLDefaults();
+    /*InitializeGLDefaults();
     CHECK_GL_ERROR();
 		
 	glGetIntegerv(GL_DEPTH_BITS, &depthbits);
 	LogMsg("GL depth buffer: %d bit", depthbits);
-	CHECK_GL_ERROR();
+	CHECK_GL_ERROR();*/
 
 	if (GetAudioManager())
 		GetAudioManager()->Init();
