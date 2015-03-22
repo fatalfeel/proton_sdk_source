@@ -6,18 +6,21 @@
 // For conditions of distribution and use, see copyright notice in Irrlicht.h
 
 // needed here also because of the create methods' parameters
-#include "CNullDriver.h"
+#include "IrrCompileConfig.h"
 
 #ifdef _IRR_COMPILE_WITH_OGLES2_
 
 //by stone
-#include "BaseApp.h"
+#define GL_GLEXT_PROTOTYPES
+
 #ifdef ANDROID_NDK
     #include <GLES2/gl2.h>
 #else
     #include <OpenGLES/ES2/gl.h>
 #endif
 
+#include "BaseApp.h"
+#include "CNullDriver.h"
 #include "COGLES2Driver.h"
 #include "COGLES2Texture.h"
 #include "COGLES2MaterialRenderer.h"
