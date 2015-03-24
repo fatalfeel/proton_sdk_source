@@ -76,4 +76,4 @@ https://www.youtube.com/watch?v=nP40CUnBohY
 https://www.youtube.com/watch?v=BIEafKA2IBM
 
 8.
-The Brother site is https://github.com/fatalfeel/proton_cm_open
+The Brother site combine cocos2d https://github.com/fatalfeel/proton_cm_open
