@@ -17,7 +17,6 @@ IRRPARTICLE := $(IRRSRC)
 IRRSCENE := $(IRRSRC)
 PNGSRC :=  $(SHARED)/Irrlicht/source/libpng
 JPGSRC :=  $(SHARED)/Irrlicht/source/jpeglib
-LZMASRC :=  $(SHARED)/Irrlicht/source/lzma
 
 IRRBULLET := $(SHARED)/Irrlicht/irrBullet
 EXTBULLET := $(SHARED)/Bullet

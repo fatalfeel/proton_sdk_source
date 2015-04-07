@@ -16,7 +16,6 @@ IRRPARTICLE := $(IRRSRC)
 IRRSCENE := $(IRRSRC)
 PNGSRC :=  $(SHARED)/Irrlicht/source/libpng
 JPGSRC :=  $(SHARED)/Irrlicht/source/jpeglib
-LZMASRC :=  $(SHARED)/Irrlicht/source/lzma
 
 #LOCAL_CPP_FEATURES += exceptions
 LOCAL_CPP_FEATURES += rtti
