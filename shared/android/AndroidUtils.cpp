@@ -791,9 +791,7 @@ void AppRender(JNIEnv*  env)
 	if (BaseApp::GetBaseApp()->IsInBackground() || g_pauseASAP) 
 		return;
 
-	glViewport(0, 0, GetPrimaryGLX(), GetPrimaryGLY());
 	BaseApp::GetBaseApp()->Draw();
-	//appRender(0, sWindowWidth, sWindowHeight);
 }
 
 void AppUpdate(JNIEnv*  env)
