@@ -4,6 +4,8 @@
 
 #include "IrrCompileConfig.h"
 
+#ifdef _IRR_COMPILE_WITH_OGLES1_
+
 #define GL_GLEXT_PROTOTYPES
 
 #ifdef __APPLE__
@@ -16,9 +18,8 @@
 
 // needed here also because of the create methods' parameters
 #include "CNullDriver.h"
+#include "COGLESExtensionHandler.h"
 #include "COGLESDriver.h"
-
-#ifdef _IRR_COMPILE_WITH_OGLES1_
 
 #include "COGLESTexture.h"
 #include "COGLESMaterialRenderer.h"
@@ -3604,7 +3605,7 @@ void COGLES1CallBridge::setBlend(bool enable)
 } // end namespace
 } // end namespace
 
-#endif // _IRR_COMPILE_WITH_OGLES1_
+//#endif // _IRR_COMPILE_WITH_OGLES1_
 
 namespace irr
 {
@@ -3659,3 +3660,5 @@ IVideoDriver* createOGLES1Driver(const SIrrlichtCreationParameters& params,
 
 } // end namespace
 } // end namespace
+
+#endif // _IRR_COMPILE_WITH_OGLES1_
