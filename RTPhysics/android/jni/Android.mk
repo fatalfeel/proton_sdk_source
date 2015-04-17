@@ -29,7 +29,7 @@ $(LOCAL_PATH)/$(APP) \
 $(LOCAL_PATH)/$(SHARED) \
 $(LOCAL_PATH)/$(SHARED)/ClanLib-2.0/Sources \
 $(LOCAL_PATH)/$(SHARED)/util/boost \
-$(LOCAL_PATH)/$(EXTBULLET) \
+$(LOCAL_PATH)/$(SHARED)/Bullet \
 $(LOCAL_PATH)/$(SHARED)/Irrlicht/include
                 
 LOCAL_SRC_FILES := \
@@ -187,9 +187,7 @@ IRRMESH := $(IRRSRC)
 IRRSCENE := $(IRRSRC)
 PNGSRC :=  $(SHARED)/Irrlicht/source/libpng
 JPGSRC :=  $(SHARED)/Irrlicht/source/jpeglib
-
 IRRBULLET := $(SHARED)/Irrlicht/irrBullet
-EXTBULLET := $(SHARED)/Bullet
 
 #LOCAL_CPP_FEATURES += exceptions
 LOCAL_CPP_FEATURES += rtti
@@ -215,7 +213,7 @@ $(LOCAL_PATH)/$(APP) \
 $(LOCAL_PATH)/$(SHARED) \
 $(LOCAL_PATH)/$(SHARED)/ClanLib-2.0/Sources \
 $(LOCAL_PATH)/$(SHARED)/util/boost \
-$(LOCAL_PATH)/$(EXTBULLET) \
+$(LOCAL_PATH)/$(SHARED)/Bullet \
 $(LOCAL_PATH)/$(SHARED)/Irrlicht/include
 
 LOCAL_SRC_FILES := \
