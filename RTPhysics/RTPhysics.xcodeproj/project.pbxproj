@@ -3821,7 +3821,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_C_LANGUAGE_STANDARD = c99;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ../shared/PlatformPrecomp.h;
@@ -3840,10 +3840,9 @@
 					../shared,
 					../shared/util/boost/,
 					"../shared/ClanLib-2.0/Sources",
-					../shared/FliteTTS/include,
 					../shared/Bullet,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				ONLY_ACTIVE_ARCH = NO;
 				PREBINDING = NO;
 				PRODUCT_NAME = "";
@@ -3860,7 +3859,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				GCC_AUTO_VECTORIZATION = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					BOOST_ALL_NO_LIB,
@@ -3909,10 +3908,9 @@
 					../shared,
 					../shared/util/boost/,
 					"../shared/ClanLib-2.0/Sources",
-					../shared/FliteTTS/include,
 					../shared/Bullet,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				PRODUCT_NAME = "";
