@@ -9,10 +9,8 @@ LOCAL_ARM_MODE := arm
 
 ENTITYSRC := $(SHARED)/Entity
 CLANCORE := $(SHARED)/ClanLib-2.0/Sources/Core
-ZLIBPATH := $(SHARED)/util/zlib
 IRRSRC :=  $(SHARED)/Irrlicht/source
 IRRMESH := $(IRRSRC)
-IRRPARTICLE := $(IRRSRC)
 IRRSCENE := $(IRRSRC)
 PNGSRC :=  $(SHARED)/Irrlicht/source/libpng
 JPGSRC :=  $(SHARED)/Irrlicht/source/jpeglib
@@ -36,10 +34,13 @@ else
 	LOCAL_CPPFLAGS := -DGC_BUILD_C -DANDROID_NDK -DBUILD_ANDROID -D_DEBUG -D_IRR_STATIC_LIB_ -DHAVE_NEON=1 -mfpu=neon -mfloat-abi=softfp
 endif
 
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/$(SHARED) $(LOCAL_PATH)/$(SHARED)/Irrlicht/include \
-$(LOCAL_PATH)/$(APP) $(LOCAL_PATH)/$(SHARED)/ClanLib-2.0/Sources $(LOCAL_PATH)/$(SHARED)/util/boost
+LOCAL_C_INCLUDES := \
+$(LOCAL_PATH)/$(APP) \
+$(LOCAL_PATH)/$(SHARED) \
+$(LOCAL_PATH)/$(SHARED)/ClanLib-2.0/Sources \
+$(LOCAL_PATH)/$(SHARED)/util/boost \
+$(LOCAL_PATH)/$(SHARED)/Irrlicht/include
                 
-
 LOCAL_SRC_FILES := \
 $(SHARED)/PlatformSetup.cpp $(SHARED)/android/AndroidUtils.cpp ../temp_final_cpp_src/AndroidApp.cpp \
 $(SHARED)/Audio/AudioManager.cpp $(SHARED)/Audio/AudioManagerAndroid.cpp \
@@ -58,9 +59,7 @@ $(SHARED)/Network/NetHTTP.cpp $(SHARED)/Network/NetSocket.cpp $(SHARED)/Network/
 $(SHARED)/FileSystem/StreamingInstanceZip.cpp $(SHARED)/FileSystem/StreamingInstanceFile.cpp $(SHARED)/FileSystem/FileSystem.cpp $(SHARED)/FileSystem/FileSystemZip.cpp \
 $(SHARED)/FileSystem/FileManager.cpp \
 \
-\
 $(ENTITYSRC)/Entity.cpp $(ENTITYSRC)/Component.cpp $(ENTITYSRC)/EntityUtils.cpp $(ENTITYSRC)/FocusInputComponent.cpp $(ENTITYSRC)/FocusRenderComponent.cpp $(ENTITYSRC)/FocusUpdateComponent.cpp \
-\
 \
 $(SHARED)/Irrlicht/IrrlichtManager.cpp $(IRRSRC)/CAttributes.cpp $(IRRSRC)/CBoneSceneNode.cpp $(IRRSRC)/CColorConverter.cpp \
 $(IRRSRC)/CDefaultSceneNodeAnimatorFactory.cpp $(IRRSRC)/CDefaultSceneNodeFactory.cpp $(IRRSRC)/CDepthBuffer.cpp $(IRRSRC)/CDummyTransformationSceneNode.cpp $(IRRSRC)/CEmptySceneNode.cpp \
@@ -116,6 +115,5 @@ $(APP)/Component/EventControlComponent.cpp
 
 #Need match _IRR_COMPILE_WITH_OGLES2_ of IrrCompileConfig.h
 LOCAL_LDLIBS := -lGLESv1_CM -lGLESv2 -ldl -llog -lz
-#LOCAL_LDLIBS := -lGLESv1_CM -ldl -llog -lz
 
 include $(BUILD_SHARED_LIBRARY)
