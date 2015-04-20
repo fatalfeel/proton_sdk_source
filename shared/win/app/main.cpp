@@ -843,21 +843,7 @@ bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
 	AdjustWindowRectEx(&sRect, style, false, ex_style);
 	
 	g_bHasFocus = true;
-
-	/*if (g_hWnd)
-	{
-		//RECT clientRect;
-		GetClientRect(g_hWnd, &clientRect);
 	
-		if (clientRect.right != width || clientRect.bottom != height)
-		{
-			//we'll need to actually recreate this
-			DestroyWindow(g_hWnd);
-			g_hWnd = NULL;
-		}
-	}*/
-
-	//if (!g_hWnd)
 	if ( g_hWnd == NULL )
 	{
 		bCenterWindow = true;
@@ -1148,17 +1134,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 	
 	g_hInstance = hInstance;
 	RemoveFile("log.txt", false);
-
-	if (lpCmdLine[0])
-	{
-		vector<string> parms = StringTokenize(lpCmdLine, " ");
-	
-		for (unsigned int i=0; i < parms.size(); i++)
-		{
-			BaseApp::GetBaseApp()->AddCommandLineParm(parms[i]);
-		}
-	}
-	
+		
 	InitVideoSize();
 
 	WSADATA wsaData;

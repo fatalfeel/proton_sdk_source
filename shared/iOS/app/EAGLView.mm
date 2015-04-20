@@ -110,10 +110,10 @@
 	return self;
 }
 
-- (void)onKill
+/*- (void)onKill
 {
 	BaseApp::GetBaseApp()->Kill();
-}
+}*/
 
 - (void)drawView
 {

@@ -6,14 +6,18 @@
  */
 #include "PlatformPrecomp.h"
 #include "App.h"
-#include "GUI/MainMenu.h"
 #include "Entity/EntityUtils.h"
 #include "Irrlicht/IrrlichtManager.h"
 #include "FileSystem/FileSystemZip.h"
+#include "GUI/MainMenu.h"
+
+//by jesse stone
+App* g_pApp = NULL;
+
 
 irr::video::E_DRIVER_TYPE AppGetOGLESType()
 {
-	return irr::video::EDT_OGLES2;
+	return irr::video::EDT_OGLES1;
 }
 
 ////////////////////////////////////////
@@ -80,21 +84,25 @@ void FreeAudioManager()
 }
 
 //////////////////App////////////////////////
-App* g_pApp = NULL;
-
-App* GetApp()
-{
-	return g_pApp;
-}
-
 App::App()
 {
+	m_initagain		= 0;
+	m_connect_set   = 0;
+
 	m_bDidPostInit	= false;
 	m_MenuEntity	= NULL;
 }
 
 App::~App()
 {
+	if( m_connect_set )
+	{
+		m_connect_set = 0;
+				
+		m_sig_unloadSurfaces.disconnect(boost::bind(&App::OnUnloadSurfaces, this));
+		m_sig_loadSurfaces.disconnect(boost::bind(&App::OnReLoadSurfaces, this));
+	}
+		
 	FreeAudioManager();
 
 	Entity::Free();
@@ -108,123 +116,92 @@ bool App::Init()
 {
     bool bFileExisted;
 	
-    //SetDefaultButtonStyle(Button2DComponent::BUTTON_STYLE_CLICK_ON_TOUCH_RELEASE);
+    if( m_connect_set == 0 )
+	{
+		m_connect_set = 1;
+				
+		m_sig_unloadSurfaces.connect(1, boost::bind(&App::OnUnloadSurfaces, this));
+		m_sig_loadSurfaces.connect(1, boost::bind(&App::OnReLoadSurfaces, this));
+	}
 	
 	if (GetEmulatedPlatformID() == PLATFORM_ID_IOS)
 	{
-        //we don't allow portrait mode for this game.  Android doesn't count
+		SetLockedLandscape(true); //we don't allow portrait mode for this game.  Android doesn't count
 		//because its landscape mode is addressed like portrait mode when set in the manifest.
-		SetLockedLandscape(true);
 	}
-
+	
 	if (GetEmulatedPlatformID() == PLATFORM_ID_WEBOS && IsIPADSize)
 	{
 		LogMsg("Special handling for touchpad landscape mode..");
 		SetLockedLandscape(false);
 		SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
 	}
-
-	//SetupFakePrimaryScreenSize(320,480); //game will think its this size, and will be scaled up
-	//L_ParticleSystem::init(2000); //if we wanted to use the 2d particle system
-
-	if (m_bInitted)	
-	{
-		return true;
-	}
-
-    SetManualRotationMode(true);
-
-	if (!BaseApp::Init())
-		return false;
-
-	LogMsg("Save path is %s", GetSavePath().c_str());
-
-	//we'll load a .zip as our filesystem if we can, this isn't really needed, but useful for testing Android style
-	//loading from a zip from windows to debug it.
-
-	/*if (GetPlatformID() == PLATFORM_ID_ANDROID)
-	{
-        FileSystemZip *pFileSystem = new FileSystemZip();
-		        		
-        pFileSystem->SetRootDirectory("assets");
-
-		FileManager::GetFileManager()->MountFileSystem(pFileSystem);
-	*/
-		
-	m_varDB.Load("save.dat", &bFileExisted);
-    
-    //by stone
-    /*if (!GetFont(FONT_SMALL)->Load("interface/font_trajan.rtfont"))
-     return false;
-     
-     if (!GetFont(FONT_LARGE)->Load("interface/font_trajan_big.rtfont"))
-     return false;*/
-    
-	//preload audio
-	if( GetAudioManager() )
-	{
-		GetAudioManager()->Preload("audio/click.wav");
-		//GetAudioManager()->Play("audio/real.mp3",1,1); //ios 128bps mp3
-		//GetAudioManager()->Play("audio/real.ogg",1,1); //android play ogg
-	}
 	
-	if (!IrrlichtManager::GetIrrlichtManager()->Init(0)) 
-		return false;
-    
+	SetManualRotationMode(true);
+	
+	if ( !BaseApp::IsInitted() )
+	{
+		BaseApp::Init();
+			    
+		m_varDB.Load("save.dat", &bFileExisted);
+		LogMsg("Save path is %s", GetSavePath().c_str());
+	    
+		//preload audio
+		if( GetAudioManager() )
+		{
+			GetAudioManager()->Preload("audio/click.wav");
+			//GetAudioManager()->Play("audio/real.mp3",1,1); //ios 128bps mp3
+			//GetAudioManager()->Play("audio/real.ogg",1,1); //android play ogg
+		}
+		
+		if( IrrlichtManager::GetIrrlichtManager()->Init() )
+		{	
 #ifdef	_IRR_COMPILE_WITH_GUI_
-    SetFPSVisible(true);
+			SetFPSVisible(true);
 #else
-    SetFPSVisible(false);
+			SetFPSVisible(false);
 #endif
-    
-    if( GetFPSVisible() )
-    {
-        IrrlichtDevice*         device  = IrrlichtManager::GetIrrlichtManager()->GetDevice();
-        gui::IGUIEnvironment*   gui     = device->getGUIEnvironment();
-
-//#ifdef _WIN32
-//		gui::IGUIStaticText*    text    = gui->addStaticText(L"FPS:", core::rect<s32>(0,25,GetScreenSizeX()-1,35), true, false, NULL, 0x10000, true);
-//#else
-		gui::IGUIStaticText*    text    = gui->addStaticText(L"FPS:", core::rect<s32>(0,0,GetScreenSizeX()-1,10), true, false, NULL, 0x10000, true);
-//#endif
-        
-        text->setOverrideColor(video::SColor(255,0,0,0));
-        text->setBackgroundColor(video::SColor(255,255,255,255));
-    }
+	    
+			if( GetFPSVisible() )
+			{
+				IrrlichtDevice*         device  = IrrlichtManager::GetIrrlichtManager()->GetDevice();
+				gui::IGUIEnvironment*   gui     = device->getGUIEnvironment();
+				gui::IGUIStaticText*    text    = gui->addStaticText(L"FPS:", core::rect<s32>(0,0,GetScreenSizeX()-1,10), true, false, NULL, 0x10000, true);
+		        
+				text->setOverrideColor(video::SColor(255,0,0,0));
+				text->setBackgroundColor(video::SColor(255,255,255,255));
+			}
+		}
+	}
     
 	return true;
 }
 
-void App::Kill()
+/*void App::Kill()
 {
 	Entity::GetEntityManager()->RemoveAllEntities();
 	IrrlichtManager::GetIrrlichtManager()->Kill();
 	BaseApp::Kill();
-}
+}*/
 
 void App::Update()
 {
 	BaseApp::Update();
-
+    
 	if (!m_bDidPostInit)
 	{
 		m_bDidPostInit = true;
-		m_special = GetSystemData() != C_PIRATED_NO;
-		
+				
 		//build a GUI node
 		Entity *pGUIEnt = Entity::GetEntityManager()->AddEntity(new Entity("GUI"));
-		//MainMenuCreate(pGUIEnt);
 		//by stone, highlevel shader used
 		m_MenuEntity = MainMenuCreate(pGUIEnt);
-		
-        //only applicable to iOS, makes the keyboard pop up faster
-        //PreloadKeyboard();
 	}
 }
 
 void App::Draw()
 {
-	IrrlichtManager::GetIrrlichtManager()->isNeedInitAgain();
+	this->isNeedInitAgain();
 	
 	//turn normal GL back on
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -233,17 +210,65 @@ void App::Draw()
 	IrrlichtManager::GetIrrlichtManager()->BeginScene(); //turn on irrlicht's 3d mode renderstates
 	IrrlichtManager::GetIrrlichtManager()->Render(); //render its scenegraph
 	IrrlichtManager::GetIrrlichtManager()->EndScene(); //tell irrlicht to go into 2d mode renderstates
-	//IrrlichtManager::GetIrrlichtManager()->RenderDebugProperty2D();
+	
 	BaseApp::Draw();
-	
-    //g_lastBound = 0;
-	
-    //by stone
-    //SetupOrtho();
-	//GetFont(FONT_SMALL)->Draw(0,50, " white `2Green `3Cyan `4Red `5Purp ");
+}
 
-	//the base handles actually drawing the GUI stuff over everything else
-	//PrepareForGL();
+int App::isNeedInitAgain()
+{
+	irr::IrrlichtDevice*		pdevice = IrrlichtManager::GetIrrlichtManager()->GetDevice();
+	irr::video::IVideoDriver*	pdriver = IrrlichtManager::GetIrrlichtManager()->GetDriver();
+		
+	if( m_initagain )
+	{
+		m_initagain = 0;
+
+		m_MenuEntity->OnUnLoad();
+
+		if (pdevice->getGUIEnvironment())
+			pdevice->getGUIEnvironment()->OnUnLoad();
+			
+		pdriver->OnUnLoad();
+
+		pdriver->OnAgainDriverInit();
+						
+		pdriver->OnReLoad();
+			
+		if (pdevice->getGUIEnvironment())
+			pdevice->getGUIEnvironment()->OnReLoad();
+
+		m_MenuEntity->OnReLoad();
+	}
+
+	return m_initagain;
+}
+
+void App::OnUnloadSurfaces()
+{
+	irr::video::IVideoDriver* pdriver = IrrlichtManager::GetIrrlichtManager()->GetDriver();
+	
+	if (pdriver)
+	{
+		LogMsg("Irrlicht unloading surfaces..");
+	}
+}
+
+//m_sig_loadSurfaces trigger
+void App::OnReLoadSurfaces()
+{
+	irr::video::IVideoDriver* pdriver = IrrlichtManager::GetIrrlichtManager()->GetDriver();
+	
+	if (pdriver)
+	{
+		LogMsg("Irrlicht loading surfaces..");
+
+		m_initagain = 1;
+	}
+}
+
+Entity*	App::GetMainScene() 
+{
+	return m_MenuEntity;
 }
 
 void App::OnScreenSizeChange()
@@ -266,10 +291,10 @@ void App::GetServerInfo( string &server, uint32 &port )
 #endif
 }
 
-int App::GetSpecial()
+/*int App::GetSpecial()
 {
 	return m_special; //1 means pirated copy
-}
+}*/
 
 Variant * App::GetVar( const string &keyName )
 {
@@ -310,7 +335,7 @@ void App::OnEnterForeground()
 void App::OnExitApp(VariantList *pVarList)
 {
 	LogMsg("Exiting the app");
-
+    
 	OSMessage o;
 	o.m_type = OSMessage::MESSAGE_FINISH_APP;
 	BaseApp::GetBaseApp()->AddOSMessage(o);
