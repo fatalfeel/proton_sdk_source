@@ -2742,7 +2742,7 @@
 					../shared/util/boost/,
 					"../shared/ClanLib-2.0/Sources",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				ONLY_ACTIVE_ARCH = NO;
 				PREBINDING = NO;
 				PRODUCT_NAME = "";
@@ -2797,7 +2797,7 @@
 					../shared/util/boost/,
 					"../shared/ClanLib-2.0/Sources",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				PRODUCT_NAME = "";
