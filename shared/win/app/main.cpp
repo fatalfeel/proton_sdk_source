@@ -1069,48 +1069,52 @@ void ForceVideoUpdate()
 
 void CheckIfMouseLeftWindowArea()
 {
-	POINT pt;
+	POINT	pt;
+	RECT	r;
+	
 	if (GetCursorPos(&pt))
 	{
-		RECT r;
-
 		GetClientRect(g_hWnd, (LPRECT)&r);
 		ClientToScreen(g_hWnd, (LPPOINT)&r.left);
 		ClientToScreen(g_hWnd, (LPPOINT)&r.right);
 		
-			//LogMsg("Got %d, %d, rect is %d, %d, %d, %d", pt.x, pt.y, r.left, r.top, r.right, r.bottom);
-			bool bInsideRect = false;
-			if (pt.x >= r.left && pt.x <= r.right
-				&& pt.y >= r.top && pt.y <= r.bottom)
-			{
-				bInsideRect = true;
-			}
+		//LogMsg("Got %d, %d, rect is %d, %d, %d, %d", pt.x, pt.y, r.left, r.top, r.right, r.bottom);
+		bool bInsideRect = false;
+		if (pt.x >= r.left && pt.x <= r.right
+			&& 
+			pt.y >= r.top && pt.y <= r.bottom)
+		{
+			bInsideRect = true;
+		}
 
-			if (bInsideRect)
+		if (bInsideRect)
+		{
+			//we're currently inside with our mouse
+			if (!g_bMouseIsInsideArea)
 			{
-				//we're currently inside with our mouse
-				if (!g_bMouseIsInsideArea)
-				{
-					//we entered the area
-					//LogMsg("We entered the window area with  mouse");
-					g_bMouseIsInsideArea = true;
-				}  else
-				{
-					//still in, no change
-				}
-			} else
+				//we entered the area
+				//LogMsg("We entered the window area with  mouse");
+				g_bMouseIsInsideArea = true;
+			}
+			else
 			{
-				if (g_bMouseIsInsideArea)
-				{
-					//LogMsg("We left the window area with  mouse");
-					g_bMouseIsInsideArea = false;
-					BaseApp::GetBaseApp()->ResetTouches();
-				} else
-				{
-					//still out, no change
-				}
+				//still in, no change
 			}
 		}
+		else
+		{
+			if (g_bMouseIsInsideArea)
+			{
+				//LogMsg("We left the window area with  mouse");
+				g_bMouseIsInsideArea = false;
+				BaseApp::GetBaseApp()->ResetTouches();
+			} 
+			else
+			{
+				//still out, no change
+			}
+		}
+	}
 }
 
 //by jesse stone
