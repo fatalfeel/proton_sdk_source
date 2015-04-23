@@ -52,12 +52,12 @@ return irr::video::EDT_OGLES1;
 -> setEGLContextClientVersion(2);
 
 5.
-
 When debug NDK c++ on Android, please set
 
 android:installLocation="internalOnly" of AndroidManifest.xml
 
-6. Enable or Disable Gui
+6. 
+Enable or Disable Gui
 
 Find define _IRR_COMPILE_WITH_GUI_ of IrrCompileConfig.h
 
