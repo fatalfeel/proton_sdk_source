@@ -22,7 +22,6 @@ GLSL shading language full control
 There is no OpenGLES1、2 texture loss problem after resume process on Android
 
 3.
-
 First run need to do
 
 On Win32 or Android --->
@@ -36,7 +35,6 @@ chmod 777 xxxxxx/media/update_media.sh
 xxxxxx/media/update_media.sh
 
 4.
-
 Switch between OGLES1 and OGLES2
 
 (a.) Find in App.cpp
