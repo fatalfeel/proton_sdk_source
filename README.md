@@ -57,14 +57,20 @@ When debug NDK c++ on Android, please set
 
 android:installLocation="internalOnly" of AndroidManifest.xml
 
-6.
+6. Enable or Disable Gui
+
+Find define _IRR_COMPILE_WITH_GUI_ of IrrCompileConfig.h
+
+Enable or disable it, will use irrlicht GUI or not
+
+7.
 Demo screenshots
 
 (a) https://github.com/fatalfeel/proton_sdk_source/tree/master/DemoPicture
 
 (b) https://plus.google.com/photos/106185541018774360364/albums/5964765088859640225
 
-7.
+8.
 Demo videos
 
 (a) Proton 3D demos on Android by Seth
@@ -75,5 +81,5 @@ https://www.youtube.com/watch?v=nP40CUnBohY
 
 https://www.youtube.com/watch?v=BIEafKA2IBM
 
-8.
+9.
 The Brother site combine cocos2d https://github.com/fatalfeel/proton_cm_open
