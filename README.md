@@ -80,4 +80,6 @@ https://www.youtube.com/watch?v=nP40CUnBohY
 https://www.youtube.com/watch?v=BIEafKA2IBM
 
 9.
-The Brother site combine cocos2d https://github.com/fatalfeel/proton_cm_open
+The brother site with cocos2dx 2d GUI 
+
+https://github.com/fatalfeel/proton_cm_open
