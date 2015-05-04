@@ -80,6 +80,6 @@ https://www.youtube.com/watch?v=nP40CUnBohY
 https://www.youtube.com/watch?v=BIEafKA2IBM
 
 9.
-The brother site with cocos2dx 2d GUI 
+The brother site with cocos2dx menu gui
 
 https://github.com/fatalfeel/proton_cm_open
