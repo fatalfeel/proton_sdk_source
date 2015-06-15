@@ -308,7 +308,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	
 	switch (message)
 	{
-			// Handles the close message when a user clicks the quit icon of the window
+		case WM_CREATE:
+			g_hWnd	= hWnd;
+			g_hDC	= GetDC(g_hWnd);
+			break;
+		
 		case WM_CLOSE:
 			g_bAppFinished = true;
 			//PostQuitMessage(0);
@@ -771,7 +775,8 @@ void CenterWindow(HWND hWnd)
 
 bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
 {
-	//LogMsg("Setting native video mode to %d, %d - Fullscreen: %d  Aspect Ratio: %.2f", width, height, int(bFullscreen), aspectRatio);
+	GLuint	PixelFormat;			// Holds The Results After Searching For A Match
+	int		bits			= 16;
 	bool	bCenterWindow	= false;
 	DWORD	ex_style		= 0;
 	
@@ -780,18 +785,7 @@ bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
 	g_bIsFullScreen		= bFullscreen;
 
 	s_LastScreenSize	= width * height;
-
-	// EGL variables
-#ifndef C_GL_MODE
-	EGLConfig			eglConfig	= 0;
-	EGLContext			eglContext	= 0;
-	NativeWindowType	eglWindow	= 0;
-	EGLint				pi32ConfigAttribs[128];
-	int				i;
-#else
-	int		bits = 16;
-	GLuint	PixelFormat;			// Holds The Results After Searching For A Match
-
+		
 	// pfd Tells Windows How We Want Things To Be
 	static PIXELFORMATDESCRIPTOR pfd =
 	{
@@ -815,12 +809,9 @@ bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
 		0, 0, 0										// Layer Masks Ignored
 	};
 
-#endif
-
 	RECT	sRect;
 	SetRect(&sRect, 0, 0, width, height);
-	//for taking screenshots with no borders with Alt-Print screen, try this:
-	
+		
 	DWORD style = WS_POPUP | WS_SYSMENU | WS_CAPTION | CS_DBLCLKS;
 	
 #ifdef C_BORDERLESS_WINDOW_MODE_FOR_SCREENSHOT_EASE
@@ -866,22 +857,15 @@ bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
 		SetWindowLong(g_hWnd, GWL_STYLE, style);
 	}
 	
-	assert(!g_hDC);
-
-#ifndef C_GL_MODE
-	eglWindow = g_hWnd;
-#endif
-
+	/*assert(!g_hDC);
 	// Get the associated device context
 	g_hDC = GetDC(g_hWnd);
 	if (!g_hDC)
 	{
 		MessageBox(0, _T("Failed to create the device context"), _T("Error"), MB_OK|MB_ICONEXCLAMATION);
 		return false;
-	}
+	}*/
 
-#ifdef C_GL_MODE
-	//NORMAL GL INIT
 	if (!(PixelFormat=ChoosePixelFormat(g_hDC,&pfd)))	// Did Windows Find A Matching Pixel Format?
 	{
 		MessageBox(NULL,"Can't Find A Suitable PixelFormat.","ERROR",MB_OK|MB_ICONEXCLAMATION);
@@ -906,83 +890,6 @@ bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
 		return FALSE;								// Return FALSE
 	}
 	
-#else
-	g_eglDisplay = eglGetDisplay((NativeDisplayType) g_hDC);
-
-	if(g_eglDisplay == EGL_NO_DISPLAY)
-		g_eglDisplay = eglGetDisplay((NativeDisplayType) EGL_DEFAULT_DISPLAY);
-
-	EGLint iMajorVersion, iMinorVersion;
-	if (!eglInitialize(g_eglDisplay, &iMajorVersion, &iMinorVersion))
-	{
-
-		MessageBox(0, _T("eglInitialize() failed."), _T("Error"), MB_OK|MB_ICONEXCLAMATION);
-
-		return false;
-	}
-
-	i = 0;
-	pi32ConfigAttribs[i++] = EGL_RED_SIZE;
-	pi32ConfigAttribs[i++] = 5;
-	pi32ConfigAttribs[i++] = EGL_GREEN_SIZE;
-	pi32ConfigAttribs[i++] = 6;
-	pi32ConfigAttribs[i++] = EGL_BLUE_SIZE;
-	pi32ConfigAttribs[i++] = 5;
-	pi32ConfigAttribs[i++] = EGL_ALPHA_SIZE;
-	pi32ConfigAttribs[i++] = 0;
-	pi32ConfigAttribs[i++] = EGL_SURFACE_TYPE;
-	pi32ConfigAttribs[i++] = EGL_WINDOW_BIT;
-	
-	//Hmm, seems to ignore this.  Too bad, I'd like to test with smaller depth buffers sometimes.
-	/*
-	pi32ConfigAttribs[i++] = EGL_DEPTH_SIZE;
-	pi32ConfigAttribs[i++] = 16;
-	*/
-	
-	pi32ConfigAttribs[i++] = EGL_NONE;
-
-	int iConfigs;
-	if (!eglChooseConfig(g_eglDisplay, pi32ConfigAttribs, &eglConfig, 1, &iConfigs) || (iConfigs != 1))
-	{
-		MessageBox(0, _T("eglChooseConfig() failed."), _T("Error"), MB_OK|MB_ICONEXCLAMATION);
-		return false;
-	}
-
-	g_eglSurface = eglCreateWindowSurface(g_eglDisplay, eglConfig, eglWindow, NULL);
-
-	if(g_eglSurface == EGL_NO_SURFACE)
-	{
-		eglGetError(); // Clear error
-		g_eglSurface = eglCreateWindowSurface(g_eglDisplay, eglConfig, NULL, NULL);
-	}
-
-	if (!TestEGLError(g_hWnd, "eglCreateWindowSurface"))
-	{
-		return false;
-	}
-
-	eglContext = eglCreateContext(g_eglDisplay, eglConfig, NULL, NULL);
-	if (!TestEGLError(g_hWnd, "eglCreateContext"))
-	{
-		return false;
-	}
-
-	eglMakeCurrent(g_eglDisplay, g_eglSurface, g_eglSurface, eglContext);
-	if (!TestEGLError(g_hWnd, "eglMakeCurrent"))
-	{
-		return false;
-	}
-	
-	/*
-	GLuint viewFramebuffer;
-	GLuint textureFrameBuffer;
-
-	glGenFramebuffersOES(1, &textureFrameBuffer);
-	*/
-#endif
-	
-	//BaseApp::GetBaseApp()->InitializeGLDefaults();
-
 	if (!bFullscreen && bCenterWindow)
 	{
 		CenterWindow(g_hWnd);
@@ -992,8 +899,6 @@ bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
 	
 	SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), GetOrientation());
 
-	//UpdateWindow(g_hWnd);
-	//RedrawWindow(0, 0, 0, RDW_ALLCHILDREN|RDW_INVALIDATE|RDW_UPDATENOW);
 	return true;
 }
 
