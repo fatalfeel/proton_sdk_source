@@ -775,10 +775,12 @@ void CenterWindow(HWND hWnd)
 
 bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
 {
+	RECT	sRect;
 	GLuint	PixelFormat;			// Holds The Results After Searching For A Match
 	int		bits			= 16;
 	bool	bCenterWindow	= false;
 	DWORD	ex_style		= 0;
+	DWORD	style = WS_POPUP | WS_SYSMENU | WS_CAPTION | CS_DBLCLKS;
 				
 	// pfd Tells Windows How We Want Things To Be
 	static PIXELFORMATDESCRIPTOR pfd =
@@ -802,10 +804,7 @@ bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
 		0,											// Reserved
 		0, 0, 0										// Layer Masks Ignored
 	};
-	
-	RECT	sRect;
-	DWORD	style = WS_POPUP | WS_SYSMENU | WS_CAPTION | CS_DBLCLKS;
-
+		
 	g_winVideoScreenX	= width;
 	g_winVideoScreenY	= height;
 	g_bIsFullScreen		= bFullscreen;
