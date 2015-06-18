@@ -779,13 +779,7 @@ bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
 	int		bits			= 16;
 	bool	bCenterWindow	= false;
 	DWORD	ex_style		= 0;
-	
-	g_winVideoScreenX	= width;
-	g_winVideoScreenY	= height;
-	g_bIsFullScreen		= bFullscreen;
-
-	s_LastScreenSize	= width * height;
-		
+				
 	// pfd Tells Windows How We Want Things To Be
 	static PIXELFORMATDESCRIPTOR pfd =
 	{
@@ -808,11 +802,16 @@ bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
 		0,											// Reserved
 		0, 0, 0										// Layer Masks Ignored
 	};
-
+	
 	RECT	sRect;
+	DWORD	style = WS_POPUP | WS_SYSMENU | WS_CAPTION | CS_DBLCLKS;
+
+	g_winVideoScreenX	= width;
+	g_winVideoScreenY	= height;
+	g_bIsFullScreen		= bFullscreen;
+	s_LastScreenSize	= width * height;
+
 	SetRect(&sRect, 0, 0, width, height);
-		
-	DWORD style = WS_POPUP | WS_SYSMENU | WS_CAPTION | CS_DBLCLKS;
 	
 #ifdef C_BORDERLESS_WINDOW_MODE_FOR_SCREENSHOT_EASE
 	style = WS_POPUP | CS_DBLCLKS;
