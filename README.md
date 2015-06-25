@@ -54,6 +54,8 @@ When debug NDK c++ on Android, please set
 
 android:installLocation="internalOnly" of AndroidManifest.xml
 
+and Android firmware need unlock s-on to s-off.
+
 6.
 Enable or Disable Gui
 
