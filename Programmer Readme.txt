@@ -23,3 +23,8 @@ return irr::video::EDT_OGLES1; -> return irr::video::EDT_OGLES2;
 (b.) find SharedActivity.java
 public AppGLSurfaceView(Context context, SharedActivity _app)
 //setEGLContextClientVersion(2); -> setEGLContextClientVersion(2);
+
+5.
+C_GL_MODE of IrrCompileConfig.h
+(a) pre-define C_GL_MODE will work on Win32 and MacOs
+(b) un-define C_GL_MODE will work on ios and android
