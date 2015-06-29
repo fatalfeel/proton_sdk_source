@@ -43,7 +43,7 @@ return irr::video::EDT_OGLES1;
 
 -> return irr::video::EDT_OGLES2;
 
-(b.) Find in SharedActivity.java (Android need only)
+(b.) public AppGLSurfaceView(Context context, SharedActivity _app) in SharedActivity.java
 
 //setEGLContextClientVersion(2); 
 
