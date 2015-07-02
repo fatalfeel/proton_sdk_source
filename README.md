@@ -71,17 +71,18 @@ Demo screenshots
 (b) https://plus.google.com/photos/106185541018774360364/albums/5964765088859640225
 
 8.
-Demo videos
+Demo video
 
-(a) Proton 3D demos on Android by Seth
+Proton 3D demos on Android by Seth
 
 https://www.youtube.com/watch?v=nP40CUnBohY
-
-(a) Irrlicht 3D + Cocos2D on IOS by Mun
-
-https://www.youtube.com/watch?v=BIEafKA2IBM
 
 9.
 The brother site with cocos2dx gui menu
 
 https://github.com/fatalfeel/proton_cm_open
+
+10.
+Any bugs or questions please search
+[Proton SDK] of http://irrlicht.sourceforge.net/forum/
+I will be there help you.
