@@ -57,11 +57,11 @@ android:installLocation="internalOnly" of AndroidManifest.xml
 and Android firmware need unlock s-on to s-off.
 
 6.
-Enable or Disable Gui
+Enable or disable Irrlicht debug info and gui
 
 Find define _IRR_COMPILE_WITH_GUI_ of IrrCompileConfig.h
 
-Enable or disable it, will use irrlicht GUI or not
+Enable or disable this define.
 
 7.
 Demo screenshots
@@ -87,4 +87,4 @@ Any bugs or questions please search
 
 [Proton SDK] of http://irrlicht.sourceforge.net/forum/
 
-I will be there help you.
+Post message, I will be there help you.
