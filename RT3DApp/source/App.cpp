@@ -203,9 +203,6 @@ void App::Draw()
 {
 	this->isNeedInitAgain();
 	
-	//turn normal GL back on
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
 	IrrlichtManager::GetIrrlichtManager()->IsRunning(); //let it do its own update tick
 	IrrlichtManager::GetIrrlichtManager()->BeginScene(); //turn on irrlicht's 3d mode renderstates
 	IrrlichtManager::GetIrrlichtManager()->Render(); //render its scenegraph
