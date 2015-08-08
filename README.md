@@ -57,32 +57,25 @@ android:installLocation="internalOnly" of AndroidManifest.xml
 and Android firmware need unlock s-on to s-off.
 
 6.
-Enable or disable Irrlicht debug info and gui
-
-Find define _IRR_COMPILE_WITH_GUI_ of IrrCompileConfig.h
-
-Enable or disable this define.
-
-7.
 Demo screenshots
 
 (a) https://github.com/fatalfeel/proton_sdk_source/tree/master/DemoPicture
 
 (b) https://plus.google.com/photos/106185541018774360364/albums/5964765088859640225
 
-8.
+7.
 Demo video
 
 Proton 3D demos on Android by Seth
 
 https://www.youtube.com/watch?v=nP40CUnBohY
 
-9.
+8.
 The brother site with cocos2dx gui menu
 
 https://github.com/fatalfeel/proton_cm_open
 
-10.
+9.
 Any bugs or questions please search
 
 [Proton SDK] of http://irrlicht.sourceforge.net/forum/
