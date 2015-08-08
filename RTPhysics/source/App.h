@@ -21,6 +21,7 @@ public:
 	//virtual void	Kill();
 	virtual void	Draw();
 	virtual void	Update();
+	virtual void	CheckInitAgain();
 	virtual void	OnScreenSizeChange();
 
 	int				isNeedInitAgain();

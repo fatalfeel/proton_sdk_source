@@ -125,6 +125,8 @@
 	glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);
 	glViewport(0, 0, GetPrimaryGLX(), GetPrimaryGLY());
 	
+	BaseApp::GetBaseApp()->CheckInitAgain();
+	
 	if (GetScreenSizeX() != 0)
     {
         BaseApp::GetBaseApp()->Update();

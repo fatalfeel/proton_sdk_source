@@ -198,6 +198,10 @@ void BaseApp::Update()
 	m_sig_update(NULL);
 }
 
+void BaseApp::CheckInitAgain()
+{
+}
+
 void BaseApp::OnScreenSizeChange()
 {
 	

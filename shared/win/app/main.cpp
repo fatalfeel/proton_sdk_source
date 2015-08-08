@@ -1111,21 +1111,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 			}
 		}
 
-		//if (g_bAppFinished) 
-		//	break;
+		BaseApp::GetBaseApp()->CheckInitAgain();
 
 		if (g_bHasFocus)
 		{
 			CheckIfMouseLeftWindowArea();
+			
 			BaseApp::GetBaseApp()->Update();
-		
-			if (!g_bIsMinimized)
-				BaseApp::GetBaseApp()->Draw();
+			//if (!g_bIsMinimized)
+			BaseApp::GetBaseApp()->Draw();
 		} 
-		else
-		{
-			Sleep(10);
-		}
 
 		if (g_fpsLimit != 0)
 		{

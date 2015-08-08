@@ -791,6 +791,7 @@ void AppRender(JNIEnv*  env)
 	if (BaseApp::GetBaseApp()->IsInBackground() || g_pauseASAP) 
 		return;
 
+	BaseApp::GetBaseApp()->CheckInitAgain();
 	BaseApp::GetBaseApp()->Draw();
 }
 
