@@ -117,29 +117,6 @@ bool IrrlichtManager::Init()
 	return true;
 }
 
-void IrrlichtManager::ClearScene()
-{
-	video::SMaterial vm;
-	
-	if (m_pScene)
-	{
-	
-#ifdef RT_IRRBULLET
-		while(m_pWorld->getNumCollisionObjects() > 0)
-		{
-			m_pWorld->removeCollisionObject(m_pWorld->getCollisionObject(0));
-		}
-#endif
-
-		m_pScene->getRootSceneNode()->removeAll();
-		m_pScene->getMeshCache()->clear(); 
-		m_pScene->clear();	
-		
-		m_pDriver->setMaterial(vm); 
-		m_pDriver->removeAllTextures();
-	}
-}
-
 void IrrlichtManager::BeginScene()
 {
 	if (m_pDriver)
