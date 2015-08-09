@@ -6,6 +6,7 @@
 #define __C_IRR_DEVICE_WIN32_H_INCLUDED__
 
 #include "IrrCompileConfig.h"
+
 #ifdef _IRR_COMPILE_WITH_WINDOWS_DEVICE_
 
 #include "CIrrDeviceStub.h"
@@ -13,6 +14,7 @@
 #include "IImagePresenter.h"
 
 #define WIN32_LEAN_AND_MEAN
+
 //#if !defined(_IRR_XBOX_PLATFORM_)
 #if defined(_WIN32)
 	#include <windows.h>
