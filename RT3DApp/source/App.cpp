@@ -238,6 +238,22 @@ void App::CheckInitAgain()
 	}
 }
 
+void App::OnEnterBackground()
+{
+	SaveStuff();
+	BaseApp::OnEnterBackground();
+}
+
+void App::OnEnterForeground()
+{
+	BaseApp::OnEnterForeground();
+}
+
+void App::OnScreenSizeChange()
+{
+	BaseApp::OnScreenSizeChange();
+}
+
 void App::OnUnloadSurfaces()
 {
 	irr::video::IVideoDriver* pdriver = IrrlichtManager::GetIrrlichtManager()->GetDriver();
@@ -264,11 +280,6 @@ void App::OnReLoadSurfaces()
 Entity*	App::GetMainScene() 
 {
 	return m_MenuEntity;
-}
-
-void App::OnScreenSizeChange()
-{
-	BaseApp::OnScreenSizeChange();
 }
 
 void App::GetServerInfo( string &server, uint32 &port )
@@ -315,17 +326,6 @@ void App::SaveStuff()
 {
 	m_varDB.Save("save.dat");
 }
-void App::OnEnterBackground()
-{
-	SaveStuff();
-	BaseApp::OnEnterBackground();
-}
-
-void App::OnEnterForeground()
-{
-	BaseApp::OnEnterForeground();
-}
-
 
 void App::OnExitApp(VariantList *pVarList)
 {

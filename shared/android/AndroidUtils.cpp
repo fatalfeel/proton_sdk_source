@@ -792,6 +792,7 @@ void AppRender(JNIEnv*  env)
 		return;
 
 	BaseApp::GetBaseApp()->CheckInitAgain();
+	BaseApp::GetBaseApp()->ClearGLBuffer();
 	BaseApp::GetBaseApp()->Draw();
 }
 

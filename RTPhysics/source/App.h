@@ -22,12 +22,12 @@ public:
 	virtual void	Draw();
 	virtual void	Update();
 	virtual void	CheckInitAgain();
+	virtual void	OnEnterBackground();
+	virtual void	OnEnterForeground();
 	virtual void	OnScreenSizeChange();
-
-	int				isNeedInitAgain();
+	
 	void			OnUnloadSurfaces();
 	void			OnReLoadSurfaces();
-
 	string			GetVersionString();
 	float			GetVersion();
 	int				GetBuild();
@@ -35,9 +35,6 @@ public:
 	VariantDB*		GetShared() {return &m_varDB;}
 	Variant*		GetVar(const string &keyName );
 	Variant*		GetVarWithDefault(const string &varName, const Variant &var) {return m_varDB.GetVarWithDefault(varName, var);}
-	//int				GetSpecial();
-	virtual void	OnEnterBackground();
-	virtual void	OnEnterForeground();
 	void			OnExitApp(VariantList *pVarList);
     void            SaveStuff();
 	Entity*			GetMainScene();

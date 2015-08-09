@@ -1112,6 +1112,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 		}
 
 		BaseApp::GetBaseApp()->CheckInitAgain();
+		BaseApp::GetBaseApp()->ClearGLBuffer();
 
 		if (g_bHasFocus)
 		{
