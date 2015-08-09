@@ -213,12 +213,15 @@ void App::Draw()
 
 void App::CheckInitAgain()
 {
-	irr::IrrlichtDevice*		pdevice = IrrlichtManager::GetIrrlichtManager()->GetDevice();
-	irr::video::IVideoDriver*	pdriver = IrrlichtManager::GetIrrlichtManager()->GetDriver();
+	irr::IrrlichtDevice*		pdevice;
+	irr::video::IVideoDriver*	pdriver;
 		
 	if( m_initagain )
 	{
 		m_initagain = 0;
+
+		pdevice = IrrlichtManager::GetIrrlichtManager()->GetDevice();
+		pdriver = IrrlichtManager::GetIrrlichtManager()->GetDriver();
 
 		m_MenuEntity->OnUnLoad();
 
@@ -277,11 +280,6 @@ void App::OnReLoadSurfaces()
 	}
 }
 
-Entity*	App::GetMainScene() 
-{
-	return m_MenuEntity;
-}
-
 void App::GetServerInfo( string &server, uint32 &port )
 {
 #if defined (_DEBUG) && defined(WIN32)
@@ -296,11 +294,6 @@ void App::GetServerInfo( string &server, uint32 &port )
 	port = 80;
 #endif
 }
-
-/*int App::GetSpecial()
-{
-	return m_special; //1 means pirated copy
-}*/
 
 Variant * App::GetVar( const string &keyName )
 {

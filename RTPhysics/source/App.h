@@ -37,11 +37,9 @@ public:
 	Variant*		GetVarWithDefault(const string &varName, const Variant &var) {return m_varDB.GetVarWithDefault(varName, var);}
 	void			OnExitApp(VariantList *pVarList);
     void            SaveStuff();
-	Entity*			GetMainScene();
 
 private:
 	bool			m_bDidPostInit;
-	//int				m_special;
 	int				m_connect_set; //by jesse stone
 	int				m_initagain;
 	
