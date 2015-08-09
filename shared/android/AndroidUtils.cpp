@@ -834,24 +834,13 @@ void AppUpdate(JNIEnv*  env)
 				GetAudioManager()->Play(g_musicToPlay, GetAudioManager()->GetLastMusicLooping(), true, false, true);
 				GetAudioManager()->SetPos(GetAudioManager()->GetLastMusicID(), g_musicPos);
 			}
-
 		}
 
-		if (BaseApp::GetBaseApp()->IsInBackground()) 
-			return;
+		//if (BaseApp::GetBaseApp()->IsInBackground()) 
+		//	return;
 		
 		if (!BaseApp::GetBaseApp()->IsInBackground())
 		{
-			//by stone, no chance enable
-			/*if (s_bSurfacesUnloaded)
-			{
-				//this is a work around for a problem where surfaces don't get reloaded on the Xoom right after IAB is used
-				if (IsXoomSize)
-					s_bSurfacesUnloaded = false;
-				
-				AppInit(NULL);
-			}*/
-
 			BaseApp::GetBaseApp()->Update();
 		}
 	}//end if (g_pauseASAP)
