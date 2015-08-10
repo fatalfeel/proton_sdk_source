@@ -701,7 +701,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		
 		case WM_MOUSEMOVE:
 			{
-				if (!g_bHasFocus) break;
+				if (!g_bHasFocus) 
+					break;
 			
 				float xPos = (float)GET_X_LPARAM(lParam);
 				float yPos = (float)GET_Y_LPARAM(lParam);
@@ -719,8 +720,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 				MessageManager::GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CLICK_MOVE_RAW, xPos, yPos, 0, GetWinkeyModifiers());
 			}
-			//sreturn true;
-
+			
 			break;
 
 		case WM_MOUSELEAVE:
@@ -1021,7 +1021,7 @@ void CheckIfMouseLeftWindowArea()
 }
 
 //by jesse stone
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLine, int nCmdShow)
+int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow)
 {
 	OSMessage		osm;
 	MSG				msg;
