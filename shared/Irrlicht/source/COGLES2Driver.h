@@ -466,8 +466,8 @@ namespace video
 		//! inits the opengl-es driver
 		bool genericDriverInit(const core::dimension2d<u32>& screenSize, bool stencilBuffer);
 
-		bool OnAgainDriverInit(); //by stone
-
+		bool OnAgainDriverInit();
+		
 		//! returns a device dependent texture from a software surface (IImage)
 		virtual video::ITexture* createDeviceDependentTexture(IImage* surface, const io::path& name, void* mipmapData);
 
@@ -608,6 +608,7 @@ namespace video
 		// Viewport calls.
 
 		void setViewport(const core::rect<s32>& viewport);
+		GLuint Program; //by stone
         
     private:
         COGLES2Driver* Driver;
@@ -631,7 +632,7 @@ namespace video
         bool DepthMask;
         bool DepthTest;
 
-		GLuint Program;
+		//GLuint Program;
         
 		GLenum ActiveTexture;
 
