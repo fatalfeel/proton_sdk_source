@@ -4330,10 +4330,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\shared\Irrlicht\source\eglext.h"
-						>
-					</File>
-					<File
 						RelativePath="..\..\shared\Irrlicht\source\gles-ext.h"
 						>
 					</File>
