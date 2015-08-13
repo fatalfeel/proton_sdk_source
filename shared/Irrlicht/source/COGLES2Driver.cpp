@@ -1054,14 +1054,18 @@ void COGLES2Driver::drawVertexPrimitiveList(const void* vertices, u32 vertexCoun
 		const void* indexList, u32 primitiveCount,
 		E_VERTEX_TYPE vType, scene::E_PRIMITIVE_TYPE pType, E_INDEX_TYPE iType)
 {
+	GLboolean depthMask = 0;
+	
 	if (!checkPrimitiveCount(primitiveCount))
 		return;
+
+	glGetBooleanv(GL_DEPTH_WRITEMASK, &depthMask);
 
 	setRenderStates3DMode();
 
 	drawVertexPrimitiveList2d3d(vertices, vertexCount, (const u16*)indexList, primitiveCount, vType, pType, iType);
 
-	BridgeCalls->setDepthMask(true);
+	glDepthMask(depthMask);
 }
 
 
@@ -2515,14 +2519,17 @@ void COGLES2Driver::setViewPort(const core::rect<s32>& area)
 	if (!StencilBuffer || !count)
 		return;
 
-	bool fog = Material.FogEnable;
-	bool lighting = Material.Lighting;
+	GLboolean depthMask = 0;
+	glGetBooleanv(GL_DEPTH_WRITEMASK, &depthMask);
+
+	bool fog		= Material.FogEnable;
+	bool lighting	= Material.Lighting;
 	E_MATERIAL_TYPE materialType = Material.MaterialType;
 
 	Material.FogEnable = false;
 	Material.Lighting = false;
 	Material.MaterialType = EMT_SOLID; // Dedicated material in future.
-
+	
 	setRenderStates3DMode();
 
 	BridgeCalls->setDepthTest(true);
@@ -2578,12 +2585,12 @@ void COGLES2Driver::setViewPort(const core::rect<s32>& area)
 	glDisableVertexAttribArray(EVA_POSITION);
 
 	glDisable(GL_STENCIL_TEST);
+	
+	Material.FogEnable		= fog;
+	Material.Lighting		= lighting;
+	Material.MaterialType	= materialType;
 
-	BridgeCalls->setDepthMask(true); //restore
-
-	Material.FogEnable = fog;
-	Material.Lighting = lighting;
-	Material.MaterialType = materialType;
+	glDepthMask(depthMask);
 }
 
 
@@ -2593,6 +2600,9 @@ void COGLES2Driver::drawStencilShadow(	bool clearStencilBuffer,
 {
 	if (!StencilBuffer)
 		return;
+
+	GLboolean depthMask = 0;
+	glGetBooleanv(GL_DEPTH_WRITEMASK, &depthMask);
 
 	setRenderStates2DMode(true, false, false);
 
@@ -2621,7 +2631,7 @@ void COGLES2Driver::drawStencilShadow(	bool clearStencilBuffer,
 
 	glDisable(GL_STENCIL_TEST);
 
-	BridgeCalls->setDepthMask(true); //restore
+	glDepthMask(depthMask);
 }
 
 
