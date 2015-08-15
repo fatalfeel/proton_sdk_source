@@ -466,6 +466,12 @@ namespace video
 		//! inits the opengl-es driver
 		bool genericDriverInit(const core::dimension2d<u32>& screenSize, bool stencilBuffer);
 
+		void GetIrrstate();
+		
+		void SetIrrstate();
+
+		void SetUseProgram(unsigned int program);
+
 		bool OnAgainDriverInit();
 		
 		//! returns a device dependent texture from a software surface (IImage)
@@ -593,6 +599,8 @@ namespace video
 
         void setDepthMask(bool enable);
 
+		bool getDepthMask();
+
 		void setDepthTest(bool enable);
 
 		// Program calls.
@@ -608,6 +616,7 @@ namespace video
 		// Viewport calls.
 
 		void setViewport(const core::rect<s32>& viewport);
+
 		GLuint Program; //by stone
         
     private:

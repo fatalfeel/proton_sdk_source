@@ -27,7 +27,7 @@
 #include "os.h"
 
 #ifdef _IRR_COMPILE_WITH_SDL_DEVICE_
-#include <SDL/SDL.h>
+	#include <SDL/SDL.h>
 #endif
 
 namespace irr
@@ -417,6 +417,16 @@ bool COGLES1Driver::genericDriverInit(const core::dimension2d<u32>& screenSize, 
 	ResetRenderStates = true;
 
 	return true;
+}
+
+void COGLES1Driver::GetIrrstate()
+{
+}
+
+void COGLES1Driver::SetIrrstate()
+{
+	BridgeCalls->setDepthMask(true);
+	BridgeCalls->setBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 bool COGLES1Driver::OnAgainDriverInit() //by stone
@@ -1001,18 +1011,12 @@ void COGLES1Driver::drawVertexPrimitiveList(const void* vertices, u32 vertexCoun
 		const void* indexList, u32 primitiveCount,
 		E_VERTEX_TYPE vType, scene::E_PRIMITIVE_TYPE pType, E_INDEX_TYPE iType)
 {
-	GLboolean depthMask = 0;
-	
 	if (!checkPrimitiveCount(primitiveCount))
 		return;
-
-	glGetBooleanv(GL_DEPTH_WRITEMASK, &depthMask);
 
 	setRenderStates3DMode();
 
 	drawVertexPrimitiveList2d3d(vertices, vertexCount, (const u16*)indexList, primitiveCount, vType, pType, iType);
-
-	glDepthMask(depthMask);
 }
 
 
@@ -2329,9 +2333,11 @@ void COGLES1Driver::setBasicRenderStates(const SMaterial& material, const SMater
 		if ( material.ZWriteEnable 
 			 && 
 			 (AllowZWriteOnTransparent || (material.BlendOperation == EBO_NONE && !MaterialRenderers[material.MaterialType].Renderer->isTransparent())))
-			glDepthMask(GL_TRUE);
+			//glDepthMask(GL_TRUE);
+			BridgeCalls->setDepthMask(GL_TRUE);
 		else
-			glDepthMask(GL_FALSE);
+			//glDepthMask(GL_FALSE);
+			BridgeCalls->setDepthMask(GL_FALSE);
 	}
 
 	// back face culling
@@ -2847,13 +2853,15 @@ void COGLES1Driver::drawStencilShadowVolume(const core::array<core::vector3df>& 
 	glGetIntegerv(GL_CULL_FACE_MODE, &cullFaceMode);
 	GLint depthFunc = 0;
 	glGetIntegerv(GL_DEPTH_FUNC, &depthFunc);
-	GLboolean depthMask = 0;
-	glGetBooleanv(GL_DEPTH_WRITEMASK, &depthMask);
+	//GLboolean depthMask = 0;
+	//glGetBooleanv(GL_DEPTH_WRITEMASK, &depthMask);
+	bool depthMask	= BridgeCalls->getDepthMask();
 
 	glDisable(GL_LIGHTING);
 	glDisable(GL_FOG);
 	glDepthFunc(GL_LEQUAL);
-	glDepthMask(GL_FALSE);
+	//glDepthMask(GL_FALSE);
+	BridgeCalls->setDepthMask(GL_FALSE);
 
 	if( !(debugDataVisible & (scene::EDS_SKELETON|scene::EDS_MESH_WIRE_OVERLAY)) )
 	{
@@ -2923,7 +2931,8 @@ void COGLES1Driver::drawStencilShadowVolume(const core::array<core::vector3df>& 
 
 	glCullFace(cullFaceMode);
 	glDepthFunc(depthFunc);
-	glDepthMask(depthMask);
+	//glDepthMask(depthMask);
+	BridgeCalls->setDepthMask(depthMask);
 }
 
 
@@ -2941,8 +2950,10 @@ void COGLES1Driver::drawStencilShadow(bool clearStencilBuffer,
 	const GLboolean fogEnabled = glIsEnabled(GL_FOG);
 	const GLboolean blendEnabled = glIsEnabled(GL_BLEND);
 
-	GLboolean depthMask = 0;
-	glGetBooleanv(GL_DEPTH_WRITEMASK, &depthMask);
+	//GLboolean depthMask = 0;
+	//glGetBooleanv(GL_DEPTH_WRITEMASK, &depthMask);
+	bool depthMask = BridgeCalls->getDepthMask();
+
 	GLint shadeModel = 0;
 	glGetIntegerv(GL_SHADE_MODEL, &shadeModel);
 	GLint blendSrc = 0, blendDst = 0;
@@ -2951,13 +2962,16 @@ void COGLES1Driver::drawStencilShadow(bool clearStencilBuffer,
 
 	glDisable(GL_LIGHTING);
 	glDisable(GL_FOG);
-	glDepthMask(GL_FALSE);
+	//glDepthMask(GL_FALSE);
+	BridgeCalls->setDepthMask(GL_FALSE);
 
 	glShadeModel(GL_FLAT);
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glEnable(GL_BLEND);
+	BridgeCalls->setBlend(true);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	BridgeCalls->setBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glEnable(GL_STENCIL_TEST);
 	glStencilFunc(GL_NOTEQUAL, 0, ~0);
@@ -3001,7 +3015,8 @@ void COGLES1Driver::drawStencilShadow(bool clearStencilBuffer,
 	if (!blendEnabled)
 		glDisable(GL_BLEND);
 
-	glDepthMask(depthMask);
+	//glDepthMask(depthMask);
+	BridgeCalls->setDepthMask(depthMask);
 	glShadeModel(shadeModel);
 	glBlendFunc(blendSrc, blendDst);
 }
@@ -3290,7 +3305,8 @@ bool COGLES1Driver::setRenderTarget(video::ITexture* texture, bool clearBackBuff
 	}
 	if (clearZBuffer)
 	{
-		glDepthMask(GL_TRUE);
+		//glDepthMask(GL_TRUE);
+		BridgeCalls->setDepthMask(GL_TRUE);
 		Material.ZWriteEnable = true;
 
 		mask |= GL_DEPTH_BUFFER_BIT;
@@ -3315,7 +3331,8 @@ const core::dimension2d<u32>& COGLES1Driver::getCurrentRenderTargetSize() const
 //! Clears the ZBuffer.
 void COGLES1Driver::clearZBuffer()
 {
-	glDepthMask(GL_TRUE);
+	//glDepthMask(GL_TRUE);
+	BridgeCalls->setDepthMask(GL_TRUE);
 	Material.ZWriteEnable = true;
 
 	glClear(GL_DEPTH_BUFFER_BIT);
@@ -3548,6 +3565,7 @@ COGLES1CallBridge::COGLES1CallBridge(COGLES1Driver* driver) : Driver(driver),
 
 	glBlendFunc(GL_ONE, GL_ZERO);
 	glDisable(GL_BLEND);
+	setDepthMask(GL_TRUE);
 }
 
 void COGLES1CallBridge::setBlendEquation(GLenum mode)
@@ -3606,6 +3624,24 @@ void COGLES1CallBridge::setBlend(bool enable)
 
 		Blend = enable;
 	}
+}
+
+void COGLES1CallBridge::setDepthMask(bool enable)
+{
+	if (DepthMask != enable)
+	{
+		if (enable)
+			glDepthMask(GL_TRUE);
+		else
+			glDepthMask(GL_FALSE);
+
+		DepthMask = enable;
+	}
+}
+
+bool COGLES1CallBridge::getDepthMask()
+{
+	return DepthMask;
 }
 
 } // end namespace
