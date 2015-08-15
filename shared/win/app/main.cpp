@@ -1097,11 +1097,6 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 	//our main loop
 	while( g_bAppFinished == false )
 	{
-		/*if (GetAsyncKeyState('Q') && GetAsyncKeyState(VK_MENU))
-		{
-			SendMessage(g_hWnd, WM_CLOSE, 0, 0);
-		}*/
-
 		if (g_winAllowFullscreenToggle)
 		{
 			if (GetAsyncKeyState(VK_RETURN) && GetAsyncKeyState(VK_MENU))
@@ -1127,7 +1122,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 		{
 			while (fpsTimer > GetSystemTimeAccurate())
 			{
-				Sleep(0);
+				::Sleep(1);
 			}
 			
 			fpsTimer = float(GetSystemTimeAccurate())+(1000.0f/ (float(g_fpsLimit)));
@@ -1162,24 +1157,6 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 					break;
 				
 				case OSMessage::MESSAGE_SET_VIDEO_MODE:
-					//size.Width	= (unsigned int)osm.m_x;
-					//size.Height = (unsigned int)osm.m_y;
-					//IrrlichtManager::GetIrrlichtManager()->SetReSize(size);
-					
-					//test reload, no remove for debug
-					/*BaseApp::GetBaseApp()->OnEnterBackground();
-					BaseApp::GetBaseApp()->m_sig_unloadSurfaces();
-
-					DestroyVideo(false);
-					if (!InitVideo(int(osm.m_x), int(osm.m_y), osm.m_fullscreen, osm.m_fontSize))
-					{
-						MessageBox(NULL, "Error changing video mode", "Error", NULL);
-						goto cleanup;
-					}
-										
-					//test reload, no remove for debug
-					BaseApp::GetBaseApp()->m_sig_loadSurfaces();
-					BaseApp::GetBaseApp()->OnEnterForeground();*/
 					break;
 			}
 		}// end while (!BaseApp::GetBaseApp()->GetOSMessages()->empty())
@@ -1214,7 +1191,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 			}
 		}
 		
-		Sleep(0);
+		::Sleep(1);
 	}
 
 cleanup:
@@ -1241,9 +1218,9 @@ void AddText(const char *tex ,char *filename)
 
 	if (FileExists(filename) == false)
 	{
-
 		fp = fopen( (GetBaseAppPath()+filename).c_str(), "wb");
-		if (!fp) return;
+		if (!fp) 
+			return;
 		fwrite( tex, strlen(tex), 1, fp);      
 		fclose(fp);
 		//return;
@@ -1251,7 +1228,8 @@ void AddText(const char *tex ,char *filename)
 	else
 	{
 		fp = fopen( (GetBaseAppPath()+filename).c_str(), "ab");
-		if (!fp) return;
+		if (!fp) 
+			return;
 		fwrite( tex, strlen(tex), 1, fp);      
 		fclose(fp);
 	}
