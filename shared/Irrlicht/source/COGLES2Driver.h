@@ -610,8 +610,6 @@ namespace video
 		// Viewport calls.
 
 		void setViewport(const core::rect<s32>& viewport);
-
-		GLuint Program; //by stone
         
     private:
         COGLES2Driver* Driver;
@@ -635,7 +633,7 @@ namespace video
         bool DepthMask;
         bool DepthTest;
 
-		//GLuint Program;
+		GLuint Program;
         
 		GLenum ActiveTexture;
 
