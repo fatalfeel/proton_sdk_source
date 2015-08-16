@@ -433,11 +433,6 @@ bool COGLES2Driver::genericDriverInit(const core::dimension2d<u32>& screenSize, 
 	return true;
 }
 
-void COGLES2Driver::SetUseProgram(unsigned int program)
-{
-	BridgeCalls->Program = program;
-}
-
 bool COGLES2Driver::OnAgainDriverInit() //by stone
 {
 	bool stencilBuffer = queryFeature(video::EVDF_STENCIL_BUFFER);
