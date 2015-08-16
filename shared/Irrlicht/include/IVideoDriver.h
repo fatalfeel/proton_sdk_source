@@ -1469,10 +1469,6 @@ namespace video
 		virtual void OnUnLoad() =0;
 		
 		virtual void OnReLoad()	=0;
-		
-		virtual void GetIrrState() =0;
-		
-		virtual void SetIrrState() =0;
 						
 		virtual void SetUseProgram(unsigned int program) =0;
 		
