@@ -1204,8 +1204,8 @@ bool CIrrDeviceWin32::run()
 			Close = true;
 	}
 */
-	if (!Close)
-		resizeIfNecessary();
+	//if (!Close)
+	//	resizeIfNecessary();
 
 	if(!Close)
 		pollJoysticks();
