@@ -786,16 +786,6 @@ void AppResize( JNIEnv*  env, jobject  thiz, jint w, jint h )
 	BaseApp::GetBaseApp()->OnScreenSizeChange();
 }
 
-void AppRender(JNIEnv*  env)
-{
-	if (BaseApp::GetBaseApp()->IsInBackground() || g_pauseASAP) 
-		return;
-
-	BaseApp::GetBaseApp()->CheckInitAgain();
-	BaseApp::GetBaseApp()->ClearGLBuffer();
-	BaseApp::GetBaseApp()->Draw();
-}
-
 void AppUpdate(JNIEnv*  env)
 {
 	if (g_pauseASAP)
@@ -811,22 +801,14 @@ void AppUpdate(JNIEnv*  env)
 		//signal to IrrlichtManager::OnLoadSurfaces()
 		BaseApp::GetBaseApp()->m_sig_loadSurfaces();
 		
-		//BaseApp::GetBaseApp()->OnEnterBackground();
-
 		//GetAudioManager()->Kill(); //already done in AppPause
 	}
 	else
 	{
 		if (g_callAppResumeASAPTimer != 0 && g_callAppResumeASAPTimer < GetSystemTimeTick())
 		{
-#ifdef _DEBUG
-			LogMsg("Resuming at %u (timer was %u)", GetSystemTimeTick(), g_callAppResumeASAPTimer);
-#endif
-
 			g_callAppResumeASAPTimer = 0;
-
-			//BaseApp::GetBaseApp()->OnEnterForeground(); //replay in !g_musicToPlay.empty()
-
+			
 			GetAudioManager()->Init(); //nothing do inside
 
 			//replay music after AppPause
@@ -836,15 +818,19 @@ void AppUpdate(JNIEnv*  env)
 				GetAudioManager()->SetPos(GetAudioManager()->GetLastMusicID(), g_musicPos);
 			}
 		}
+	}
+}
 
-		//if (BaseApp::GetBaseApp()->IsInBackground()) 
-		//	return;
-		
-		if (!BaseApp::GetBaseApp()->IsInBackground())
-		{
-			BaseApp::GetBaseApp()->Update();
-		}
-	}//end if (g_pauseASAP)
+void AppRender(JNIEnv*  env)
+{
+	if (BaseApp::GetBaseApp()->IsInBackground() || g_pauseASAP) 
+		return;
+
+	BaseApp::GetBaseApp()->CheckInitAgain();
+	BaseApp::GetBaseApp()->ClearGLBuffer();
+	
+	BaseApp::GetBaseApp()->Update();
+	BaseApp::GetBaseApp()->Draw();
 }
 
 void AppDone(JNIEnv*  env)
