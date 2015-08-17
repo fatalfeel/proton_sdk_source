@@ -20,7 +20,6 @@
 #include "CNullDriver.h"
 #include "COGLESExtensionHandler.h"
 #include "COGLESDriver.h"
-
 #include "COGLESTexture.h"
 #include "COGLESMaterialRenderer.h"
 #include "CImage.h"
