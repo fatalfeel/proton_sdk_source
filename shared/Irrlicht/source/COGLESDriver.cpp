@@ -2945,9 +2945,10 @@ void COGLES1Driver::drawStencilShadow(bool clearStencilBuffer,
 
 	GLint shadeModel = 0;
 	glGetIntegerv(GL_SHADE_MODEL, &shadeModel);
-	GLint blendSrc = 0, blendDst = 0;
-	glGetIntegerv(GL_BLEND_SRC, &blendSrc);
-	glGetIntegerv(GL_BLEND_DST, &blendDst);
+	GLenum blendSrc = 0, blendDst = 0;
+	//glGetIntegerv(GL_BLEND_SRC, &blendSrc);
+	//glGetIntegerv(GL_BLEND_DST, &blendDst);
+	BridgeCalls->getBlendFunc(&blendSrc, &blendDst);
 
 	glDisable(GL_LIGHTING);
 	glDisable(GL_FOG);
@@ -3007,7 +3008,8 @@ void COGLES1Driver::drawStencilShadow(bool clearStencilBuffer,
 	//glDepthMask(depthMask);
 	BridgeCalls->setDepthMask(depthMask);
 	glShadeModel(shadeModel);
-	glBlendFunc(blendSrc, blendDst);
+	//glBlendFunc(blendSrc, blendDst);
+	BridgeCalls->setBlendFunc(blendSrc, blendDst);
 }
 
 //! Sets the fog mode.
@@ -3552,7 +3554,8 @@ COGLES1CallBridge::COGLES1CallBridge(COGLES1Driver* driver) : Driver(driver),
 #endif
 	}
 
-	glBlendFunc(GL_ONE, GL_ZERO);
+	//glBlendFunc(GL_ONE, GL_ZERO);
+	setBlendFunc(GL_ONE, GL_ZERO);
 	glDisable(GL_BLEND);
 	setDepthMask(GL_TRUE);
 }
@@ -3579,6 +3582,12 @@ void COGLES1CallBridge::setBlendFunc(GLenum source, GLenum destination)
 		BlendSourceAlpha = source;
 		BlendDestinationAlpha = destination;
 	}
+}
+
+void COGLES1CallBridge::getBlendFunc(GLenum* source, GLenum* destination)
+{
+	*source			= BlendSourceRGB;
+	*destination	= BlendDestinationRGB;
 }
 
 void COGLES1CallBridge::setBlendFuncSeparate(GLenum sourceRGB, GLenum destinationRGB, GLenum sourceAlpha, GLenum destinationAlpha)
