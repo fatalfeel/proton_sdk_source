@@ -4,6 +4,9 @@
 // For conditions of distribution and use, see copyright notice in Irrlicht.h
 
 #include "IrrCompileConfig.h"
+#include "PlatformEnums.h"
+
+#ifdef _IRR_COMPILE_WITH_OGLES1_
 
 #define GL_GLEXT_PROTOTYPES
 
@@ -14,9 +17,6 @@
     #include "GLES/gl.h"
     #include "GLES/glext.h"
 #endif
-
-
-#ifdef _IRR_COMPILE_WITH_OGLES1_
 
 #include "COGLESExtensionHandler.h"
 #include "COGLESDriver.h"

@@ -38,8 +38,8 @@
 	#pragma comment(lib, "libgles_cm.lib")
 #endif*/
 
-#include "PlatformSetup.h"
-#include "COGLESExtensionHandler.h"
+//#include "PlatformSetup.h"
+//#include "COGLESExtensionHandler.h"
 
 namespace irr
 {

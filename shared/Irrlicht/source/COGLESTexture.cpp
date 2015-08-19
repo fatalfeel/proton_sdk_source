@@ -4,6 +4,8 @@
 
 #include "IrrCompileConfig.h"
 
+#ifdef _IRR_COMPILE_WITH_OGLES1_
+
 #define GL_GLEXT_PROTOTYPES
 
 #ifdef __APPLE__
@@ -14,11 +16,10 @@
     #include "GLES/glext.h"
 #endif
 
-#ifdef _IRR_COMPILE_WITH_OGLES1_
-
 #include "irrTypes.h"
-#include "COGLESTexture.h"
+#include "COGLESExtensionHandler.h"
 #include "COGLESDriver.h"
+#include "COGLESTexture.h"
 #include "os.h"
 #include "CImage.h"
 #include "CColorConverter.h"
