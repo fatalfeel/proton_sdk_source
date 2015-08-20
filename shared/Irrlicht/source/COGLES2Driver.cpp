@@ -2377,7 +2377,7 @@ GLint COGLES2Driver::getTextureWrapMode(u8 clamp) const
 //! sets the needed renderstates
 void COGLES2Driver::setRenderStates2DMode(bool alpha, bool texture, bool alphaChannel)
 {
-    SMaterial mat2d;
+    SMaterial material_2d;
 	
 	if (CurrentRenderMode != ERM_2D)
 	{
@@ -2406,10 +2406,10 @@ void COGLES2Driver::setRenderStates2DMode(bool alpha, bool texture, bool alphaCh
 		Material = OverrideMaterial2D;
 	}*/
     
-    mat2d.Lighting        = false;
-    mat2d.TextureLayer[0].BilinearFilter = false;
-    setBasicRenderStates( mat2d, mat2d, true );
-    Material = mat2d;
+    material_2d.Lighting = false;
+    material_2d.TextureLayer[0].BilinearFilter = false; //use GL_NEAREST
+    setBasicRenderStates( material_2d, material_2d, true );
+    Material = material_2d;
 
 	if (texture)
 		MaterialRenderer2D->setTexture(CurrentTexture[0]);
