@@ -21,9 +21,9 @@
 
 JavaVM* g_pJavaVM = NULL;
 
-const char* GetAppName();
-const char* GetBundlePrefix();
-const char* GetBundleName();
+//const char* GetAppName();
+//const char* GetBundlePrefix();
+//const char* GetBundleName();
 
 uint32		g_callAppResumeASAPTimer = 0;
 bool		g_pauseASAP = false;
@@ -53,14 +53,20 @@ enum eAndroidActions
 	ACTION_OUTSIDE,
 };
 
-typedef struct _AndroidMessageCache
+class AndroidMessageCache
 {
-	eMessageType	type;
-	float			x,y;
-	int				finger;
-}AndroidMessageCache;
+public:
+	AndroidMessageCache()
+	{}
+	~AndroidMessageCache()
+	{}
 
-static std::list<AndroidMessageCache>	s_messageCache;
+	eAndroidActions		type;
+	float				x,y;
+	int					finger;
+};
+
+static std::list<AndroidMessageCache*>	s_messageCache;
 static pthread_mutex_t					s_mouselock;
 
 int g_winVideoScreenX = 0;
@@ -726,16 +732,26 @@ bool HasVibration()
 void MouseKeyProcess(int method, AndroidMessageCache* amsg, unsigned int* qsize)
 {
 	pthread_mutex_lock(&s_mouselock);
+
+	AndroidMessageCache* store_msg;
 	
 	switch(method)
 	{
 		case 0:
-			s_messageCache.push_back(*amsg);
+			s_messageCache.push_back(amsg);
 			break;
 
 		case 1:
-			*amsg = s_messageCache.front();
+			store_msg		= s_messageCache.front();
+			
+			amsg->type		= store_msg->type;
+			amsg->x			= store_msg->x;
+			amsg->y			= store_msg->y;
+			amsg->finger	= store_msg->finger;
+			
 			s_messageCache.pop_front();
+			delete store_msg;
+			
 			break;
 
 		case 2:
@@ -757,13 +773,13 @@ void CheckTouchCommand()
 
 	MouseKeyProcess(2, NULL, &qsize);
 		
-	if( qsize > 0 )
+	if( qsize >= 1 )
 	{
 		MouseKeyProcess(1, &amessage, NULL);
 		
 		switch (amessage.type)
 		{
-			case MESSAGE_TYPE_GUI_CLICK_START:
+			case ACTION_DOWN:
 				//by stone
 #ifdef _IRR_COMPILE_WITH_GUI_
 				ev.MouseInput.Event 		= irr::EMIE_LMOUSE_PRESSED_DOWN;
@@ -775,7 +791,7 @@ void CheckTouchCommand()
 #endif
 				break;
 
-			case MESSAGE_TYPE_GUI_CLICK_END:
+			case ACTION_UP:
 				//by stone
 #ifdef _IRR_COMPILE_WITH_GUI_
 				ev.MouseInput.Event 		= irr::EMIE_LMOUSE_LEFT_UP;
@@ -787,13 +803,10 @@ void CheckTouchCommand()
 #endif
 				break;
 
-			case MESSAGE_TYPE_GUI_CLICK_MOVE:
+			case ACTION_MOVE:
 				break;
 
 			default:
-#ifndef _DEBUG
-				LogMsg("Unhandled input message %d at %.2f:%.2f", action, x, y);
-#endif
 				break;
 		}
 	}
@@ -815,11 +828,14 @@ void AppResize( JNIEnv*  env, jobject  thiz, jint w, jint h )
 	LogMsg("Setup screen to %d %d", w, h);
 #endif
 		SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
+				
+		apkpath 	= GetAPKFile();
 		
+#ifdef _DEBUG
+		LogMsg("Initializing BaseApp.  APK filename is %s", apkpath.c_str());
+#endif				
 		pFileSystem = new FileSystemZip();
-		
-		apkpath = GetAPKFile();
-		
+
 		if( pFileSystem->Init_unz(apkpath) )
 		{
 			LogMsg("APK based Filesystem mounted.");
@@ -964,34 +980,47 @@ void AppResume(JNIEnv*  env)
 
 void AppOnTouch( JNIEnv*  env, jobject jobj,jint action, jfloat x, jfloat y, jint finger)
 {
-	int							keyid;
-	AndroidMessageCache			amessage;
-			
+	int						keyid;
+	unsigned int			qsize;
+	AndroidMessageCache*	amessage;
+
 	switch (action)
 	{
 		case ACTION_DOWN:
-			amessage.type = MESSAGE_TYPE_GUI_CLICK_START;
+			amessage			= new AndroidMessageCache();
+			amessage->type		= ACTION_DOWN;
+			amessage->x			= x;
+			amessage->y			= y;
+			amessage->finger	= finger;
+			MouseKeyProcess(0, amessage, NULL);
 			break;
 
 		case ACTION_UP:
-			amessage.type = MESSAGE_TYPE_GUI_CLICK_END;
+			amessage			= new AndroidMessageCache();
+			amessage->type		= ACTION_UP;
+			amessage->x			= x;
+			amessage->y			= y;
+			amessage->finger	= finger;
+			MouseKeyProcess(0, amessage, NULL);
 			break;
 
 		case ACTION_MOVE:
-			amessage.type = MESSAGE_TYPE_GUI_CLICK_MOVE;
+			MouseKeyProcess(2, NULL, &qsize);
+
+			if( qsize <= 0 )
+			{
+				amessage			= new AndroidMessageCache();
+				amessage->type		= ACTION_MOVE;
+				amessage->x			= x;
+				amessage->y			= y;
+				amessage->finger	= finger;
+				MouseKeyProcess(0, amessage, NULL);
+			}
 			break;
 
 		default:
-			amessage.type = MESSAGE_TYPE_UNKNOWN;
 			break;
 	}
-	
-	amessage.x		= x;
-	amessage.y		= y;
-	amessage.finger	= finger;
-	
-	//s_messageCache.push_back(amessage);
-	MouseKeyProcess(0, &amessage, NULL);
 }
 
 void AppOnSendGUIEx(JNIEnv*  env, jobject thiz,jint messageType, jint parm1, jint parm2, jint finger )
@@ -1101,14 +1130,14 @@ int AppOSMessageGet(JNIEnv* env)
 		return 0;
 	}
 
-	/*while (!g_messageCache.empty())
+	/*while (!s_messageCache.empty())
 	{
-		AndroidMessageCache *pM = &g_messageCache.front();
+		AndroidMessageCache *pM = &s_messageCache.front();
 		
 		ConvertCoordinatesIfRequired(pM->x, pM->y);
 
 		MessageManager::GetMessageManager()->SendGUIEx(pM->type, pM->x, pM->y, pM->finger);
-		g_messageCache.pop_front();
+		s_messageCache.pop_front();
 	}*/
 
 	while (!BaseApp::GetBaseApp()->GetOSMessages()->empty())
