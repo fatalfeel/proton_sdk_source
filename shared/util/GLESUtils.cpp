@@ -164,7 +164,7 @@ void GenerateSetPerspectiveFOV(float fovy, float aspect, float zNear, float zFar
 	float		xmin, xmax, ymin, ymax;
 	CL_Mat4f	mat;
 	
-	PrepareForGL();
+	//PrepareForGL();
 
 	//glMatrixMode(GL_PROJECTION);
 	
@@ -617,7 +617,7 @@ void SetupOrtho()
 	CHECK_GL_ERROR();
 }
 
-void PrepareForGL()
+/*void PrepareForGL()
 {
 	if (NeedsOrthoSet())
         return; //not needed
@@ -636,7 +636,7 @@ void PrepareForGL()
 	glLoadIdentity();
 	CHECK_GL_ERROR();
 	ResetOrthoFlag();
-}
+}*/
 
 /*
 * Transform a point (column vector) by a 4x4 matrix.  I.e.  out = m * in

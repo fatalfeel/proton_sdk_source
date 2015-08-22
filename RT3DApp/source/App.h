@@ -49,6 +49,7 @@ private:
 
 extern irr::video::E_DRIVER_TYPE AppGetOGLESType();
 
+extern App*				g_pApp;
 extern AudioManager*	GetAudioManager();  //supply this yourself
 extern void             FreeAudioManager();
 

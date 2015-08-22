@@ -1277,10 +1277,6 @@ import android.view.View.OnClickListener;
 	public static native void nativeOnAccelerometerUpdate(float x, float y, float z);
 	public static native void nativeSendGUIEx(int messageType, int parm1, int parm2, int finger);
 	public static native void nativeSendGUIStringEx(int messageType, int parm1, int parm2, int finger, String s);
-	static 
-    {
-		//System.loadLibrary(dllname);
-    }
 }
 
 class AppGLSurfaceView extends GLSurfaceView
@@ -1346,10 +1342,13 @@ class AppGLSurfaceView extends GLSurfaceView
 		} 
 		else
 		{
-			float x = e.getX(); float y = e.getY();
-     		int finger = 0; //planning ahead for multi touch
-			nativeOnTouch(e.getAction(), x,y,finger);
+			int		finger	= 0; //planning ahead for multi touch
+			float	x 		= e.getX(); 
+			float	y		= e.getY();
+     		
+			nativeOnTouch(e.getAction(), x, y, finger);
 		}
+		
 		return true;
     }
     
@@ -1394,21 +1393,6 @@ class WrapSharedMultiTouchInput
 
 class AppRenderer implements GLSurfaceView.Renderer 
 {
-	public AppRenderer(SharedActivity _app)
-	{
-		app = _app;
-	}
-
-	public void onSurfaceCreated(GL10 gl, EGLConfig config)
-    {
-    }
-
-    public void onSurfaceChanged(GL10 gl, int w, int h) 
-    {
-        //gl.glViewport(0, 0, w, h);
-        nativeResize(w, h);
-        nativeInit();
-    }
 	
 	//don't change the order of these defines, they match the ones in Proton!
 		
@@ -1461,7 +1445,23 @@ class AppRenderer implements GLSurfaceView.Renderer
 
 	static long m_gameTimer = 0;
 	static int m_timerLoopMS = 0; //every this MS, the loop runs.  0 for no fps limit
+	
+	public AppRenderer(SharedActivity _app)
+	{
+		app = _app;
+		
+		nativeInit();
+	}
 
+	public void onSurfaceCreated(GL10 gl, EGLConfig config)
+    {
+    }
+
+    public void onSurfaceChanged(GL10 gl, int w, int h) 
+    {
+        nativeResize(w, h);
+    }
+	
     public synchronized void onDrawFrame(GL10 gl)
     {
 		if (m_timerLoopMS != 0)

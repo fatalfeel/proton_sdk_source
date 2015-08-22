@@ -19,7 +19,7 @@
 
 #define C_DELAY_BEFORE_RESTORING_SURFACES_MS 1
 
-extern JavaVM* g_pJavaVM;
+JavaVM* g_pJavaVM = NULL;
 
 const char* GetAppName();
 const char* GetBundlePrefix();
@@ -53,18 +53,15 @@ enum eAndroidActions
 	ACTION_OUTSIDE,
 };
 
-class AndroidMessageCache
+typedef struct _AndroidMessageCache
 {
-public:
-	float x,y;
-	eMessageType type;
-	int finger;
+	eMessageType	type;
+	float			x,y;
+	int				finger;
+}AndroidMessageCache;
 
-};
-
-std::list<AndroidMessageCache> g_messageCache;
-
-JavaVM* g_pJavaVM = NULL;
+static std::list<AndroidMessageCache>	s_messageCache;
+static pthread_mutex_t					s_mouselock;
 
 int g_winVideoScreenX = 0;
 int g_winVideoScreenY = 0;
@@ -76,11 +73,8 @@ std::vector<std::string> StringTokenize(const std::string& theString, const std:
 
 extern "C" 
 {
-
 	JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) 
 	{
-		//LogMsg("JNI_OnLoad(): you are here");
-
 		JNIEnv* env;
 		if (vm->GetEnv((void**)&env, JNI_VERSION_1_4) != JNI_OK) 
 		{
@@ -88,9 +82,11 @@ extern "C"
 			return -1;
 		}
 		g_pJavaVM = vm; //save to use this for the rest of the app.  Not neccesarily safe to use the Env passed in though.
+
+		LogMsg("JNI_OnLoad(): you are here");
+
 		return JNI_VERSION_1_4;
 	}
-
 }
 
 int GetPrimaryGLX() 
@@ -129,7 +125,7 @@ std::string GetBaseAppPath()
 	return ""; //we mount the assets as zip, there really isn't a base path
 }
 
-JNIEnv * GetJavaEnv()
+JNIEnv* GetJavaEnv()
 {
 	assert(g_pJavaVM);
 
@@ -227,9 +223,6 @@ std::string GetAPKFile()
 	env->ReleaseStringUTFChars(ret, ss);
 	return std::string(tmp);
 }
-
-//returns the SD card user save path (will be deleted when app is uninstalled on 2.2+)
-//returns "" if no SD card/external writable storage available
 
 std::string GetAppCachePath()
 {
@@ -567,17 +560,6 @@ int GetDaysSinceDate(int month,int day, int year)
 	return 0;
 }
 
-bool RTCreateDirectory(const std::string &dir_name)
-{
-#ifdef _DEBUG
-	LogMsg("CreateDirectory: %s", dir_name.c_str());
-#endif
-
-	std::string temp = dir_name;
-	CreateDirectoryRecursively("", temp);
-	return true;
-}
-
 void CreateDirectoryRecursively(std::string basePath, std::string path)
 {
 #ifdef _DEBUG
@@ -595,6 +577,16 @@ void CreateDirectoryRecursively(std::string basePath, std::string path)
 	return;
 }
 
+bool RTCreateDirectory(const std::string &dir_name)
+{
+#ifdef _DEBUG
+	LogMsg("CreateDirectory: %s", dir_name.c_str());
+#endif
+
+	std::string temp = dir_name;
+	CreateDirectoryRecursively("", temp);
+	return true;
+}
 
 std::vector<std::string> GetDirectoriesAtPath(std::string path)
 {
@@ -731,56 +723,124 @@ bool HasVibration()
 	return true;
 }
 
+void MouseKeyProcess(int method, AndroidMessageCache* amsg, unsigned int* qsize)
+{
+	pthread_mutex_lock(&s_mouselock);
+	
+	switch(method)
+	{
+		case 0:
+			s_messageCache.push_back(*amsg);
+			break;
+
+		case 1:
+			*amsg = s_messageCache.front();
+			s_messageCache.pop_front();
+			break;
+
+		case 2:
+			*qsize = s_messageCache.size();
+			break;
+	}
+		
+	pthread_mutex_unlock(&s_mouselock);
+}
+
+void CheckTouchCommand()
+{
+#ifdef _IRR_COMPILE_WITH_GUI_	
+	irr::SEvent	ev;
+#endif			
+	
+	unsigned int		qsize;
+	AndroidMessageCache	amessage;
+
+	MouseKeyProcess(2, NULL, &qsize);
+		
+	if( qsize > 0 )
+	{
+		MouseKeyProcess(1, &amessage, NULL);
+		
+		switch (amessage.type)
+		{
+			case MESSAGE_TYPE_GUI_CLICK_START:
+				//by stone
+#ifdef _IRR_COMPILE_WITH_GUI_
+				ev.MouseInput.Event 		= irr::EMIE_LMOUSE_PRESSED_DOWN;
+				ev.EventType            	= irr::EET_MOUSE_INPUT_EVENT;
+				ev.MouseInput.ButtonStates 	= 0;
+				ev.MouseInput.X				= amessage.x;
+				ev.MouseInput.Y				= amessage.y;
+				IrrlichtManager::GetIrrlichtManager()->GetDevice()->postEventFromUser(ev);
+#endif
+				break;
+
+			case MESSAGE_TYPE_GUI_CLICK_END:
+				//by stone
+#ifdef _IRR_COMPILE_WITH_GUI_
+				ev.MouseInput.Event 		= irr::EMIE_LMOUSE_LEFT_UP;
+				ev.EventType            	= irr::EET_MOUSE_INPUT_EVENT;
+				ev.MouseInput.ButtonStates 	= 0;
+				ev.MouseInput.X				= amessage.x;
+				ev.MouseInput.Y				= amessage.y;
+				IrrlichtManager::GetIrrlichtManager()->GetDevice()->postEventFromUser(ev);
+#endif
+				break;
+
+			case MESSAGE_TYPE_GUI_CLICK_MOVE:
+				break;
+
+			default:
+#ifndef _DEBUG
+				LogMsg("Unhandled input message %d at %.2f:%.2f", action, x, y);
+#endif
+				break;
+		}
+	}
+}
+
 void AppResize( JNIEnv*  env, jobject  thiz, jint w, jint h )
 {
+	std::string		apkpath;
+	FileSystemZip*	pFileSystem = NULL;
+
 	g_winVideoScreenX = w;
 	g_winVideoScreenY = h;
-#ifdef _DEBUG
-	LogMsg("Resizing screen to %d %d", w, h);
-#endif
-	
+		
 	if (!BaseApp::GetBaseApp()->IsInitted())
 	{
-		SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
-		LogMsg("Initializing BaseApp.  APK filename is %s", GetAPKFile().c_str());
 		srand( (unsigned)time(NULL) );
-		FileSystemZip *pFileSystem = new FileSystemZip();
-#ifdef _DEBUG
-		LogMsg("Filesystem new'ed");
-#endif
-		if (!pFileSystem->Init_unz(GetAPKFile()))
-		{
-			LogMsg("Error finding APK file to load resources (%s", GetAPKFile().c_str());
-		}
 
 #ifdef _DEBUG
-		LogMsg("APK based Filesystem mounted.");
+	LogMsg("Setup screen to %d %d", w, h);
 #endif
-		/*
-		vector<std::string> contents = pFileSystem->GetContents();
-		for (int i=0; i < contents.size(); i++)
+		SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
+		
+		pFileSystem = new FileSystemZip();
+		
+		apkpath = GetAPKFile();
+		
+		if( pFileSystem->Init_unz(apkpath) )
 		{
-		LogMsg("%s", contents[i].c_str());
+			LogMsg("APK based Filesystem mounted.");
 		}
-		*/
+		else
+		{
+			LogMsg("Error finding APK file to load resources (%s", apkpath.c_str());
+		}
 
 		pFileSystem->SetRootDirectory("assets");
 
 		FileManager::GetFileManager()->MountFileSystem(pFileSystem);
-		LogMsg("Assets mounted");
-
+				
 		if (!BaseApp::GetBaseApp()->Init())
 		{
 			LogMsg("Unable to initalize BaseApp");
 		}
 
-
 		//let's also create our save directory on the sd card if needed, so we don't get errors when just assuming we can save
 		//settings later in the app.
-
 		CreateDirectoryRecursively("", GetAppCachePath());
-
-
 	}
 
 	BaseApp::GetBaseApp()->OnScreenSizeChange();
@@ -831,14 +891,32 @@ void AppRender(JNIEnv*  env)
 	
 	BaseApp::GetBaseApp()->Update();
 	BaseApp::GetBaseApp()->Draw();
+
+	CheckTouchCommand();
+}
+
+void AppInit(JNIEnv* env)
+{
+	//create mutex attribute variable
+	pthread_mutexattr_t	pmattr;
+
+	// setup recursive mutex for mutex attribute
+	pthread_mutexattr_settype(&pmattr, PTHREAD_MUTEX_RECURSIVE_NP);
+
+	// Use the mutex attribute to create the mutex
+	pthread_mutex_init(&s_mouselock, &pmattr);
+
+	// Mutex attribute can be destroy after initializing the mutex variable
+	pthread_mutexattr_destroy(&pmattr);
+
+	LogMsg("AppInit finish");
 }
 
 void AppDone(JNIEnv*  env)
 {
+	pthread_mutex_destroy(&s_mouselock);
+
 	LogMsg("Killing base app.");
-	
-	//if (IsBaseAppInitted())
-	//	BaseApp::GetBaseApp()->Kill();
 }
 
 void AppPause(JNIEnv*  env)
@@ -884,90 +962,41 @@ void AppResume(JNIEnv*  env)
 #endif
 }
 
-void AppInit(JNIEnv*  env)
-{
-	//by stone
-	/*LogMsg("Initialized GL surfaces for game");
-	BaseApp::GetBaseApp()->InitializeGLDefaults();
-	LogMsg("gl defaults set");
-	BaseApp::GetBaseApp()->OnScreenSizeChange();
-	LogMsg("OnScreensizechange done");*/
-
-	/*if (s_bSurfacesUnloaded)
-	{
-		s_bSurfacesUnloaded = false;
-		
-		//signal to IrrlichtManager::OnLoadSurfaces()
-		BaseApp::GetBaseApp()->m_sig_loadSurfaces(); 
-	}*/
-	
-	LogMsg("AppInit finish");
-}
-
 void AppOnTouch( JNIEnv*  env, jobject jobj,jint action, jfloat x, jfloat y, jint finger)
 {
-	static AndroidMessageCache	am;
-	eMessageType				messageType = MESSAGE_TYPE_UNKNOWN;
-	
-#ifdef _IRR_COMPILE_WITH_GUI_	
-	irr::SEvent	ev;
-#endif		
-
+	int							keyid;
+	AndroidMessageCache			amessage;
+			
 	switch (action)
 	{
 		case ACTION_DOWN:
-			messageType = MESSAGE_TYPE_GUI_CLICK_START;
-
-			//by stone
-#ifdef _IRR_COMPILE_WITH_GUI_
-			ev.MouseInput.Event 		= irr::EMIE_LMOUSE_PRESSED_DOWN;
-			ev.EventType            	= irr::EET_MOUSE_INPUT_EVENT;
-			ev.MouseInput.ButtonStates 	= 0;
-			ev.MouseInput.X				= x;
-			ev.MouseInput.Y				= y;
-			IrrlichtManager::GetIrrlichtManager()->GetDevice()->postEventFromUser(ev);
-#endif
+			amessage.type = MESSAGE_TYPE_GUI_CLICK_START;
 			break;
 
 		case ACTION_UP:
-			messageType = MESSAGE_TYPE_GUI_CLICK_END;
-
-			//by stone
-#ifdef _IRR_COMPILE_WITH_GUI_
-			ev.MouseInput.Event 		= irr::EMIE_LMOUSE_LEFT_UP;
-			ev.EventType            	= irr::EET_MOUSE_INPUT_EVENT;
-			ev.MouseInput.ButtonStates 	= 0;
-			ev.MouseInput.X				= x;
-			ev.MouseInput.Y				= y;
-			IrrlichtManager::GetIrrlichtManager()->GetDevice()->postEventFromUser(ev);
-#endif
+			amessage.type = MESSAGE_TYPE_GUI_CLICK_END;
 			break;
 
 		case ACTION_MOVE:
-			messageType = MESSAGE_TYPE_GUI_CLICK_MOVE;
+			amessage.type = MESSAGE_TYPE_GUI_CLICK_MOVE;
 			break;
 
-	default:
-
-#ifndef _DEBUG
-			LogMsg("Unhandled input message %d at %.2f:%.2f", action, x, y);
-#endif
+		default:
+			amessage.type = MESSAGE_TYPE_UNKNOWN;
 			break;
 	}
 	
-	am.x		= x;
-	am.y		= y;
-	am.finger	= finger;
-	am.type		= messageType;
-
-	g_messageCache.push_back(am);
+	amessage.x		= x;
+	amessage.y		= y;
+	amessage.finger	= finger;
+	
+	//s_messageCache.push_back(amessage);
+	MouseKeyProcess(0, &amessage, NULL);
 }
-
 
 void AppOnSendGUIEx(JNIEnv*  env, jobject thiz,jint messageType, jint parm1, jint parm2, jint finger )
 {
 	MessageManager::GetMessageManager()->SendGUIEx((eMessageType)messageType, (float)parm1, (float)parm2, finger);  
-
 }
 
 void AppOnSendGUIStringEx(JNIEnv*  env, jobject thiz,jint messageType, jint parm1, jint parm2, jint finger, jstring s )
@@ -1072,7 +1101,7 @@ int AppOSMessageGet(JNIEnv* env)
 		return 0;
 	}
 
-	while (!g_messageCache.empty())
+	/*while (!g_messageCache.empty())
 	{
 		AndroidMessageCache *pM = &g_messageCache.front();
 		
@@ -1080,7 +1109,7 @@ int AppOSMessageGet(JNIEnv* env)
 
 		MessageManager::GetMessageManager()->SendGUIEx(pM->type, pM->x, pM->y, pM->finger);
 		g_messageCache.pop_front();
-	}
+	}*/
 
 	while (!BaseApp::GetBaseApp()->GetOSMessages()->empty())
 	{

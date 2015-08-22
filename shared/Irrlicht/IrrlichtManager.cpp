@@ -121,11 +121,9 @@ void IrrlichtManager::BeginScene()
 {
 	if (m_pDriver)
 	{
-		//this really isn't needed as Proton clears the zbuffer/etc
 		m_pDriver->beginScene(false, false, SColor(255,100,101,140));
 	
 #ifdef RT_IRRBULLET
-		
 		if (m_pWorld)
 		{
             // Step the simulation with our delta time

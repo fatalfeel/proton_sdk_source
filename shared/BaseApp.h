@@ -224,7 +224,7 @@ public:
 	virtual void OnMessage(Message &m);
 	//RTFont * GetFont(eFont font)					{return &m_fontArray[font];}
 	void SetInputMode(eInputMode mode){m_inputMode = mode;}
-	eInputMode GetInputMode()				{return m_inputMode;}
+	eInputMode GetInputMode()					{return m_inputMode;}
 	virtual void OnMemoryWarning();
 	
 	/**
@@ -263,13 +263,13 @@ public:
 	 *   - For \link eMessageType::MESSAGE_TYPE_GUI_PASTE MESSAGE_TYPE_GUI_PASTE\endlink this
 	 *     parameter contains the contents of the clipboard as a \c string.
 	 */
-	boost::signal<void (VariantList*)> m_sig_input;
+	//boost::signal<void (VariantList*)> m_sig_input;
 	/**
 	 * "Move" touch messages.
 	 * Used if eInputMode::INPUT_MODE_SEPARATE_MOVE_TOUCHES was set. Otherwise they are signaled
 	 * via \c BaseApp::m_sig_input.
 	 */
-	boost::signal<void (VariantList*)> m_sig_input_move;
+	//boost::signal<void (VariantList*)> m_sig_input_move;
 	/**
 	 * Messages from the platform itself.
 	 * To get the type of the message use code like this:

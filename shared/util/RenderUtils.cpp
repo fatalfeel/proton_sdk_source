@@ -395,7 +395,7 @@ void UndoFakeScreenSize()
 	SetupOriginalScreenSize(0,0);
 
 	SetupScreenInfo(g_screenSizeX,g_screenSizeY, GetOrientation());
-	PrepareForGL(); //make sure any ortho settings are also updated
+	//PrepareForGL(); //make sure any ortho settings are also updated
 }
 
 
@@ -410,7 +410,7 @@ void RedoFakeScreenSize()
 		g_undoFakeScreenSizeX = 0;
 		g_undoFakeScreenSizeY = 0;
 	
-		PrepareForGL(); //make sure any ortho settings are also updated
+		//PrepareForGL(); //make sure any ortho settings are also updated
 	}
 
 }
