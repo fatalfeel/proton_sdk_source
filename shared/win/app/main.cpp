@@ -39,9 +39,16 @@ bool	g_bIsMinimized				= false;
 bool	g_winAllowFullscreenToggle	= true;
 bool	g_bMouseIsInsideArea		= true;
 bool	g_winAllowWindowResize		= true;
+bool	g_bHasFocus					= true;
+bool	g_bAppFinished				= false;
+bool	g_escapeMessageSent			= false; //work around for problems on my dev machine with escape not being sent on keydown sometimes, fixed by reboot (!?)
 
-std::vector<VideoModeEntry>	g_videoModes;
-static int					s_LastScreenSize;
+
+static std::vector<VideoModeEntry>	s_videoModes;
+static int							s_LastScreenSize;
+
+static std::list<WinMessageCache*>	s_messageCache;
+static CRITICAL_SECTION				s_mouselock;
 
 void SetVideoModeByName(string name);
 void AddVideoMode(string name, int x, int y, ePlatformID platformID, eOrientationMode forceOrientation = ORIENTATION_DONT_CARE);
@@ -121,7 +128,7 @@ void InitVideoSize()
 //***************************************************************************
 void AddVideoMode(string name, int x, int y, ePlatformID platformID, eOrientationMode forceOrientation)
 {
-	g_videoModes.push_back(VideoModeEntry(name, x, y, platformID, forceOrientation));
+	s_videoModes.push_back(VideoModeEntry(name, x, y, platformID, forceOrientation));
 }
 
 void SetVideoModeByName(string name)
@@ -129,9 +136,9 @@ void SetVideoModeByName(string name)
 	unsigned int	i;
 	VideoModeEntry*	v = NULL;
 
-	for (i=0; i < g_videoModes.size(); i++)
+	for (i=0; i < s_videoModes.size(); i++)
 	{
-		v = &g_videoModes[i];
+		v = &s_videoModes[i];
 		
 		if (v->name == name)
 		{
@@ -174,11 +181,6 @@ int GetPrimaryGLY()
 	return g_winVideoScreenY;
 }	
 
-int mousePosX = 0;
-int mousePosY = 0;
-bool g_bHasFocus			= true;
-bool g_bAppFinished			= false;
-bool g_escapeMessageSent	= false; //work around for problems on my dev machine with escape not being sent on keydown sometimes, fixed by reboot (!?)
 
 #ifndef RT_WEBOS
 
@@ -189,9 +191,11 @@ bool g_escapeMessageSent	= false; //work around for problems on my dev machine w
 #ifndef GET_X_LPARAM
 #define GET_X_LPARAM(lp)                        ((int)(short)LOWORD(lp))
 #endif
+
 #ifndef GET_Y_LPARAM
 #define GET_Y_LPARAM(lp)                        ((int)(short)HIWORD(lp))
 #endif
+
 bool g_leftMouseButtonDown	= false; //to help emulate how an iphone works
 bool g_rightMouseButtonDown = false; //to help emulate how an iphone works
 
@@ -298,14 +302,97 @@ int VKeyToWMCharKey(int vKey)
 	return vKey;
 }
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+void MouseKeyProcess(int method, WinMessageCache* amsg, unsigned int* qsize)
 {
-	int Width, Height;
+	EnterCriticalSection(&s_mouselock);
 
+	WinMessageCache* store_msg;
+	
+	switch(method)
+	{
+		case 0:
+			s_messageCache.push_back(amsg);
+			break;
+
+		case 1:
+			store_msg		= s_messageCache.front();
+			
+			amsg->type		= store_msg->type;
+			amsg->x			= store_msg->x;
+			amsg->y			= store_msg->y;
+			amsg->finger	= store_msg->finger;
+			
+			s_messageCache.pop_front();
+			delete store_msg;
+			
+			break;
+
+		case 2:
+			*qsize = s_messageCache.size();
+			break;
+	}
+		
+	LeaveCriticalSection(&s_mouselock);
+}
+
+void CheckTouchCommand()
+{
 #ifdef _IRR_COMPILE_WITH_GUI_	
 	irr::SEvent	ev;
-#endif		
+#endif			
 	
+	unsigned int		qsize;
+	WinMessageCache		amessage;
+
+	MouseKeyProcess(2, NULL, &qsize);
+		
+	if( qsize >= 1 )
+	{
+		MouseKeyProcess(1, &amessage, NULL);
+		
+		switch (amessage.type)
+		{
+			case ACTION_DOWN:
+				//by stone
+#ifdef _IRR_COMPILE_WITH_GUI_
+				ev.MouseInput.Event 		= irr::EMIE_LMOUSE_PRESSED_DOWN;
+				ev.EventType            	= irr::EET_MOUSE_INPUT_EVENT;
+				ev.MouseInput.ButtonStates 	= 0;
+				ev.MouseInput.X				= amessage.x;
+				ev.MouseInput.Y				= amessage.y;
+				IrrlichtManager::GetIrrlichtManager()->GetDevice()->postEventFromUser(ev);
+#endif
+				break;
+
+			case ACTION_UP:
+				//by stone
+#ifdef _IRR_COMPILE_WITH_GUI_
+				ev.MouseInput.Event 		= irr::EMIE_LMOUSE_LEFT_UP;
+				ev.EventType            	= irr::EET_MOUSE_INPUT_EVENT;
+				ev.MouseInput.ButtonStates 	= 0;
+				ev.MouseInput.X				= amessage.x;
+				ev.MouseInput.Y				= amessage.y;
+				IrrlichtManager::GetIrrlichtManager()->GetDevice()->postEventFromUser(ev);
+#endif
+				break;
+
+			case ACTION_MOVE:
+				break;
+
+			default:
+				break;
+		}
+	}
+}
+
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	int					Width, Height;
+	float				cx,cy;
+	
+	unsigned int		qsize;
+	WinMessageCache*	amessage;
+
 	switch (message)
 	{
 		case WM_CREATE:
@@ -370,7 +457,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 					IrrlichtManager::GetIrrlichtManager()->SetReSize(core::dimension2d<u32>(Width,Height));
 					
-					//BaseApp::GetBaseApp()->KillOSMessagesByType(OSMessage::MESSAGE_SET_VIDEO_MODE);
 					BaseApp::GetBaseApp()->SetVideoMode(Width, Height, false, 0);
 				}
 			}
@@ -581,12 +667,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 		
 		case WM_SETCURSOR:
-			//{
 			break;
-			//}
+
 		case WM_SYSCOMMAND:
-			// Do not allow screensaver to start. - wait, why would I want to disable the screensaver?!
-			//if (wParam == SC_SCREENSAVE) return true;
+
 			if ((wParam & 0xFFF0) == SC_MINIMIZE)
 			{
 				// shrink the application to the notification area
@@ -625,23 +709,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			{
 				if (!g_bHasFocus) 
 					break;
-//by stone
-#ifdef _IRR_COMPILE_WITH_GUI_
-				ev.MouseInput.Event 		= irr::EMIE_LMOUSE_PRESSED_DOWN;
-				ev.EventType            	= irr::EET_MOUSE_INPUT_EVENT;
-				ev.MouseInput.ButtonStates 	= 0;
-				ev.MouseInput.X				= GET_X_LPARAM(lParam);
-				//ev.MouseInput.Y				= GET_Y_LPARAM(lParam)+GetSystemMetrics(SM_CYSIZE);
-				ev.MouseInput.Y				= GET_Y_LPARAM(lParam);
-				IrrlichtManager::GetIrrlichtManager()->GetDevice()->postEventFromUser(ev);
-#endif
 
+				cx = GET_X_LPARAM(lParam);
+				cy = GET_Y_LPARAM(lParam);
+				
+				amessage			= new WinMessageCache();
+				amessage->type		= ACTION_DOWN;
+				amessage->x			= cx;
+				amessage->y			= cy;
+				amessage->finger	= 0;
+				MouseKeyProcess(0, amessage, NULL);
+				
 				g_leftMouseButtonDown = true;
-				int xPos = GET_X_LPARAM(lParam);
-				int yPos = GET_Y_LPARAM(lParam);
-				ConvertCoordinatesIfRequired(xPos, yPos);
-				MessageManager::GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CLICK_START, (float)xPos, (float)yPos, 0, GetWinkeyModifiers());
-				break;
 			}
 			break;
 
@@ -649,37 +728,33 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			{
 				if (!g_bHasFocus) 
 					break;
-//by stone
-#ifdef _IRR_COMPILE_WITH_GUI_
-				ev.MouseInput.Event 		= irr::EMIE_LMOUSE_LEFT_UP;
-				ev.EventType            	= irr::EET_MOUSE_INPUT_EVENT;
-				ev.MouseInput.ButtonStates 	= 0;
-				ev.MouseInput.X				= GET_X_LPARAM(lParam);
-				ev.MouseInput.Y				= GET_Y_LPARAM(lParam)+GetSystemMetrics(SM_CYSIZE);
-				IrrlichtManager::GetIrrlichtManager()->GetDevice()->postEventFromUser(ev);
-#endif
 				
-				int xPos = GET_X_LPARAM(lParam);
-				int yPos = GET_Y_LPARAM(lParam);
-				ConvertCoordinatesIfRequired(xPos, yPos);
-				MessageManager::GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CLICK_END, (float)xPos, (float)yPos, 0, GetWinkeyModifiers());
-				g_leftMouseButtonDown = false;
-			}
-			return true;
-			break;
+				cx = GET_X_LPARAM(lParam);
+				cy = GET_Y_LPARAM(lParam);
+				
+				amessage			= new WinMessageCache();
+				amessage->type		= ACTION_UP;
+				amessage->x			= cx;
+				amessage->y			= cy;
+				amessage->finger	= 0;
+				MouseKeyProcess(0, amessage, NULL);
 
+				g_leftMouseButtonDown = false;
+
+			}
+			break;
 
 		case WM_RBUTTONDOWN:
 		case WM_RBUTTONDBLCLK:
 			{
 				if (!g_bHasFocus) 
 					break;
-				g_rightMouseButtonDown = true;
+				
+				/*g_rightMouseButtonDown = true;
 				int xPos = GET_X_LPARAM(lParam);
 				int yPos = GET_Y_LPARAM(lParam);
 				ConvertCoordinatesIfRequired(xPos, yPos);
-				MessageManager::GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CLICK_START, (float)xPos, (float)yPos, 1, GetWinkeyModifiers());
-				break;
+				MessageManager::GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CLICK_START, (float)xPos, (float)yPos, 1, GetWinkeyModifiers());*/
 			}
 			break;
 
@@ -688,15 +763,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				if (!g_bHasFocus) 
 					break;
 				
-				int xPos = GET_X_LPARAM(lParam);
+				/*int xPos = GET_X_LPARAM(lParam);
 				int yPos = GET_Y_LPARAM(lParam);
-				
 				ConvertCoordinatesIfRequired(xPos, yPos);
 				MessageManager::GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CLICK_END, (float)xPos, (float)yPos, 1, GetWinkeyModifiers());
-				g_rightMouseButtonDown = false;
+				g_rightMouseButtonDown = false;*/
 			}
-			
-			return true;
 			break;
 		
 		case WM_MOUSEMOVE:
@@ -704,27 +776,42 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				if (!g_bHasFocus) 
 					break;
 			
-				float xPos = (float)GET_X_LPARAM(lParam);
-				float yPos = (float)GET_Y_LPARAM(lParam);
-				ConvertCoordinatesIfRequired(xPos, yPos);
-		
-				if (g_leftMouseButtonDown)
+				if( g_leftMouseButtonDown )
 				{
-					MessageManager::GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CLICK_MOVE, xPos, yPos, 0, GetWinkeyModifiers());
-				} 
-			
-				if (g_rightMouseButtonDown)
-				{
-					MessageManager::GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CLICK_MOVE, xPos, yPos, 1, GetWinkeyModifiers());
-				} 
+					MouseKeyProcess(2, NULL, &qsize);
 
-				MessageManager::GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CLICK_MOVE_RAW, xPos, yPos, 0, GetWinkeyModifiers());
+					if( qsize <= 0 )
+					{
+						cx = GET_X_LPARAM(lParam);
+						cy = GET_Y_LPARAM(lParam);
+						
+						amessage			= new WinMessageCache();
+						amessage->type		= ACTION_MOVE;
+						amessage->x			= cx;
+						amessage->y			= cy;
+						amessage->finger	= 0;
+						MouseKeyProcess(0, amessage, NULL);
+					}
+				}
 			}
 			
 			break;
 
 		case WM_MOUSELEAVE:
-			LogMsg("Mouse leaving window");
+			if( g_leftMouseButtonDown )
+			{
+				cx = GET_X_LPARAM(lParam);
+				cy = GET_Y_LPARAM(lParam);
+				
+				amessage			= new WinMessageCache();
+				amessage->type		= ACTION_UP;
+				amessage->x			= cx;
+				amessage->y			= cy;
+				amessage->finger	= 0;
+				MouseKeyProcess(0, amessage, NULL);
+
+				g_leftMouseButtonDown = false;
+			}
 			break;
 
 		case WM_CANCELMODE:
@@ -970,54 +1057,34 @@ void ForceVideoUpdate()
 #endif
 }
 
-void CheckIfMouseLeftWindowArea()
+bool CheckIfMouseLeftWindowArea(short* movedir)
 {
 	POINT	pt;
-	RECT	r;
+	RECT	rwin;
+	bool	bInsideRect = false;
 	
 	if (GetCursorPos(&pt))
 	{
-		GetClientRect(g_hWnd, (LPRECT)&r);
-		ClientToScreen(g_hWnd, (LPPOINT)&r.left);
-		ClientToScreen(g_hWnd, (LPPOINT)&r.right);
-		
-		//LogMsg("Got %d, %d, rect is %d, %d, %d, %d", pt.x, pt.y, r.left, r.top, r.right, r.bottom);
-		bool bInsideRect = false;
-		if (pt.x >= r.left && pt.x <= r.right
+		GetClientRect(g_hWnd,	(LPRECT)&rwin);
+		ClientToScreen(g_hWnd,	(LPPOINT)&rwin.left);
+		ClientToScreen(g_hWnd,	(LPPOINT)&rwin.right);
+						
+		if (pt.x >= rwin.left && pt.x <= rwin.right
 			&& 
-			pt.y >= r.top && pt.y <= r.bottom)
+			pt.y >= rwin.top && pt.y <= rwin.bottom)
 		{
 			bInsideRect = true;
 		}
-
-		if (bInsideRect)
-		{
-			//we're currently inside with our mouse
-			if (!g_bMouseIsInsideArea)
-			{
-				//we entered the area
-				//LogMsg("We entered the window area with  mouse");
-				g_bMouseIsInsideArea = true;
-			}
-			else
-			{
-				//still in, no change
-			}
-		}
 		else
 		{
-			if (g_bMouseIsInsideArea)
-			{
-				//LogMsg("We left the window area with  mouse");
-				g_bMouseIsInsideArea = false;
-				BaseApp::GetBaseApp()->ResetTouches();
-			} 
+			if( pt.x < rwin.left )
+				*movedir = 0;
 			else
-			{
-				//still out, no change
-			}
+				*movedir = g_winVideoScreenX;
 		}
 	}
+
+	return bInsideRect;
 }
 
 //by jesse stone
@@ -1026,8 +1093,10 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 	OSMessage		osm;
 	MSG				msg;
 	int				ret;
+	short			movedir;
+	WSADATA			wsaData;
 	static float	fpsTimer=0;
-
+	
 	//core::dimension2d<u32> size;
 	
 #ifdef WIN32
@@ -1042,13 +1111,13 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 	g_hInstance = hInstance;
 	RemoveFile("log.txt", false);
 		
-	InitVideoSize();
-
-	WSADATA wsaData;
+	srand( (unsigned)GetTickCount() );
 	WSAStartup(MAKEWORD(2, 2), &wsaData);
 
-	srand( (unsigned)GetTickCount() );
+	InitVideoSize();
 
+	InitializeCriticalSection(&s_mouselock);
+	
 	// Register the windows class
 	WNDCLASS sWC;
 	sWC.style = CS_DBLCLKS;
@@ -1111,8 +1180,6 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 
 		if (g_bHasFocus)
 		{
-			CheckIfMouseLeftWindowArea();
-			
 			BaseApp::GetBaseApp()->Update();
 			//if (!g_bIsMinimized)
 			BaseApp::GetBaseApp()->Draw();
@@ -1160,21 +1227,28 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 					break;
 			}
 		}// end while (!BaseApp::GetBaseApp()->GetOSMessages()->empty())
+
+		CheckTouchCommand();
 	
 		if (g_bHasFocus && !g_bIsMinimized)
 		{
-#ifdef C_GL_MODE
+#if defined(_IRR_COMPILE_WITH_OGLES1_) || defined(_IRR_COMPILE_WITH_OGLES2_)
+			eglSwapBuffers( g_eglDisplay, g_eglSurface );
+#elif defined(_IRR_COMPILE_WITH_OPENGL_)
 			SwapBuffers(g_hDC); //need it
-#else
-			eglSwapBuffers(g_eglDisplay, g_eglSurface);
-			if (!TestEGLError(g_hWnd, "eglSwapBuffers"))
-			{
-				goto cleanup;
-			}
 #endif
 		}
 
-//skipRender:
+		if( !CheckIfMouseLeftWindowArea(&movedir) )
+		{
+			 /*msg.message	= WM_MOUSELEAVE;
+			 msg.lParam		= movedir;
+			 msg.hwnd		= g_hWnd; // window that want's 
+			 DispatchMessage(&msg);*/
+			
+			::PostMessage(g_hWnd, WM_MOUSELEAVE, 0, movedir);
+		}
+				
 		// Managing the window messages
 		while (PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE) == TRUE)
 		{
@@ -1202,9 +1276,12 @@ cleanup:
 		BaseApp::Free();
 	}
 
+	WSACleanup();
+	
 	DestroyVideo(true);
 
-	WSACleanup(); 
+	DeleteCriticalSection(&s_mouselock);
+	
 	return 0;
 }
 
