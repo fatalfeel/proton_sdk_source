@@ -134,11 +134,6 @@ string GetAppCachePath()
 	return GetSavePath();
 }
 
-void CreateAppCacheDirIfNeeded()
-{
-	CreateDirectoryRecursively("", GetAppCachePath());
-}
-
 void RemoveFile(string fileName, bool bAddSavePath)
 { 
 	if (bAddSavePath)
@@ -283,6 +278,11 @@ void CreateDirectoryRecursively(string basePath, string path)
                           withIntermediateDirectories:YES
                                            attributes:nil
                                                 error:nil];
+}
+
+void CreateAppCacheDirIfNeeded()
+{
+	CreateDirectoryRecursively("", GetAppCachePath());
 }
 
 bool RemoveDirectoryRecursively(string path)

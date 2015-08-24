@@ -13,7 +13,11 @@
 #import "App.h"
 #import "Irrlicht/IrrlichtManager.h"
 
-#define USE_DEPTH_BUFFER 1
+
+//#define USE_DEPTH_BUFFER 1
+
+static std::list<IosMessageCache*>	s_messageCache;
+static pthread_mutex_t				s_mouselock;
 
 // A class extension to declare private methods
 @interface EAGLView ()
@@ -114,6 +118,88 @@
 {
 	BaseApp::GetBaseApp()->Kill();
 }*/
+-(void) MouseKeyProcess:(int)method : (IosMessageCache*) amsg : (unsigned int*) qsize
+{
+    pthread_mutex_lock(&s_mouselock);
+    
+    IosMessageCache* store_msg;
+    
+    switch(method)
+    {
+        case 0:
+            s_messageCache.push_back(amsg);
+            break;
+            
+        case 1:
+            store_msg		= s_messageCache.front();
+            
+            amsg->type		= store_msg->type;
+            amsg->x			= store_msg->x;
+            amsg->y			= store_msg->y;
+            amsg->finger	= store_msg->finger;
+            
+            s_messageCache.pop_front();
+            delete store_msg;
+            
+            break;
+            
+        case 2:
+            *qsize = s_messageCache.size();
+            break;
+    }
+    
+    pthread_mutex_unlock(&s_mouselock);
+}
+
+-(void) CheckTouchCommand
+{
+#ifdef _IRR_COMPILE_WITH_GUI_
+    irr::SEvent	ev;
+#endif
+    
+    unsigned int            qsize;
+    IosMessageCache         amessage;
+    
+    [self MouseKeyProcess: 2 : NULL : &qsize];
+    
+    if( qsize >= 1 )
+    {
+        [self MouseKeyProcess: 1 : &amessage : NULL];
+        
+        switch (amessage.type)
+        {
+            case ACTION_DOWN:
+                //by stone
+#ifdef _IRR_COMPILE_WITH_GUI_
+                ev.MouseInput.X			= amessage.x;
+                ev.MouseInput.Y			= amessage.y;
+                ev.EventType            = irr::EET_MOUSE_INPUT_EVENT;
+                ev.MouseInput.Event     = irr::EMIE_LMOUSE_PRESSED_DOWN;
+                ev.MouseInput.ButtonStates = 0;
+                IrrlichtManager::GetIrrlichtManager()->GetDevice()->postEventFromUser(ev);
+#endif
+                break;
+                
+            case ACTION_UP:
+                //by stone
+#ifdef _IRR_COMPILE_WITH_GUI_
+                ev.MouseInput.X				= amessage.x;
+                ev.MouseInput.Y				= amessage.y;
+                ev.EventType            	= irr::EET_MOUSE_INPUT_EVENT;
+                ev.MouseInput.Event 		= irr::EMIE_LMOUSE_LEFT_UP;
+                ev.MouseInput.ButtonStates 	= 0;
+                IrrlichtManager::GetIrrlichtManager()->GetDevice()->postEventFromUser(ev);
+#endif
+                break;
+                
+            case ACTION_MOVE:
+                break;
+                
+            default:
+                break;
+        }
+    }
+}
 
 - (void)drawView
 {
@@ -148,6 +234,8 @@
 		
 		[appDelegate onOSMessage: &m];
 	}
+    
+    [self CheckTouchCommand];
 	
 	glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
 	// if(main_throttled_update()) 
@@ -191,13 +279,13 @@
  	glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &backingWidth);
 	glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &backingHeight);
 	   
-	if (USE_DEPTH_BUFFER) 
-	{
+	//if (USE_DEPTH_BUFFER)
+	//{
 		glGenRenderbuffersOES(1, &depthRenderbuffer);
 		glBindRenderbufferOES(GL_RENDERBUFFER_OES, depthRenderbuffer);
 		glRenderbufferStorageOES(GL_RENDERBUFFER_OES, GL_DEPTH_COMPONENT16_OES, backingWidth, backingHeight);
 		glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES, GL_RENDERBUFFER_OES, depthRenderbuffer);
-	}
+	//}
     
     glGenRenderbuffersOES(1, &m_StencilBuffer);
     glBindRenderbufferOES(GL_RENDERBUFFER_OES, m_StencilBuffer);
@@ -372,41 +460,36 @@ return count;
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
   	// Enumerate through all the touch objects.
+    float                   cx,cy;
+    float                   scale       = 1.0f;
     UITouch*                touch       = [touches anyObject];
-
-#ifdef _IRR_COMPILE_WITH_GUI_ 	
-	CGPoint                 touchPoint  = [touch locationInView:self];
+    CGPoint                 touchPoint  = [touch locationInView:self];
     UIInterfaceOrientation  orientation = [UIDevice currentDevice].orientation;
-    irr::SEvent             ev;
-    
-    float scale = 1.0f;
-    
-    //if ([self respondsToSelector:@selector(setContentScaleFactor:)])
-    //    scale = [[UIScreen mainScreen] scale];
+    int                     fingerID    = GetFingerTrackIDByTouch(touch);
+    IosMessageCache*        amessage;
     
     if (orientation == UIInterfaceOrientationLandscapeLeft
         ||
         orientation == UIInterfaceOrientationLandscapeRight)
     {
         //Landscape
-        ev.MouseInput.X = touchPoint.y*scale;
-        ev.MouseInput.Y = touchPoint.x*scale;
+        cx = touchPoint.y*scale;
+        cy = touchPoint.x*scale;
     }
     else
     {
-        ev.MouseInput.X = touchPoint.x*scale;
-        ev.MouseInput.Y = touchPoint.y*scale;
+        cx = touchPoint.x*scale;
+        cy = touchPoint.y*scale;
     }
-    
-	// event as mouse.
-	ev.EventType            = irr::EET_MOUSE_INPUT_EVENT;
-	ev.MouseInput.Event     = irr::EMIE_LMOUSE_PRESSED_DOWN;
-        	    
-	ev.MouseInput.ButtonStates = 0;
-    IrrlichtManager::GetIrrlichtManager()->GetDevice()->postEventFromUser(ev);
-#endif	
 
-	for (touch in touches)
+    amessage			= new IosMessageCache();
+    amessage->type		= ACTION_DOWN;
+    amessage->x			= cx;
+    amessage->y			= cy;
+    amessage->finger	= fingerID;
+    [self MouseKeyProcess : 0 : amessage : NULL];
+
+	/*for (touch in touches)
 	{
 		//found a touch.  Is it already on our list?
 		int fingerID = GetFingerTrackIDByTouch(touch);
@@ -424,49 +507,108 @@ return count;
 		}
 
 		CGPoint pt =[touch locationInView:self];
-		ConvertCoordinatesIfRequired(pt.x, pt.y);
+        float px = pt.x;
+        float py = pt.y;
+		ConvertCoordinatesIfRequired(px, py);
+        pt.x = px;
+        pt.y = py;
         MessageManager::GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_START,pt.x, pt.y,fingerID);
-	}	
+	}*/
 }
 
 //by stone
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    int						keyid;
+    float                   cx,cy;
+    float                   scale       = 1.0f;
     UITouch*                touch       = [touches anyObject];
-	
-#ifdef _IRR_COMPILE_WITH_GUI_ 	
-	CGPoint                 touchPoint  = [touch locationInView:self];
+    CGPoint                 touchPoint  = [touch locationInView:self];
     UIInterfaceOrientation  orientation = [UIDevice currentDevice].orientation;
-    irr::SEvent             ev;
+    int                     fingerID    = GetFingerTrackIDByTouch(touch);
+    IosMessageCache*        amessage;
+	
+    if (orientation == UIInterfaceOrientationLandscapeLeft
+        ||
+        orientation == UIInterfaceOrientationLandscapeRight)
+    {
+        //Landscape
+        cx = touchPoint.y*scale;
+        cy = touchPoint.x*scale;
+    }
+    else
+    {
+        cx = touchPoint.x*scale;
+        cy = touchPoint.y*scale;
+    }
     
-    float scale = 1.0f;
+    amessage			= new IosMessageCache();
+    amessage->type		= ACTION_UP;
+    amessage->x			= cx;
+    amessage->y			= cy;
+    amessage->finger	= fingerID;
+    [self MouseKeyProcess : 0 : amessage : NULL];
     
-    //if ([self respondsToSelector:@selector(setContentScaleFactor:)])
-    //    scale = [[UIScreen mainScreen] scale];
+    // Enumerate through all the touch objects.
+	/*for (touch in touches)
+	{
+		//found a touch.  Is it already on our list?
+		int fingerID = GetFingerTrackIDByTouch(touch);
+		if (fingerID != -1)
+		{
+			g_touchTracker[fingerID].m_touchPointer = NULL; //clear it
+		}
+        else
+		{
+			//wasn't on our list
+			continue;
+		}
+		
+		CGPoint pt =[touch locationInView:self];
+		//ConvertCoordinatesIfRequired(pt.x, pt.y);
+        float px = pt.x;
+        float py = pt.y;
+		ConvertCoordinatesIfRequired(px, py);
+        pt.x = px;
+        pt.y = py;
+        
+		MessageManager::GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_END,pt.x, pt.y, fingerID);
+	}*/
+}
+
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    float                   cx,cy;
+    float                   scale       = 1.0f;
+    UITouch*                touch       = [touches anyObject];
+    CGPoint                 touchPoint  = [touch locationInView:self];
+    UIInterfaceOrientation  orientation = [UIDevice currentDevice].orientation;
+    int                     fingerID    = GetFingerTrackIDByTouch(touch);
+    IosMessageCache*        amessage;
     
     if (orientation == UIInterfaceOrientationLandscapeLeft
         ||
         orientation == UIInterfaceOrientationLandscapeRight)
     {
         //Landscape
-        ev.MouseInput.X = touchPoint.y*scale;
-        ev.MouseInput.Y = touchPoint.x*scale;
+        cx = touchPoint.y*scale;
+        cy = touchPoint.x*scale;
     }
     else
     {
-        ev.MouseInput.X = touchPoint.x*scale;
-        ev.MouseInput.Y = touchPoint.y*scale;
+        cx = touchPoint.x*scale;
+        cy = touchPoint.y*scale;
     }
-
-	ev.EventType            = irr::EET_MOUSE_INPUT_EVENT;
-	ev.MouseInput.Event     = irr::EMIE_LMOUSE_LEFT_UP;
-           
-	ev.MouseInput.ButtonStates = 0;
-	IrrlichtManager::GetIrrlichtManager()->GetDevice()->postEventFromUser(ev);
-#endif	
+    
+    amessage			= new IosMessageCache();
+    amessage->type		= ACTION_UP;
+    amessage->x			= cx;
+    amessage->y			= cy;
+    amessage->finger	= fingerID;
+    [self MouseKeyProcess : 0 : amessage : NULL];
     
     // Enumerate through all the touch objects.
-	for (touch in touches)
+	/*for (touch in touches)
 	{
 		//found a touch.  Is it already on our list?
 		int fingerID = GetFingerTrackIDByTouch(touch);
@@ -481,39 +623,55 @@ return count;
 		}
 		
 		CGPoint pt =[touch locationInView:self];
-		ConvertCoordinatesIfRequired(pt.x, pt.y);
+		//ConvertCoordinatesIfRequired(pt.x, pt.y);
+        float px = pt.x;
+        float py = pt.y;
+		ConvertCoordinatesIfRequired(px, py);
+        pt.x = px;
+        pt.y = py;
 		MessageManager::GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_END,pt.x, pt.y, fingerID);
-	}	
+	}*/
 }
-
-- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
-{
-  	// Enumerate through all the touch objects.
-	for (UITouch *touch in touches)
-	{
-		//found a touch.  Is it already on our list?
-		int fingerID = GetFingerTrackIDByTouch(touch);
-		if (fingerID != -1)
-		{
-			g_touchTracker[fingerID].m_touchPointer = NULL; //clear it
-		}
-        else
-		{
-			//wasn't on our list
-			continue;
-		}
-		
-		CGPoint pt =[touch locationInView:self];
-		ConvertCoordinatesIfRequired(pt.x, pt.y);
-		MessageManager::GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_END,pt.x, pt.y, fingerID);
-	}	
-}
-
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
-   // Enumerate through all the touch objects.
-	for (UITouch *touch in touches)
+    // Enumerate through all the touch objects.
+    float                   cx,cy;
+    float                   scale       = 1.0f;
+    UITouch*                touch       = [touches anyObject];
+    CGPoint                 touchPoint  = [touch locationInView:self];
+    UIInterfaceOrientation  orientation = [UIDevice currentDevice].orientation;
+    int                     fingerID    = GetFingerTrackIDByTouch(touch);
+    unsigned int            qsize;
+    IosMessageCache*        amessage;
+    
+    [self MouseKeyProcess : 2 : NULL : &qsize ];
+    
+    if( qsize <= 0 )
+    {
+        if (orientation == UIInterfaceOrientationLandscapeLeft
+            ||
+            orientation == UIInterfaceOrientationLandscapeRight)
+        {
+            //Landscape
+            cx = touchPoint.y*scale;
+            cy = touchPoint.x*scale;
+        }
+        else
+        {
+            cx = touchPoint.x*scale;
+            cy = touchPoint.y*scale;
+        }
+        
+        amessage			= new IosMessageCache();
+        amessage->type		= ACTION_MOVE;
+        amessage->x			= cx;
+        amessage->y			= cy;
+        amessage->finger	= fingerID;
+        [self MouseKeyProcess : 0 : amessage : NULL];
+    }
+    
+    /*for (touch in touches)
 	{
 	
 		//found a touch.  Is it already on our list?
@@ -529,9 +687,14 @@ return count;
 		}
 	
 		CGPoint pt =[touch locationInView:self];
-		ConvertCoordinatesIfRequired(pt.x, pt.y);
+		//ConvertCoordinatesIfRequired(pt.x, pt.y);
+        float px = pt.x;
+        float py = pt.y;
+		ConvertCoordinatesIfRequired(px, py);
+        pt.x = px;
+        pt.y = py;
 		MessageManager::GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_MOVE,pt.x, pt.y, fingerID);
-	}	
+	}*/
 }
 
 @end
