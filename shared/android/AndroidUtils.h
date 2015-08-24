@@ -13,10 +13,33 @@
 #include <jni.h>
 #include <string>
 
-std::string GetAPKFile();
+//android has some concurrency issues that cause problems unless we cache input events - we don't want it calling ConvertCoordinatesIfRequired
+//willy nilly
+enum eAndroidActions
+{
+	ACTION_DOWN,
+	ACTION_UP,
+	ACTION_MOVE,
+	ACTION_CANCEL,
+	ACTION_OUTSIDE,
+};
 
-JNIEnv * GetJavaEnv();
-char * GetAndroidMainClassName();
+class AndroidMessageCache
+{
+public:
+	AndroidMessageCache()
+	{}
+	~AndroidMessageCache()
+	{}
+
+	eAndroidActions		type;
+	float				x,y;
+	int					finger;
+};
+
+JNIEnv*		GetJavaEnv();
+std::string GetAPKFile();
+char*		GetAndroidMainClassName();
 void AppResize( JNIEnv*  env, jobject  thiz, jint w, jint h );
 void AppUpdate(JNIEnv*  env);
 void AppRender(JNIEnv*  env);
