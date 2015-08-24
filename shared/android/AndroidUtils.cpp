@@ -975,7 +975,7 @@ void AppOnTouch( JNIEnv*  env, jobject jobj,jint action, jfloat x, jfloat y, jin
 			break;
 
 		case ACTION_MOVE:
-			/*MouseKeyProcess(2, NULL, &qsize);
+			MouseKeyProcess(2, NULL, &qsize);
 
 			if( qsize <= 0 )
 			{
@@ -985,7 +985,7 @@ void AppOnTouch( JNIEnv*  env, jobject jobj,jint action, jfloat x, jfloat y, jin
 				amessage->y			= y;
 				amessage->finger	= finger;
 				MouseKeyProcess(0, amessage, NULL);
-			}*/
+			}
 			break;
 
 		default:

@@ -750,11 +750,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				if (!g_bHasFocus) 
 					break;
 				
-				/*g_rightMouseButtonDown = true;
-				int xPos = GET_X_LPARAM(lParam);
-				int yPos = GET_Y_LPARAM(lParam);
-				ConvertCoordinatesIfRequired(xPos, yPos);
-				MessageManager::GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CLICK_START, (float)xPos, (float)yPos, 1, GetWinkeyModifiers());*/
+				g_rightMouseButtonDown = true;
 			}
 			break;
 
@@ -762,16 +758,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			{
 				if (!g_bHasFocus) 
 					break;
-				
-				/*int xPos = GET_X_LPARAM(lParam);
-				int yPos = GET_Y_LPARAM(lParam);
-				ConvertCoordinatesIfRequired(xPos, yPos);
-				MessageManager::GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CLICK_END, (float)xPos, (float)yPos, 1, GetWinkeyModifiers());
-				g_rightMouseButtonDown = false;*/
+			
+				g_rightMouseButtonDown = false;
 			}
 			break;
 		
 		case WM_MOUSEMOVE:
+			//need it future
 			{
 				if (!g_bHasFocus) 
 					break;
@@ -794,7 +787,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					}
 				}
 			}
-			
 			break;
 
 		case WM_MOUSELEAVE:
@@ -1057,7 +1049,7 @@ void ForceVideoUpdate()
 #endif
 }
 
-bool CheckIfMouseLeftWindowArea(short* movedir)
+bool CheckIfMouseLeftWindowArea(int* movepos)
 {
 	POINT	pt;
 	RECT	rwin;
@@ -1077,10 +1069,21 @@ bool CheckIfMouseLeftWindowArea(short* movedir)
 		}
 		else
 		{
-			if( pt.x < rwin.left )
-				*movedir = 0;
-			else
-				*movedir = g_winVideoScreenX;
+			ScreenToClient(g_hWnd, &pt);
+
+			if( pt.x < 0 )
+				pt.x = 0;
+			else if( pt.x > rwin.right - rwin.left )
+				pt.x = rwin.right - rwin.left;
+
+			if( pt.y < 0 )
+				pt.y = 0;
+			else if( pt.y > rwin.bottom - rwin.top )
+				pt.y = rwin.bottom - rwin.top;
+
+			*movepos    = pt.y;
+			*movepos  <<= 16;
+			*movepos   |= pt.x;
 		}
 	}
 
@@ -1093,7 +1096,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 	OSMessage		osm;
 	MSG				msg;
 	int				ret;
-	short			movedir;
+	int				movepos;
 	WSADATA			wsaData;
 	static float	fpsTimer=0;
 	
@@ -1239,14 +1242,14 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 #endif
 		}
 
-		if( !CheckIfMouseLeftWindowArea(&movedir) )
+		if( !CheckIfMouseLeftWindowArea(&movepos) )
 		{
 			 /*msg.message	= WM_MOUSELEAVE;
-			 msg.lParam		= movedir;
+			 msg.lParam		= movepos;
 			 msg.hwnd		= g_hWnd; // window that want's 
 			 DispatchMessage(&msg);*/
 			
-			::PostMessage(g_hWnd, WM_MOUSELEAVE, 0, movedir);
+			::PostMessage(g_hWnd, WM_MOUSELEAVE, 0, movepos);
 		}
 				
 		// Managing the window messages
