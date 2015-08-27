@@ -106,6 +106,8 @@ CVReturn MyDisplayLinkCallback(CVDisplayLinkRef      displayLink,
 	[openGLContext release];
     openGLContext = NULL;
 	[pixelFormat release];
+
+	pthread_mutex_destroy(&s_mouselock);
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:NSViewGlobalFrameDidChangeNotification 
@@ -328,7 +330,19 @@ CVReturn MyDisplayLinkCallback(CVDisplayLinkRef      displayLink,
 	if (![self inLiveResize])
 	{
 		LogMsg("Reshaping: %.2f %.2f",  bounds.size.width, bounds.size.height);
-		InitDeviceScreenInfoEx(bounds.size.width, bounds.size.height, ORIENTATION_LANDSCAPE_LEFT);
+		
+		InitDeviceScreenInfoEx(bounds.size.width, bounds.size.height);
+
+		if (!BaseApp::GetBaseApp()->IsInitted())
+		{
+			pthread_mutexattr_t	pmattr;
+			// setup recursive mutex for mutex attribute
+			pthread_mutexattr_settype(&pmattr, PTHREAD_MUTEX_RECURSIVE_NP);
+			// Use the mutex attribute to create the mutex
+			pthread_mutex_init(&s_mouselock, &pmattr);
+			// Mutex attribute can be destroy after initializing the mutex variable
+			pthread_mutexattr_destroy(&pmattr);
+		}
 	}
 	
 	[[self openGLContext] update];

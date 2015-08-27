@@ -391,37 +391,34 @@ bool HasVibration()
 	return false;
 }
 
-void InitDeviceScreenInfoEx(int width, int height, int orientation)
+void InitDeviceScreenInfoEx(int width, int height)
 {
 	g_primaryGLX = width;
 	g_primaryGLY = height;
 	
-	if (!BaseApp::GetBaseApp()->IsInitted())
+	/*if (!BaseApp::GetBaseApp()->IsInitted())
+	{
+		SetupScreenInfo(width, height, GetOrientation());
+		//LogMsg("Initializing BaseApp...");
+		
+        srand( (unsigned)time(NULL) );
+			
+		CreateAppCacheDirIfNeeded();
+			
+		if (!BaseApp::GetBaseApp()->Init())
 		{
-			SetupScreenInfo(width, height, GetOrientation());
-			LogMsg("Initializing BaseApp...");
-			srand( (unsigned)time(NULL) );
-			
-			CreateAppCacheDirIfNeeded(); //actually these creates our user data directory as well as they are the
-			//same path. It will be located in ~/Library/Application Support/"+GetAppName().  If you don't want this
-			//directory created, we'll need to add some flag here to not do it I guess.
-			
-			if (!BaseApp::GetBaseApp()->Init())
-			{
-				
-				NSLog(@"Couldn't init app");
-				//[self release];
-				//return nil;
-			}
-			
-//			CreateDirectoryRecursively("", GetAppCachePath());
-
-		} else
-		{
-				SetupScreenInfo(width, height, GetOrientation());
+			NSLog(@"Couldn't init app");
 		}
-	
+			
+	}
+    else
+	{
+		SetupScreenInfo(width, height, GetOrientation());
+	}*/
 
+    srand( (unsigned)time(NULL) );
+    
+    SetupScreenInfo(width, height, GetOrientation());
 }
 
 int ConvertOSXKeycodeToProtonVirtualKey(int c)

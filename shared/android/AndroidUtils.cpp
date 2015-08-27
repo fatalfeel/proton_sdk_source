@@ -825,6 +825,14 @@ void AppResize( JNIEnv*  env, jobject  thiz, jint w, jint h )
 			LogMsg("Unable to initalize BaseApp");
 		}
 
+		pthread_mutexattr_t	pmattr;
+		// setup recursive mutex for mutex attribute
+		pthread_mutexattr_settype(&pmattr, PTHREAD_MUTEX_RECURSIVE_NP);
+		// Use the mutex attribute to create the mutex
+		pthread_mutex_init(&s_mouselock, &pmattr);
+		// Mutex attribute can be destroy after initializing the mutex variable
+		pthread_mutexattr_destroy(&pmattr);
+
 		//let's also create our save directory on the sd card if needed, so we don't get errors when just assuming we can save
 		//settings later in the app.
 		CreateDirectoryRecursively("", GetAppCachePath());
@@ -884,18 +892,6 @@ void AppRender(JNIEnv*  env)
 
 void AppInit(JNIEnv* env)
 {
-	//create mutex attribute variable
-	pthread_mutexattr_t	pmattr;
-
-	// setup recursive mutex for mutex attribute
-	pthread_mutexattr_settype(&pmattr, PTHREAD_MUTEX_RECURSIVE_NP);
-
-	// Use the mutex attribute to create the mutex
-	pthread_mutex_init(&s_mouselock, &pmattr);
-
-	// Mutex attribute can be destroy after initializing the mutex variable
-	pthread_mutexattr_destroy(&pmattr);
-
 	LogMsg("AppInit finish");
 }
 
