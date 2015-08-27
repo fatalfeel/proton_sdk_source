@@ -333,8 +333,14 @@ CVReturn MyDisplayLinkCallback(CVDisplayLinkRef      displayLink,
 		
 		InitDeviceScreenInfoEx(bounds.size.width, bounds.size.height);
 
+		//init shader program first than irrlicht
 		if (!BaseApp::GetBaseApp()->IsInitted())
 		{
+			if (!BaseApp::GetBaseApp()->Init())
+			{
+				NSLog(@"Couldn't init app");
+			}
+			
 			pthread_mutexattr_t	pmattr;
 			// setup recursive mutex for mutex attribute
 			pthread_mutexattr_settype(&pmattr, PTHREAD_MUTEX_RECURSIVE);

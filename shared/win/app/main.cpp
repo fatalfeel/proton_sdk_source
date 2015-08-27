@@ -1279,12 +1279,12 @@ cleanup:
 		BaseApp::Free();
 	}
 
-	WSACleanup();
+	DeleteCriticalSection(&s_mouselock);
 	
 	DestroyVideo(true);
 
-	DeleteCriticalSection(&s_mouselock);
-	
+	WSACleanup();
+		
 	return 0;
 }
 
