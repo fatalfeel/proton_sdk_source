@@ -2516,12 +2516,14 @@ void COpenGLDriver::draw2DImage(const video::ITexture* texture, const core::rect
 //! in one line. All drawings are clipped against clipRect (if != 0).
 //! The subtextures are defined by the array of sourceRects and are chosen
 //! by the indices given.
-void COpenGLDriver::draw2DImage(const video::ITexture* texture,
-				const core::position2d<s32>& pos,
-				const core::array<core::rect<s32> >& sourceRects,
-				const core::array<s32>& indices,
-				const core::rect<s32>* clipRect, SColor color,
-				bool useAlphaChannelOfTexture)
+void COpenGLDriver::draw2DImageBatch(const video::ITexture* texture,
+									const core::position2d<s32>& pos,
+									const core::array<core::rect<s32> >& sourceRects,
+									const core::array<s32>& indices,
+									s32 kerningWidth,
+									const core::rect<s32>* clipRect,
+									SColor color,
+									bool useAlphaChannelOfTexture)
 {
 	if (!texture)
 		return;
@@ -3473,19 +3475,6 @@ void COpenGLDriver::setTextureRenderStates(const SMaterial& material, bool reset
 		{
 			if (i>0 && !MultiTextureExtension)
 				break;
-
-			/*if (!CurrentTexture[i])
-			{
-				BridgeCalls->setTexture(i, fixedPipeline);
-
-				continue;
-			}
-			else
-			{
-				BridgeCalls->setTexture(i, fixedPipeline);
-
-				setTransform ((E_TRANSFORMATION_STATE) (ETS_TEXTURE_0 + i), material.getTextureMatrix(i));
-			}*/
 
 			BridgeCalls->setTexture(i, fixedPipeline);
 
@@ -5466,7 +5455,8 @@ void COpenGLCallBridge::setTexture(u32 stage, bool fixedPipeline)
 				if(fixedPipeline)
 					glEnable(GL_TEXTURE_2D);
 
-				glBindTexture(GL_TEXTURE_2D, static_cast<const COpenGLTexture*>(Driver->CurrentTexture[stage])->getOpenGLTextureName());
+				//glBindTexture(GL_TEXTURE_2D, static_cast<const COpenGLTexture*>(Driver->CurrentTexture[stage])->getOpenGLTextureName());
+				glBindTexture(GL_TEXTURE_2D, ((COpenGLTexture*)Driver->CurrentTexture[stage])->getOpenGLTextureName());
 			}
 			else
 			{
