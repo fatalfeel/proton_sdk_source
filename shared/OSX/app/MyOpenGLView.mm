@@ -316,10 +316,12 @@ CVReturn MyDisplayLinkCallback(CVDisplayLinkRef      displayLink,
 {
 	// This method will be called on the main thread when resizing
     // Add a mutex around to avoid the threads accessing the context simultaneously
+	NSRect                  bounds;
+	core::dimension2d<u32>  size;
+
 	CGLLockContext( (_CGLContextObject*)[[self openGLContext] CGLContextObj]);
 	
-	core::dimension2d<u32>  size;
-    NSRect                  bounds = [self bounds];
+    bounds		= [self bounds];
     
     size.Width  = bounds.size.width;
     size.Height = bounds.size.height;
@@ -329,7 +331,7 @@ CVReturn MyDisplayLinkCallback(CVDisplayLinkRef      displayLink,
 	
 	if (![self inLiveResize])
 	{
-		LogMsg("Reshaping: %.2f %.2f",  bounds.size.width, bounds.size.height);
+		LogMsg("Reshaping: %.2f %.2f", bounds.size.width, bounds.size.height);
 		
 		InitDeviceScreenInfoEx(bounds.size.width, bounds.size.height);
 
