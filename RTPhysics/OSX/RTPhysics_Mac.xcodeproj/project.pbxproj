@@ -221,7 +221,6 @@
 		B75D0B4A184018C1004B6297 /* bvhtrianglemeshshape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B75D0B33184018C1004B6297 /* bvhtrianglemeshshape.cpp */; };
 		B75D0B4B184018C1004B6297 /* bulletworld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B75D0B35184018C1004B6297 /* bulletworld.cpp */; };
 		B75D0B4C184018C1004B6297 /* boxshape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B75D0B37184018C1004B6297 /* boxshape.cpp */; };
-		B77A6CB81B92548700915F0F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B77A6CB71B92548700915F0F /* Images.xcassets */; };
 		B7E8326E183FEAFB004AC9E0 /* ioapi_mem.c in Sources */ = {isa = PBXBuildFile; fileRef = B7E8326C183FEAFB004AC9E0 /* ioapi_mem.c */; };
 		B7E8326F183FEAFB004AC9E0 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = B7E8326D183FEAFB004AC9E0 /* zip.c */; };
 		B7E83363183FEBE6004AC9E0 /* BuiltInFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B7E83274183FEBE5004AC9E0 /* BuiltInFont.cpp */; };
@@ -971,7 +970,6 @@
 		B75D0B35184018C1004B6297 /* bulletworld.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bulletworld.cpp; path = irrBullet/bulletworld.cpp; sourceTree = "<group>"; };
 		B75D0B36184018C1004B6297 /* boxshape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = boxshape.h; path = irrBullet/boxshape.h; sourceTree = "<group>"; };
 		B75D0B37184018C1004B6297 /* boxshape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = boxshape.cpp; path = irrBullet/boxshape.cpp; sourceTree = "<group>"; };
-		B77A6CB71B92548700915F0F /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = RTPhysics_Mac/Images.xcassets; sourceTree = "<group>"; };
 		B7E831AF183FEA14004AC9E0 /* aabbox3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aabbox3d.h; sourceTree = "<group>"; };
 		B7E831B0183FEA14004AC9E0 /* CDynamicMeshBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDynamicMeshBuffer.h; sourceTree = "<group>"; };
 		B7E831B1183FEA14004AC9E0 /* CIndexBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CIndexBuffer.h; sourceTree = "<group>"; };
@@ -1676,7 +1674,6 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				B77A6CB71B92548700915F0F /* Images.xcassets */,
 				B7177D2318438E6000914F8E /* audio */,
 				B7177D2418438E6000914F8E /* game */,
 				B7177D2518438E6000914F8E /* interface */,
@@ -3270,7 +3267,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B77A6CB81B92548700915F0F /* Images.xcassets in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				AFBD7716113895850015E685 /* MainMenu.xib in Resources */,
 				5DFB863312BB233D00337543 /* app.icns in Resources */,

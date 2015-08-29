@@ -75,7 +75,6 @@
 		B7359ED3184315530085B525 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7359ED2184315530085B525 /* AudioToolbox.framework */; };
 		B7359ED5184315AF0085B525 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7359ED4184315AF0085B525 /* OpenAL.framework */; };
 		B753EB60198F77160070F0D5 /* StencilMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B753EB5E198F77160070F0D5 /* StencilMenu.cpp */; };
-		B77A6CB21B9252D400915F0F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B77A6CB11B9252D400915F0F /* Images.xcassets */; };
 		B7E83199183FE846004AC9E0 /* EventControlComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B7E83198183FE846004AC9E0 /* EventControlComponent.cpp */; };
 		B7E831A8183FE872004AC9E0 /* HouseMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B7E831A1183FE872004AC9E0 /* HouseMenu.cpp */; };
 		B7E831A9183FE872004AC9E0 /* MainMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B7E831A2183FE872004AC9E0 /* MainMenu.cpp */; };
@@ -479,7 +478,6 @@
 		B7359ED4184315AF0085B525 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		B753EB5E198F77160070F0D5 /* StencilMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StencilMenu.cpp; path = ../source/GUI/StencilMenu.cpp; sourceTree = "<group>"; };
 		B753EB5F198F77160070F0D5 /* StencilMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StencilMenu.h; path = ../source/GUI/StencilMenu.h; sourceTree = "<group>"; };
-		B77A6CB11B9252D400915F0F /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = RT3DApp_Mac/Images.xcassets; sourceTree = "<group>"; };
 		B7E83197183FE846004AC9E0 /* EventControlComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EventControlComponent.h; path = ../source/Component/EventControlComponent.h; sourceTree = "<group>"; };
 		B7E83198183FE846004AC9E0 /* EventControlComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EventControlComponent.cpp; path = ../source/Component/EventControlComponent.cpp; sourceTree = "<group>"; };
 		B7E8319A183FE872004AC9E0 /* HouseMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HouseMenu.h; path = ../source/GUI/HouseMenu.h; sourceTree = "<group>"; };
@@ -1200,7 +1198,6 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				B77A6CB11B9252D400915F0F /* Images.xcassets */,
 				5D70B83512B6075B00A1AB17 /* game */,
 				5D70B83312B6074D00A1AB17 /* audio */,
 				5DDE05A912B58EBD000C5CC0 /* interface */,
@@ -2336,7 +2333,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B77A6CB21B9252D400915F0F /* Images.xcassets in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				AFBD7716113895850015E685 /* MainMenu.xib in Resources */,
 				5DDE05AA12B58EBD000C5CC0 /* interface in Resources */,
