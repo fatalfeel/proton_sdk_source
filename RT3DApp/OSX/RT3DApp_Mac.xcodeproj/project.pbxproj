@@ -269,14 +269,12 @@
 		B7E834A5183FEC39004AC9E0 /* pnggccrd.c in Sources */ = {isa = PBXBuildFile; fileRef = B7E83494183FEC39004AC9E0 /* pnggccrd.c */; };
 		B7E834A6183FEC39004AC9E0 /* pngget.c in Sources */ = {isa = PBXBuildFile; fileRef = B7E83495183FEC39004AC9E0 /* pngget.c */; };
 		B7E834A7183FEC39004AC9E0 /* pngmem.c in Sources */ = {isa = PBXBuildFile; fileRef = B7E83496183FEC39004AC9E0 /* pngmem.c */; };
-		B7E834A8183FEC39004AC9E0 /* pngnow.png in Resources */ = {isa = PBXBuildFile; fileRef = B7E83497183FEC39004AC9E0 /* pngnow.png */; };
 		B7E834A9183FEC39004AC9E0 /* pngpread.c in Sources */ = {isa = PBXBuildFile; fileRef = B7E83498183FEC39004AC9E0 /* pngpread.c */; };
 		B7E834AA183FEC39004AC9E0 /* pngread.c in Sources */ = {isa = PBXBuildFile; fileRef = B7E83499183FEC39004AC9E0 /* pngread.c */; };
 		B7E834AB183FEC39004AC9E0 /* pngrio.c in Sources */ = {isa = PBXBuildFile; fileRef = B7E8349A183FEC39004AC9E0 /* pngrio.c */; };
 		B7E834AC183FEC39004AC9E0 /* pngrtran.c in Sources */ = {isa = PBXBuildFile; fileRef = B7E8349B183FEC39004AC9E0 /* pngrtran.c */; };
 		B7E834AD183FEC39004AC9E0 /* pngrutil.c in Sources */ = {isa = PBXBuildFile; fileRef = B7E8349C183FEC39004AC9E0 /* pngrutil.c */; };
 		B7E834AE183FEC39004AC9E0 /* pngset.c in Sources */ = {isa = PBXBuildFile; fileRef = B7E8349D183FEC39004AC9E0 /* pngset.c */; };
-		B7E834AF183FEC39004AC9E0 /* pngtest.png in Resources */ = {isa = PBXBuildFile; fileRef = B7E8349E183FEC39004AC9E0 /* pngtest.png */; };
 		B7E834B0183FEC39004AC9E0 /* pngtrans.c in Sources */ = {isa = PBXBuildFile; fileRef = B7E8349F183FEC39004AC9E0 /* pngtrans.c */; };
 		B7E834B1183FEC39004AC9E0 /* pngvcrd.c in Sources */ = {isa = PBXBuildFile; fileRef = B7E834A0183FEC39004AC9E0 /* pngvcrd.c */; };
 		B7E834B2183FEC39004AC9E0 /* pngwio.c in Sources */ = {isa = PBXBuildFile; fileRef = B7E834A1183FEC39004AC9E0 /* pngwio.c */; };
@@ -1013,14 +1011,12 @@
 		B7E83494183FEC39004AC9E0 /* pnggccrd.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pnggccrd.c; path = libpng/pnggccrd.c; sourceTree = "<group>"; };
 		B7E83495183FEC39004AC9E0 /* pngget.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pngget.c; path = libpng/pngget.c; sourceTree = "<group>"; };
 		B7E83496183FEC39004AC9E0 /* pngmem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pngmem.c; path = libpng/pngmem.c; sourceTree = "<group>"; };
-		B7E83497183FEC39004AC9E0 /* pngnow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pngnow.png; path = libpng/pngnow.png; sourceTree = "<group>"; };
 		B7E83498183FEC39004AC9E0 /* pngpread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pngpread.c; path = libpng/pngpread.c; sourceTree = "<group>"; };
 		B7E83499183FEC39004AC9E0 /* pngread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pngread.c; path = libpng/pngread.c; sourceTree = "<group>"; };
 		B7E8349A183FEC39004AC9E0 /* pngrio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pngrio.c; path = libpng/pngrio.c; sourceTree = "<group>"; };
 		B7E8349B183FEC39004AC9E0 /* pngrtran.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pngrtran.c; path = libpng/pngrtran.c; sourceTree = "<group>"; };
 		B7E8349C183FEC39004AC9E0 /* pngrutil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pngrutil.c; path = libpng/pngrutil.c; sourceTree = "<group>"; };
 		B7E8349D183FEC39004AC9E0 /* pngset.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pngset.c; path = libpng/pngset.c; sourceTree = "<group>"; };
-		B7E8349E183FEC39004AC9E0 /* pngtest.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pngtest.png; path = libpng/pngtest.png; sourceTree = "<group>"; };
 		B7E8349F183FEC39004AC9E0 /* pngtrans.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pngtrans.c; path = libpng/pngtrans.c; sourceTree = "<group>"; };
 		B7E834A0183FEC39004AC9E0 /* pngvcrd.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pngvcrd.c; path = libpng/pngvcrd.c; sourceTree = "<group>"; };
 		B7E834A1183FEC39004AC9E0 /* pngwio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pngwio.c; path = libpng/pngwio.c; sourceTree = "<group>"; };
@@ -2171,14 +2167,12 @@
 				B7E83494183FEC39004AC9E0 /* pnggccrd.c */,
 				B7E83495183FEC39004AC9E0 /* pngget.c */,
 				B7E83496183FEC39004AC9E0 /* pngmem.c */,
-				B7E83497183FEC39004AC9E0 /* pngnow.png */,
 				B7E83498183FEC39004AC9E0 /* pngpread.c */,
 				B7E83499183FEC39004AC9E0 /* pngread.c */,
 				B7E8349A183FEC39004AC9E0 /* pngrio.c */,
 				B7E8349B183FEC39004AC9E0 /* pngrtran.c */,
 				B7E8349C183FEC39004AC9E0 /* pngrutil.c */,
 				B7E8349D183FEC39004AC9E0 /* pngset.c */,
-				B7E8349E183FEC39004AC9E0 /* pngtest.png */,
 				B7E8349F183FEC39004AC9E0 /* pngtrans.c */,
 				B7E834A0183FEC39004AC9E0 /* pngvcrd.c */,
 				B7E834A1183FEC39004AC9E0 /* pngwio.c */,
@@ -2345,8 +2339,6 @@
 				5D70B83412B6074D00A1AB17 /* audio in Resources */,
 				5D70B83612B6075B00A1AB17 /* game in Resources */,
 				5DFB863312BB233D00337543 /* app.icns in Resources */,
-				B7E834A8183FEC39004AC9E0 /* pngnow.png in Resources */,
-				B7E834AF183FEC39004AC9E0 /* pngtest.png in Resources */,
 				B7359ECE1843153D0085B525 /* LICENSE.cocosdenshion in Resources */,
 				B7177D2F18439F0900914F8E /* shaders in Resources */,
 			);
