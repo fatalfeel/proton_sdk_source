@@ -76,8 +76,6 @@ The brother site with cocos2dx gui menu
 https://github.com/fatalfeel/proton_cm_open
 
 9.
-Any bugs or questions please search
-
-[Proton SDK] of http://irrlicht.sourceforge.net/forum/
+Any bugs or questions please click github's [Issues] -> [New issue]
 
 Post message, I will be there help you.
