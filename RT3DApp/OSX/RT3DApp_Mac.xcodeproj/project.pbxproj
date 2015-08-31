@@ -608,7 +608,7 @@
 		B7E8321E183FEA14004AC9E0 /* IReferenceCounted.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IReferenceCounted.h; sourceTree = "<group>"; };
 		B7E8321F183FEA14004AC9E0 /* irrAllocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = irrAllocator.h; sourceTree = "<group>"; };
 		B7E83220183FEA14004AC9E0 /* irrArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = irrArray.h; sourceTree = "<group>"; };
-		B7E83221183FEA14004AC9E0 /* IrrCompileConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IrrCompileConfig.h; sourceTree = "<group>"; };
+		B7E83221183FEA14004AC9E0 /* IrrCompileConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IrrCompileConfig.h; path = include/IrrCompileConfig.h; sourceTree = "<group>"; };
 		B7E83222183FEA14004AC9E0 /* irrlicht.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = irrlicht.h; sourceTree = "<group>"; };
 		B7E83223183FEA14004AC9E0 /* IrrlichtDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IrrlichtDevice.h; sourceTree = "<group>"; };
 		B7E83224183FEA14004AC9E0 /* irrList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = irrList.h; sourceTree = "<group>"; };
@@ -1456,6 +1456,7 @@
 			children = (
 				5D93018614D0E578004E2E36 /* include */,
 				5D93026D14D0E578004E2E36 /* source */,
+				B7E83221183FEA14004AC9E0 /* IrrCompileConfig.h */,
 				5D93026A14D0E578004E2E36 /* IrrlichtManager.cpp */,
 				5D93026B14D0E578004E2E36 /* IrrlichtManager.h */,
 			);
@@ -1580,7 +1581,6 @@
 				B7E8321E183FEA14004AC9E0 /* IReferenceCounted.h */,
 				B7E8321F183FEA14004AC9E0 /* irrAllocator.h */,
 				B7E83220183FEA14004AC9E0 /* irrArray.h */,
-				B7E83221183FEA14004AC9E0 /* IrrCompileConfig.h */,
 				B7E83222183FEA14004AC9E0 /* irrlicht.h */,
 				B7E83223183FEA14004AC9E0 /* IrrlichtDevice.h */,
 				B7E83224183FEA14004AC9E0 /* irrList.h */,

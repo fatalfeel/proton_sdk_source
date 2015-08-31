@@ -1287,6 +1287,7 @@
 			children = (
 				5D59D02010B64AF200BA1F75 /* include */,
 				5D59D01F10B64AE600BA1F75 /* source */,
+				5D59D08D10B64C4300BA1F75 /* IrrCompileConfig.h */,
 				5D59D0CF10B64C7B00BA1F75 /* IrrlichtManager.h */,
 				5D59D0CE10B64C7B00BA1F75 /* IrrlichtManager.cpp */,
 			);
@@ -1662,7 +1663,6 @@
 				5D59D08A10B64C4300BA1F75 /* IReferenceCounted.h */,
 				5D59D08B10B64C4300BA1F75 /* irrAllocator.h */,
 				5D59D08C10B64C4300BA1F75 /* irrArray.h */,
-				5D59D08D10B64C4300BA1F75 /* IrrCompileConfig.h */,
 				5D59D08E10B64C4300BA1F75 /* irrlicht.h */,
 				5D59D08F10B64C4300BA1F75 /* IrrlichtDevice.h */,
 				5D59D09010B64C4300BA1F75 /* irrList.h */,

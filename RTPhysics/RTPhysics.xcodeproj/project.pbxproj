@@ -1763,6 +1763,7 @@
 				5D9D479112E8280D006CD82C /* irrBullet */,
 				5D59D02010B64AF200BA1F75 /* include */,
 				5D59D01F10B64AE600BA1F75 /* source */,
+				B78C68741815046700FEC242 /* IrrCompileConfig.h */,
 				5D59D0CE10B64C7B00BA1F75 /* IrrlichtManager.cpp */,
 				5D59D0CF10B64C7B00BA1F75 /* IrrlichtManager.h */,
 			);
@@ -2138,7 +2139,6 @@
 				B78C68711815046700FEC242 /* IReferenceCounted.h */,
 				B78C68721815046700FEC242 /* irrAllocator.h */,
 				B78C68731815046700FEC242 /* irrArray.h */,
-				B78C68741815046700FEC242 /* IrrCompileConfig.h */,
 				B78C68751815046700FEC242 /* irrlicht.h */,
 				B78C68761815046700FEC242 /* IrrlichtDevice.h */,
 				B78C68771815046800FEC242 /* irrList.h */,
