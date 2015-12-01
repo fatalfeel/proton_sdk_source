@@ -18,7 +18,7 @@ All platform can play music and sound easily
 GLSL shading language full control
 
 2.
-There is no OpenGLES1、2 texture loss problem after resume process on Android
+Before download source, take care of CR line ending in linux system
 
 3.
 First run need to do. (Take care of CR line ending in linux system)
