@@ -21,7 +21,7 @@ GLSL shading language full control
 Before download source, take care of CR line ending in linux system
 
 3.
-First run need to do. (Take care of CR line ending in linux system)
+First run need to do.
 
 On Win32 or Android --->
 
