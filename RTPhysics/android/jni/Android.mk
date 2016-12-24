@@ -6,7 +6,7 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := bullet
+LOCAL_MODULE := libbullet
 SHARED := ../../../shared
 LOCAL_ARM_MODE := arm
 
@@ -174,7 +174,7 @@ include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := rtphysics
+LOCAL_MODULE := librtphysics
 SHARED := ../../../shared
 APP := ../../source
 APPCOMP := ../../source/Component
@@ -293,7 +293,7 @@ $(IRRBULLET)/trianglemeshshape.cpp \
 $(APP)/App.cpp $(APP)/GUI/MainMenu.cpp $(APP)/GUI/PhysicsHelloMenu.cpp \
 $(APP)/Component/EventControlComponent.cpp
 
-LOCAL_STATIC_LIBRARIES := bullet
+LOCAL_STATIC_LIBRARIES := libbullet
 
 #Need match _IRR_COMPILE_WITH_OGLES2_ of IrrCompileConfig.h
 LOCAL_LDLIBS := -lGLESv1_CM -lGLESv2 -ldl -llog -lz

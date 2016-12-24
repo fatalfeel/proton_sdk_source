@@ -2,7 +2,7 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := rt3dapp
+LOCAL_MODULE := librt3dapp
 SHARED := ../../../shared
 APP := ../../source
 LOCAL_ARM_MODE := arm
