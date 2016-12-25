@@ -25,9 +25,9 @@ public AppGLSurfaceView(Context context, SharedActivity _app)
 //setEGLContextClientVersion(2); -> setEGLContextClientVersion(2);
 
 5.
-Enable or disable C_GL_MODE of IrrCompileConfig.h
-(a) Enable C_GL_MODE is working on Win32 and MacOs
-(b) Disable C_GL_MODE is working on ios and android
+Predefined C_GL_MODE of IrrCompileConfig.h
+(a) Win32 and MacOs Enable C_GL_MODE
+(b) Ios and Android Disable C_GL_MODE
 
 6.
 Enable or disable Irrlicht info bar and gui
