@@ -19,7 +19,7 @@ GLSL shading language full control
 
 2.
 
-Take care of carriage return in source files
+Before download take care of carriage return in source files
 
 3.
 First run need to do.
