@@ -24,11 +24,11 @@ Take care of carriage return in source files
 3.
 First run need to do.
 
-On Win32 or Android --->
+(a)Win32 or Android --->
 
 xxxxxx/media/update_media.bat
 
-On MacOs or Ios --->
+(b)MacOs or Ios --->
 
 chmod 777 xxxxxx/media/update_media.sh
 
