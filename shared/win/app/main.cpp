@@ -1217,11 +1217,6 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 
 		if( !CheckIfMouseLeftWindowArea(&movepos) )
 		{
-			 /*msg.message	= WM_MOUSELEAVE;
-			 msg.lParam		= movepos;
-			 msg.hwnd		= g_hWnd; // window that want's 
-			 DispatchMessage(&msg);*/
-			
 			::PostMessage(g_hWnd, WM_MOUSELEAVE, 0, movepos);
 		}
 				
