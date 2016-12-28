@@ -61,7 +61,7 @@ Demo screenshots
 
 (a) https://github.com/fatalfeel/proton_sdk_source/tree/master/DemoPicture
 
-(b) https://plus.google.com/photos/106185541018774360364/albums/5964765088859640225
+(b) https://goo.gl/photos/4HMcf4kp5opfticj9
 
 7.
 Demo video
