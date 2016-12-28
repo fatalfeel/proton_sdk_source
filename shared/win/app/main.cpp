@@ -1093,7 +1093,7 @@ bool CheckIfMouseLeftWindowArea(int* movepos)
 //by jesse stone
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow)
 {
-	OSMessage		osm;
+	//OSMessage		osm;
 	MSG				msg;
 	int				ret;
 	int				movepos;
@@ -1198,38 +1198,11 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 			fpsTimer = float(GetSystemTimeAccurate())+(1000.0f/ (float(g_fpsLimit)));
 		}
 
-		while( !BaseApp::GetBaseApp()->GetOSMessages()->empty() )
+		if( !BaseApp::GetBaseApp()->GetOSMessages()->empty() )
 		{
-			osm = BaseApp::GetBaseApp()->GetOSMessages()->front();
+			//osm = BaseApp::GetBaseApp()->GetOSMessages()->front();
 			BaseApp::GetBaseApp()->GetOSMessages()->pop_front();
-
-			switch (osm.m_type)
-			{
-				case OSMessage::MESSAGE_CHECK_CONNECTION:
-					//pretend we did it
-					MessageManager::GetMessageManager()->SendGUI(MESSAGE_TYPE_OS_CONNECTION_CHECKED, RT_kCFStreamEventOpenCompleted, 0);	
-					break;
-
-				case OSMessage::MESSAGE_OPEN_TEXT_BOX:
-					break;
-				
-				case OSMessage::MESSAGE_CLOSE_TEXT_BOX:
-					SetIsUsingNativeUI(false);
-					break;
-				
-				case OSMessage::MESSAGE_FINISH_APP:
-				case OSMessage::MESSAGE_SUSPEND_TO_HOME_SCREEN:
-					PostMessage(g_hWnd, WM_CLOSE, 0, 0);
-					break;
-				
-				case OSMessage::MESSAGE_SET_FPS_LIMIT:
-					g_fpsLimit = int(osm.m_x);
-					break;
-				
-				case OSMessage::MESSAGE_SET_VIDEO_MODE:
-					break;
-			}
-		}// end while (!BaseApp::GetBaseApp()->GetOSMessages()->empty())
+		}
 
 		CheckTouchCommand();
 	
