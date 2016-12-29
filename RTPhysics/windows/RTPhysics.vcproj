@@ -227,7 +227,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib  audiere.lib zdll.lib wsock32.lib"
+				AdditionalDependencies="audiere.lib zdll.lib wsock32.lib"
 				OutputFile="../bin/winRTPhysics.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\shared\win\lib;..\..\shared\win\fmod\api\lib;..\..\shared\win\audiere\lib"
@@ -308,7 +308,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib  audiere.lib zdll.lib wsock32.lib"
+				AdditionalDependencies="audiere.lib zdll.lib wsock32.lib"
 				OutputFile="../bin/RTPhysics.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\shared\win\lib;..\..\shared\win\fmod\api\lib;..\..\shared\win\audiere\lib"
