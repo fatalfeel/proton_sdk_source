@@ -84,3 +84,5 @@ Post message, I will be there help you.
 Product demo
 
 https://apkpure.com/ihala/com.alphainfo.ihala
+
+https://appadvice.com/app/ihala/789622575
